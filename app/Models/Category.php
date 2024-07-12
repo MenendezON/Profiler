@@ -30,9 +30,14 @@ class Category extends Authenticatable
         'slug',
     ];
 
-    public function users():BelongsTo
+    public function user():BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function posts():HasMany
+    {
+        return $this->hasMany(Post::class);
     }
 
 }

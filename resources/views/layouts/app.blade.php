@@ -33,7 +33,7 @@
         <x-side-navbar />
         <!-- end sidbar -->
 
-        <div class="bg-gray-100 flex-1 p-6 md:mt-16">
+        <div class="flex-1 p-6 md:mt-16">
             <!-- Start of the main content -->
             {{ $slot }}
             <!-- End of the main content -->
