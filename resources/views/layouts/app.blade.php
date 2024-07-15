@@ -18,6 +18,8 @@
     <link rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/v5.12.1/css/pro.min.css">
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('assets/css/style.css') }}">
     @livewireStyles
+
+
 </head>
 
 <body class="bg-gray-100">
@@ -47,7 +49,7 @@
     @stack('modals')
 
     @livewireScripts
-    
+
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="{{ URL::asset('assets/js/scripts.js') }}"></script>
     <!-- end script -->

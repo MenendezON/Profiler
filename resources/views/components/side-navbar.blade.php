@@ -15,16 +15,16 @@
 
         <!-- link -->
        
-        <a href="{{ route('dashboard') }}" class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
+        <a href="{{ route('home') }}" class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
             <i class="fad fa-chart-pie text-xs mr-2"></i>
-            Analytics dashboard
+            Tableau de bord
         </a>
         <!-- end link -->
 
         <!-- link -->
-        <a href="./index-1.html" class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
+        <a href="{{ route('post-index') }}" class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
             <i class="fad fa-shopping-cart text-xs mr-2"></i>
-            ecommerce dashboard
+            Offres d'emploi
         </a>
         <!-- end link -->
 

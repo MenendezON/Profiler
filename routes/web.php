@@ -3,8 +3,11 @@
 use App\Livewire\Category\CategoryIndex;
 use App\Livewire\Category\CategoryList;
 use App\Livewire\Company\IndexCompany;
+use App\Livewire\HomePage;
+use App\Livewire\Post\PostCreate;
 use App\Livewire\Post\PostIndex;
 use App\Livewire\Post\PostList;
+use App\Livewire\Post\PostShow;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -20,9 +23,13 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 
+    Route::get('/dashboard/overview', HomePage::class)->name('home');
+
     Route::get('/company', IndexCompany::class)->name('index-company');
     
     Route::get('/categories', CategoryIndex::class)->name('category-index');
 
-    Route::get('/jobs', PostIndex::class)->name('post-index');
+    Route::get('/offers', PostIndex::class)->name('post-index');
+    Route::get('/offers/new', PostCreate::class)->name('post-create');
+    Route::get('/offers/{slug}', PostShow::class)->name('post-show');
 });

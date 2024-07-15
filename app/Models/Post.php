@@ -25,6 +25,7 @@ class Post extends Model
         'description',
         'status',
         'year_experience',
+        'category_id'
     ];
 
     public function user():BelongsTo

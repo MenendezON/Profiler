@@ -5,7 +5,9 @@
     <div class="card w-full mb-2">
         <div class="card-header font-bold">
             <span class="bg-gray-200 px-3 py-2 rounded-md">{{$post->location}}</span> | 
-            <span>{{$post->title}}</span>
+            <x-nav-link href="{{ route('post-show', ['slug' => $post->slug]) }}" class="text-lg text-gray-900" wire:navigate>
+            {{$post->title}}
+            </x-nav-link>
         </div>
         <div class="flex px-6 py-2 justify-between">
             <span>Date de publication : {{\Carbon\Carbon::parse($post->created_at)->format('d M Y')}}</span>

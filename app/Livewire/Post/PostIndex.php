@@ -8,6 +8,13 @@ use Livewire\Component;
 #[Layout('layouts/app')]
 class PostIndex extends Component
 {
+    public $createPostModal = false;
+
+    public function showCreatePostModal()
+    {
+        $this->createPostModal = true;
+    }
+    
     public function render()
     {
         return view('livewire.post.post-index');
