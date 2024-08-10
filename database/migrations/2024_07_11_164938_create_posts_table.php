@@ -23,9 +23,10 @@ return new class extends Migration
             $table->string('type');
             $table->integer('contract_length');
             $table->text('description');
+            $table->text('prerequis');
             $table->foreignIdFor(Category::class);
             $table->string('status');
-            $table->integer('year_experience');
+            $table->integer('experience_level');
             $table->timestamps();
         });
     }

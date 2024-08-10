@@ -23,31 +23,31 @@
 </head>
 
 <body class="bg-gray-100">
+    <div class="flex h-screen bg-gray-50 dark:bg-gray-900" :class="{ 'overflow-hidden': isSideMenuOpen }">
+    <div class="flex flex-col flex-1 w-full">
+        <!-- start navbar -->
+        <x-top-navbar />
+        <!-- end navbar -->
 
-    <!-- start navbar -->
-    <x-top-navbar />
-    <!-- end navbar -->
 
+        <!-- strat wrapper -->
+        <div class="h-screen flex flex-row">
+            <!-- start sidebar -->
+            <x-side-navbar />
+            <!-- end sidbar -->
 
-    <!-- strat wrapper -->
-    <div class="h-screen flex flex-row flex-wrap">
-        <!-- start sidebar -->
-        <x-side-navbar />
-        <!-- end sidbar -->
+            <div class="h-full w-full overflow-y-auto bg-yellow-500">
+                <!-- Start of the main content -->
+                {{ $slot }}
+                <!-- End of the main content -->
+            </div>
 
-        <div class="flex-1 p-6 md:mt-16">
-            <!-- Start of the main content -->
-            {{ $slot }}
-            <!-- End of the main content -->
         </div>
+        <!-- end wrapper -->
 
+        <!-- script -->
+        </div>
     </div>
-    <!-- end wrapper -->
-
-    <!-- script -->
-
-    @stack('modals')
-
     @livewireScripts
 
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>

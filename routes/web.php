@@ -25,11 +25,11 @@ Route::middleware([
 
     Route::get('/dashboard/overview', HomePage::class)->name('home');
 
-    Route::get('/company', IndexCompany::class)->name('index-company');
+    Route::get('/company', IndexCompany::class)->name('company-index');
     
     Route::get('/categories', CategoryIndex::class)->name('category-index');
 
     Route::get('/offers', PostIndex::class)->name('post-index');
-    Route::get('/offers/new', PostCreate::class)->name('post-create');
-    Route::get('/offers/{slug}', PostShow::class)->name('post-show');
+    Route::get('/offers/{slug}/pipeline', PostShow::class)->name('post-show');
+    //Route::get('/offers/o/{slug}', PostShow::class)->name('post-show');
 });

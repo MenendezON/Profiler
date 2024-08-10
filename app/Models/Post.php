@@ -23,8 +23,9 @@ class Post extends Model
         'type',
         'contract_length',
         'description',
+        'prerequis',
         'status',
-        'year_experience',
+        'experience_level',
         'category_id'
     ];
 
