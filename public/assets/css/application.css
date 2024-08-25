@@ -1,0 +1,422 @@
+/* Modal Styling */
+
+.modal-dialog-slideout {min-height: 100%; margin: 0 0 0 auto;background: #fff;}
+.modal.fade .modal-dialog.modal-dialog-slideout {-webkit-transform: translate(100%,0)scale(1);transform: translate(100%,0)scale(1);}
+.modal.fade.show .modal-dialog.modal-dialog-slideout {-webkit-transform: translate(0,0);transform: translate(0,0);display: flex;align-items: stretch;-webkit-box-align: stretch;height: 100%;}
+.modal.fade.show .modal-dialog.modal-dialog-slideout .modal-body{overflow-y: auto;overflow-x: hidden;}
+.modal-dialog-slideout .modal-content{border: 0;}
+.modal-dialog-slideout .modal-header {
+    height: 91px;
+    display: block;
+    background-color:floralwhite;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    padding: 8px !important;
+}
+.modal-dialog-slideout .modal-footer {height: 49px !important; display: block; background-color: #F2F2F2;}
+.modal-dialog-slideout .modal-header h5 {float:left;}
+
+
+/* Added by Avdehsh*/
+.modal-navigation{
+    margin-left: -49px;
+    width: 50px;
+    position: absolute;
+}
+.modal-navigation .buttons{
+    margin-bottom: -15px;
+}
+.buttons:hover btn{
+    background-color: #ed8a19;
+}
+.
+/* .modal-dialog-slideout .modal-header {
+    min-height: 121px !important;
+} */
+.modal-dark-bg{
+    /* background-color: #F4F3EF; */
+}
+.modal-footer  {
+  /* padding-bottom: 65px; */
+  padding-top: 0px;
+  width: 100%;
+  margin: 0;
+}
+.modal-body{
+    padding: 0;
+}
+.modal-title {
+    font-size: 22px;
+}
+
+
+.nav-tabs-navigation {
+    text-align: left;
+    border-bottom: 0px;
+    margin-top: -22px;
+}
+.nav-tabs .nav-item .nav-link.active {
+    color: #27ada6;
+}
+.badge-status{
+    font-size: 9px;
+    padding: 2px 4px;
+    margin-top: 0px;
+}
+.applicant_header{
+    display: block;
+}
+.applicant_name_modal {
+    color: #044b7c;
+    vertical-align: text-top;
+    text-transform: capitalize;
+    display: inline-block;
+}
+
+.app_rating_modal{
+    font-size: 10px;
+    color: #ed8a19;
+}
+.app_details {
+    margin-top: 0px;
+    color: #6d6d6d;
+    text-align: left;
+    display: block;
+}
+.app_details_col {
+    margin-right: 20px;
+}
+/* .modal-dialog-slideout .modal-header{
+    height: 85px !important;
+    padding-top: 8px;
+
+} */
+.modal-content-applicant{
+  border: 0 none;
+  border-radius: 0px !important;
+}
+
+.candidate-profile{
+    display: block;
+}
+.candidate-profile .candidate-name{
+    text-align: center;
+    font-size: 28px;
+    color: #6D6D6D;
+    display: inline-block;
+    text-transform: capitalize;
+    margin-left:10px;
+    min-width: 140px;
+}
+.candidate-profile .candidate-name a{
+}
+.candidate-profile .candidate-name i{
+    color: #044b7c;
+    font-size: 14px;
+    vertical-align: middle;
+    margin-left: 20px;
+}
+.candidate-profile .profile-actions {
+    margin-top: -30px;
+    margin-left: 90px;
+    margin-bottom: 10px;
+    display: block;
+}
+.candidate-profile .profile-actions .btn-sm{
+    padding-left: 5px; 
+    padding-right: 5px; 
+}
+.candidate-profile .profile-details{
+    text-align: center;
+}
+.profile-details i{
+    color: #6D6D6D;
+}
+
+.applicant-contact-details{
+    text-align: center;
+    margin-top: 10px;
+    font-size: 16px;
+    color: #044b7c;
+    font-weight: 500;
+
+}
+.applicant-contact-details i {
+    color: #6D6D6D;
+}
+.profile-details-col {
+    padding-left: 10px;
+    padding-right: 10px;
+    display: inline-block;
+}
+.modal-edit-profile{
+    padding: 25px;
+}
+.applicant-opening{
+    color: #044b7c;
+    margin-top: -9px;
+    margin-bottom: 5px;
+}
+.holds-the-iframe {
+        background:url("../assets/img/loader.gif") center center no-repeat;
+        margin-top: 20px;
+        padding-left: 0px;
+        padding-right: 0px;
+     }
+.holds-the-iframe-blank {
+    margin-top:20px;
+    padding-left: 0px;
+    padding-right: 0px;
+     }
+.custom-answers-block{
+    margin-top: 20px;
+    padding-top: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
+    border-top: solid;
+    border-width: 1px;
+    border-top-color: #E9ECEF;
+
+}
+.custom-answer {
+    margin-top: 20px;
+}
+
+.no-resume {
+    color: #afafaf;
+    padding-top: 20%;
+    font-size: 20px;;
+}
+
+/* Interviews */
+.interview-block{
+    background-color: #FFFFFF;
+    padding: 20px;
+    margin: 10px;
+    border: solid;
+    border-color: #DEE2E5;
+    border-width: 2px;
+    text-align: left;
+
+}
+.interview-type{
+    font-size: 18px;
+    color: #154B7C;
+}
+.interview-datetime {
+    padding: 20px 0px;
+    font-weight: 600;
+    font-size: 12px;
+}
+.interview-interviewer{
+
+}
+.interview-actions{
+
+}
+.interview-rating{
+    margin: 10px 0px;
+    color: #ffb500;
+    font-size: 18px;
+}
+.interview-feedback-title{
+    font-size: 18px;
+    padding-bottom: 10px;
+}
+.interview-comments-icon{
+    color: #6D6D6D;
+    font-size: 18px;
+}
+.interview-comments-action-icon{
+    font-size: 20px;
+    padding-top: 10px;
+
+}
+.interview-comments-action-icon i{
+    font-size: 18px;
+
+}
+.rating-interview {
+  border: none;
+  font-size: 24px;
+  float: left;
+}
+.interview-status{
+    margin-top: 30px;
+}
+.interview-status .date {
+    color: #6D6D6D;
+    font-size: 12px;
+}
+
+/* Activity Feed*/
+.activity-feed {
+    padding-left: 45px;
+    padding-right: 15px;
+    padding-top: 30px;
+    list-style: none;
+    text-align: left;
+}
+.activity-feed .feed-item {
+    position: relative;
+    padding-bottom: 20px;
+    padding-left: 30px;
+    border-left: 2px solid #e4e8eb;
+}
+.activity-feed .feed-item:last-child {
+    border-color: transparent;
+}
+.activity-feed .feed-item::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: -6px;
+    width: 10px;
+    height: 10px;
+    border-radius: 6px;
+    background: #fff;
+    border: 1px solid #f37167;
+}
+.activity-feed .feed-item .date {
+    display: block;
+    position: relative;
+    top: -5px;
+    color: #8c96a3;
+    text-transform: uppercase;
+    font-size: 13px;
+}
+.activity-feed .feed-item .text {
+    position: relative;
+    top: -3px;
+}
+
+/* comments */
+.comment-block{
+    background-color: #FFFFFF;
+    padding: 20px;
+    margin: 10px;
+    border: solid;
+    border-color: #DEE2E5;
+    border-width: 2px;
+    text-align: left;
+
+}
+.comment-block .comment-name {
+    padding-top: 3px;
+    text-align: right;
+}
+.comment-block .comment-date {
+    font-size: 12px;
+}
+
+/****** Style Star Rating Widget *****/
+
+.rating {
+border: none;
+font-size: 18px;
+/* float: left; */
+display: inline-block;
+vertical-align: top;
+
+}
+
+.rating > input { display: none; }
+.rating > label:before {
+margin-top: 7px;
+margin-left: 5px; 
+font-size: 1em;
+font-family: FontAwesome;
+display: inline-block;
+content: "\f005";
+}
+
+/* .rating > .half:before {
+content: "\f089";
+position: absolute;
+} */
+
+.rating > label {
+color: #ddd;
+float: right;
+}
+
+/***** CSS Magic to Highlight Stars on Hover *****/
+
+.rating > input:checked ~ label, /* show gold star when clicked */
+.rating:not(:checked) > label:hover, /* hover current star */
+.rating:not(:checked) > label:hover ~ label { color: #FFD700;  } /* hover previous stars in list */
+
+.rating > input:checked + label:hover, /* hover current star when changing rating */
+.rating > input:checked ~ label:hover,
+.rating > label:hover ~ input:checked ~ label, /* lighten current selection */
+.rating > input:checked ~ label:hover ~ label { color: #FFED85;  }
+/****** Rating for Interview *****/
+
+.rating-interview > input { display: none; }
+.rating-interview > label:before {
+margin-top: 7px;
+margin-left: 5px; 
+font-size: 1em;
+font-family: FontAwesome;
+display: inline-block;
+content: "\f005";
+}
+
+.rating-interview > label {
+color: #ddd;
+float: right;
+}
+
+/***** CSS Magic to Highlight Stars on Hover *****/
+
+.rating-interview > input:checked ~ label, /* show gold star when clicked */
+.rating-interview:not(:checked) > label:hover, /* hover current star */
+.rating-interview:not(:checked) > label:hover ~ label { color: #FFD700;  } /* hover previous stars in list */
+
+.rating-interview > input:checked + label:hover, /* hover current star when changing rating */
+.rating-interview > input:checked ~ label:hover,
+.rating-interview > label:hover ~ input:checked ~ label, /* lighten current selection */
+.rating-interview > input:checked ~ label:hover ~ label { color: #FFED85;  }
+
+
+/* Interview Feedback Actions */
+@media only screen and (min-width: 576px) and (max-width:991px){
+    .modal-dialog {
+        max-width: 90%;
+    }
+    .modal-header {
+        height: 133px !important;
+    }
+
+}
+
+@media only screen and (max-width: 576px) {
+    .modal-header {
+        height: 130px !important;
+    }
+    .nav-tabs .nav-item .nav-link {
+        font-size: 12px;
+        padding: 0.5rem 0.5rem;
+    }
+    .nav-tabs .nav-item .nav-link a{
+        padding: 8px 16px 10px;
+    }
+
+    .hide-on-mobile{
+        display: none;
+    }
+
+   
+}
+
+@media only screen and (max-width: 578px) {
+    .modal-header {
+        height: 130px !important;
+    }
+    .holds-the-iframe {
+        padding-left: 0;
+        padding-right: 0;
+   }
+    
+}
