@@ -23,6 +23,9 @@ class CreateNewUser implements CreatesNewUsers
     public function create(array $input): Company
     {
         Validator::make($input, [
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'website' => ['required', 'string', 'max:255'],
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => $this->passwordRules(),
@@ -44,6 +47,7 @@ class CreateNewUser implements CreatesNewUsers
             return tap(Company::create([
                 'id' => Str::uuid(),
                 'name' => $input['name'],
+                'website' => $input['website'],
             ]), function (Company $company) use ($input) {
                 return $this->createUser($company, $input);
             });
@@ -54,7 +58,8 @@ class CreateNewUser implements CreatesNewUsers
     {
         $company->users()->save(User::forceCreate([
             'company_id' => $company->id,
-            'name' => "User",
+            'first_name' => $input['first_name'],
+            'last_name' => $input['last_name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
         ]));
