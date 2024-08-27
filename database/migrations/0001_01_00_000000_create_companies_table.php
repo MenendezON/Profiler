@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
+            $table->string('status')->default('inactive');
+            $table->string('website')->nullable();
             $table->timestamps();
         });
     }
