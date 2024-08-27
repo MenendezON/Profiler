@@ -11,6 +11,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -26,9 +27,13 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'firt_name',
+        'last_name',
         'email',
         'password',
+        'designation',
+        'role',
+        'status',
     ];
 
     /**
@@ -65,18 +70,19 @@ class User extends Authenticatable
         ];
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            if (empty($model->{$model->getKeyName()})) {
+                $model->{$model->getKeyName()} = (string) Str::uuid();
+            }
+        });
+    }
+
     public function company():BelongsTo
     {
         return $this->belongsTo(Company::class);
     }
 
-    public function categories():HasMany
-    {
-        return $this->hasMany(Category::class);
-    }
-
-    public function posts():HasMany
-    {
-        return $this->hasMany(Post::class);
-    }
 }

@@ -27,6 +27,8 @@ class Company extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'status',
+        'website',
     ];
 
     protected $keyType = 'string';
