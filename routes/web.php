@@ -5,6 +5,7 @@ use App\Livewire\Applications;
 use App\Livewire\Category\CategoryIndex;
 use App\Livewire\Category\CategoryList;
 use App\Livewire\Company\IndexCompany;
+use App\Livewire\DashboardComponent;
 use App\Livewire\HomePage;
 use App\Livewire\InterviewsComponent;
 use App\Livewire\JobOpenings;
@@ -38,9 +39,7 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', DashboardComponent::class)->name('dashboard');
 
     Route::get('/openings/new', OpeningNewComponent::class)->name('opening.new');
     Route::get('/openings/{categ}', JobOpenings::class)->name('openings');
