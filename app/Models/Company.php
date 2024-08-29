@@ -54,4 +54,9 @@ class Company extends Authenticatable
         return $this->hasMany(Location::class);
     }
 
+    public function departments()
+    {
+        return $this->hasMany(Department::class);
+    }
+
 }
