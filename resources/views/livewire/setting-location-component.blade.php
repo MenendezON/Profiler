@@ -11,7 +11,7 @@
     }
 
     .btn-darkblue {
-        background-color: #233c63; 
+        background-color: #233c63;
     }
 
     .btn-darkblue:hover !important {
@@ -39,17 +39,21 @@
     </nav>
     <div class="row">
 
-        <div class="col-md-4" id="view_location_dfcebbaf79842c2e6fca7b77741de3a6">
+        @foreach ($locations as $office)
+        <div class="col-md-4">
             <div class="card text-center">
                 <div class="card-body">
-                    <h4 class="card-title">SN Office</h4>
-                    <p class="card-text">Ngor, Dakar<br>
-                        Dakar, Dakar<br>
-                        Senegal - 15000</p>
-                    <a href="{{route('settings.locations.edit', 'dfcebbaf79842c2e6fca7b77741de3a6')}}" class="btn btn-primary">Edit</a> <a href="#" id="delete_location_dfcebbaf79842c2e6fca7b77741de3a6" onclick="action(this)" class="btn">Delete</a>
+                    <h4 class="card-title">{{$office->name}}</h4>
+                    <p class="card-text">
+                        {{$office->address}}<br>
+                        {{$office->city}}, {{$office->state}}<br>
+                        {{$office->country}} - {{$office->code_postal}}
+                    </p>
+                    <a href="{{route('settings.locations.edit', $office->id)}}" class="btn btn-primary">Edit</a> <a href="#" id="delete_location_{{$office->id}}" onclick="action(this)" class="btn">Delete</a>
                 </div>
             </div>
         </div>
+        @endforeach
 
 
         <div class="col-md-4">

@@ -46,34 +46,34 @@
                     <h4 class="card-title">Add New Location</h4>
                 </div>
                 <div class="card-body ">
-                    <form method="post" action="https://dash.recooty.com/settings/locations/new">
-                        <input type="hidden" name="_token" value="a2jrzsPry1jQAlrb0GurF44pdmN0ObkFts6Wsm2X"> <label for="location_name">Location Name <span>*</span></label>
+                    <form wire:submit="store">
+                        <input type="hidden" name="_token" value="a2jrzsPry1jQAlrb0GurF44pdmN0ObkFts6Wsm2X"> 
+                        <label for="location_name">Location Name <span>*</span></label>
                         <div class="form-group">
-                            <input type="text" class="form-control" name="location_name" placeholder="eg. Headquarter" required>
+                            <input type="text" class="form-control" wire:model="name" name="location_name" placeholder="eg. Headquarter" required>
                         </div>
                         <label for="location_address">Address <span>*</span></label>
                         <div class="form-group">
-                            <input type="text" class="form-control" name="location_address" required>
+                            <input type="text" class="form-control" wire:model="address" name="location_address" required>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="location_city">City <span>*</span></label>
-                                <input type="text" class="form-control" name="location_city" required>
+                                <input type="text" class="form-control" wire:model="city" name="location_city" required>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="location_state">State <span>*</span></label>
-                                <input type="text" class="form-control" name="location_state" required>
+                                <input type="text" class="form-control" wire:model="state" name="location_state" required>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <input type="hidden" name="location_country" id="location_country" required>
                                 <label for="location_country">Country <span>*</span></label>
-                                <select class="form-control " name="location_country_code" id="location_country_code" required>
+                                <select class="form-control " name="location_country" wire:model="country" id="location_country" required>
                                     <option selected disabled>--SELECT--</option>
-                                    <option value="AF">Afghanistan</option>
-                                    <option value="AL">Albania</option>
-                                    <option value="DZ">Algeria</option>
+                                    <option>Afghanistan</option>
+                                    <option>Albania</option>
+                                    <!--option value="DZ">Algeria</option>
                                     <option value="DS">American Samoa</option>
                                     <option value="AD">Andorra</option>
                                     <option value="AO">Angola</option>
@@ -140,10 +140,10 @@
                                     <option value="ET">Ethiopia</option>
                                     <option value="FK">Falkland Islands (Malvinas)</option>
                                     <option value="FO">Faroe Islands</option>
-                                    <option value="FJ">Fiji</option>
+                                    <option value="FJ">Fiji</option-->
                                     <option value="FI">Finland</option>
-                                    <option value="FR">France</option>
-                                    <option value="FX">France, Metropolitan</option>
+                                    <option>France</option>
+                                    <!--option value="FX">France, Metropolitan</option>
                                     <option value="GF">French Guiana</option>
                                     <option value="PF">French Polynesia</option>
                                     <option value="TF">French Southern Territories</option>
@@ -159,12 +159,12 @@
                                     <option value="GD">Grenada</option>
                                     <option value="GP">Guadeloupe</option>
                                     <option value="GU">Guam</option>
-                                    <option value="GT">Guatemala</option>
-                                    <option value="GN">Guinea</option>
-                                    <option value="GW">Guinea-Bissau</option>
-                                    <option value="GY">Guyana</option>
-                                    <option value="HT">Haiti</option>
-                                    <option value="HM">Heard and Mc Donald Islands</option>
+                                    <option value="GT">Guatemala</option-->
+                                    <option>Guinea</option>
+                                    <option>Guinea-Bissau</option>
+                                    <option>Guyana</option>
+                                    <option>Haiti</option>
+                                    <!--option value="HM">Heard and Mc Donald Islands</option>
                                     <option value="HN">Honduras</option>
                                     <option value="HK">Hong Kong</option>
                                     <option value="HU">Hungary</option>
@@ -255,15 +255,15 @@
                                     <option value="RU">Russian Federation</option>
                                     <option value="RW">Rwanda</option>
                                     <option value="KN">Saint Kitts and Nevis</option>
-                                    <option value="LC">Saint Lucia</option>
-                                    <option value="VC">Saint Vincent and the Grenadines</option>
-                                    <option value="WS">Samoa</option>
-                                    <option value="SM">San Marino</option>
-                                    <option value="ST">Sao Tome and Principe</option>
-                                    <option value="SA">Saudi Arabia</option>
-                                    <option value="SN">Senegal</option>
-                                    <option value="RS">Serbia</option>
-                                    <option value="SC">Seychelles</option>
+                                    <option value="LC">Saint Lucia</option-->
+                                    <option>Saint Vincent and the Grenadines</option>
+                                    <option>Samoa</option>
+                                    <option>San Marino</option>
+                                    <option>Sao Tome and Principe</option>
+                                    <option>Saudi Arabia</option>
+                                    <option>Senegal</option>
+                                    <option>Serbia</option>
+                                    <!--option value="SC">Seychelles</option>
                                     <option value="SL">Sierra Leone</option>
                                     <option value="SG">Singapore</option>
                                     <option value="SK">Slovakia</option>
@@ -316,12 +316,12 @@
                                     <option value="YE">Yemen</option>
                                     <option value="ZR">Zaire</option>
                                     <option value="ZM">Zambia</option>
-                                    <option value="ZW">Zimbabwe</option>
+                                    <option value="ZW">Zimbabwe</option-->
                                 </select>
                             </div>
                             <div class="form-group col-md-6">
-                                <label for="location_zip">Postal Code <span>*</span></label>
-                                <input type="text" class="form-control" name="location_zip" id="postal_code" required>
+                                <label for="location_code_postal">Postal Code <span>*</span></label>
+                                <input type="text" class="form-control" wire:model="code_postal" name="location_code_postal" id="postal_code" required>
                             </div>
                         </div>
                         <button type="submit" class="btn btn-info btn-wd">Add Location</button>
