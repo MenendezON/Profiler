@@ -41,10 +41,10 @@
                     <h4 class="card-title">Add New Department</h4>
                 </div>
                 <div class="card-body ">
-                    <form method="post" action="https://dash.recooty.com/settings/departments/new">
+                    <form wire:submit="store">
                         <input type="hidden" name="_token" value="r9NQWCLvHcGjF0cCDSDWRgHvYHTEAqR09yAVUBD8"> <label for="location_name">Department Name <span>*</span></label>
                         <div class="form-group">
-                            <input type="text" class="form-control" name="department_name" placeholder="eg. Human Resources" required="">
+                            <input type="text" class="form-control" wire:model="name" name="department_name" placeholder="eg. Human Resources" required="">
                         </div>
                         <button type="submit" class="btn btn-info btn-wd">Add Department</button>
                     </form>

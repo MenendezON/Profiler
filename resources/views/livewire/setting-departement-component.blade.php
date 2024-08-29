@@ -50,22 +50,15 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach ($departments as $index => $department)
                             <tr>
-                                <td>1</td>
-                                <td>ICT</td>
+                                <td>{{$index+1}}</td>
+                                <td>{{$department->name}}</td>
                                 <td>
-                                    <a href="{{route('settings.departments.edit', '86c4ad52768c511046fea7b2d42b300c')}}"><button class="btn btn-sm btn-warning">Edit</button></a>
-
+                                    <a href="{{route('settings.departments.edit', $department->id)}}"><button class="btn btn-sm btn-warning">Edit</button></a>
                                 </td>
                             </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Logistic</td>
-                                <td>
-                                    <a href="https://dash.recooty.com/settings/departments/edit/c429429bf1f2af051f2021dc92a8ebea"><button class="btn btn-sm btn-warning">Edit</button></a>
-
-                                </td>
-                            </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>

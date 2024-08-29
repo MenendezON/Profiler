@@ -41,10 +41,10 @@
                     <h4 class="card-title">Edit Department</h4>
                 </div>
                 <div class="card-body ">
-                    <form method="post" action="https://dash.recooty.com/settings/departments/edit/86c4ad52768c511046fea7b2d42b300c">
+                    <form wire:submit="update">
                         <input type="hidden" name="_token" value="r9NQWCLvHcGjF0cCDSDWRgHvYHTEAqR09yAVUBD8"> <label for="department_name">Department Name</label>
                         <div class="form-group">
-                            <input type="text" class="form-control" name="department_name" placeholder="eg. Accounts" value="ICT">
+                            <input type="text" class="form-control" wire:model="name" name="department_name" placeholder="eg. Accounts" value="ICT">
                         </div>
                         <button type="submit" class="btn btn-info btn-wd">Save</button>
                     </form>
