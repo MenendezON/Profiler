@@ -23,4 +23,9 @@ class Location extends Model
     {
         return $this->belongsTo(Company::class);
     }
+
+    public function openings()
+    {
+        return $this->hasMany(Opening::class);
+    }
 }

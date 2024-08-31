@@ -85,4 +85,13 @@ class User extends Authenticatable
         return $this->belongsTo(Company::class);
     }
 
+    public function openings()
+    {
+        return $this->hasMany(Opening::class);
+    }
+
+    public function screeningquestions()
+    {
+        return $this->hasMany(Screeningquestion::class);
+    }
 }
