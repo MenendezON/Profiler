@@ -45,10 +45,10 @@
 <div class="content">
     <nav aria-label="breadcrumb" role="navigation">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="https://dash.recooty.com">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="https://dash.recooty.com/settings">Settings</a></li>
-            <li class="breadcrumb-item"><a href="https://dash.recooty.com/settings/form-templates">Screening Question Templates</a></li>
-            <li class="breadcrumb-item active" aria-current="page">HR Assistant</li>
+            <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{{route('settings')}}">Settings</a></li>
+            <li class="breadcrumb-item"><a href="{{route('settings.screenquestion')}}">Screening Question Templates</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{$screeningquestion->data}}</li>
         </ol>
     </nav>
     <div class="row">
@@ -57,7 +57,7 @@
                 <div class="card-header">
                     <div class="row">
                         <div class="col">
-                            <h4 class="card-title">HR Assistant</h4>
+                            <h4 class="card-title">{{$screeningquestion->data}}</h4>
                         </div>
                         <div class="col">
                             <a href="https://dash.recooty.com/settings/form-templates/028ee724157b05d04e7bdcf237d12e60/add">

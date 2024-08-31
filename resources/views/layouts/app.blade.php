@@ -21,7 +21,7 @@
     <link href="{{ URL::asset('assets/css/demo.css')}}" rel="stylesheet" />
     
     @stack('styles')
-    
+    @livewireStyles
 </head>
 
 <body class="sidebar-mini">
