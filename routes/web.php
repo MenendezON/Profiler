@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ScreeningController;
 use App\Livewire\ApplicantNewComponent;
 use App\Livewire\Applications;
 use App\Livewire\Category\CategoryIndex;
@@ -39,6 +40,9 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
+    Route::get('/api/listtemplate', [ScreeningController::class, 'list']);
+    Route::POST('/api/createtemplate', [ScreeningController::class, 'store']);
+
     Route::get('/dashboard', DashboardComponent::class)->name('dashboard');
 
     Route::get('/openings/new', OpeningNewComponent::class)->name('opening.new');
