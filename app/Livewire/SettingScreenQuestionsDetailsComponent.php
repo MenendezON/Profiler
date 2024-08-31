@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Screeningquestion;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -9,6 +10,14 @@ use Livewire\Component;
 #[Layout('layouts.app')]
 class SettingScreenQuestionsDetailsComponent extends Component
 {
+
+    public $screeningquestion;
+
+    public function mount($id)
+    {
+        $this->screeningquestion = Screeningquestion::findOrFail($id);
+    }
+
     #[Title('Form Template Details')]
     public function render()
     {
