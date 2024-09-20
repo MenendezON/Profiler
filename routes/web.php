@@ -42,6 +42,9 @@ Route::middleware([
 ])->group(function () {
     Route::get('/api/listtemplate', [ScreeningController::class, 'list']);
     Route::POST('/api/createtemplate', [ScreeningController::class, 'store']);
+    Route::POST('/api/listlocation', [ScreeningController::class, 'listlocation']);
+    Route::POST('/api/listdepartment', [ScreeningController::class, 'listdepartment']);
+    Route::POST('/api/listtemplate', [ScreeningController::class, 'listtemplate']);
 
     Route::get('/dashboard', DashboardComponent::class)->name('dashboard');
 

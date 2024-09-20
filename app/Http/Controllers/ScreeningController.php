@@ -3,6 +3,8 @@
 // Controller
 namespace App\Http\Controllers;
 
+use App\Models\Department;
+use App\Models\Location;
 use App\Models\Screeningquestion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,26 +14,76 @@ class ScreeningController extends Controller
     public function list(Request $request)
     {
         // Fetch all records from the Screeningquestion model
-        $questions = Screeningquestion::all();
+        $screeningquestions = Screeningquestion::where('company_id', Auth::user()->company->id)
+                                                //->orWhere('company_id', 'default')
+                                                ->get();
 
         // Generate the HTML for the table rows
         $tableRows = '';
 
-        foreach ($questions as $index => $question) {
+        foreach ($screeningquestions as $index => $screen) {
             $tableRows .= '
             <tr>
                 <td>' . ($index + 1) . '</td>
-                <td>' . htmlspecialchars($question->data) . '</td>
-                <td class="text-center">0</td>
+                <td>' . htmlspecialchars($screen->data) . '</td>
+                <td class="text-center">'.$screen->question .'</td>
                 <td>
-                    <a href="/edit/' . $question->id . '" class="btn btn-sm btn-primary">Edit</a>
-                    <a href="/delete/' . $question->id . '" class="btn btn-sm btn-danger">Delete</a>
+                    <a href="'.route('settings.screenquestion.show', $screen->id).'" class="btn btn-sm btn-primary">Edit</a>
+                    <a href="/delete/' . $screen->id . '" class="btn btn-sm btn-danger">Delete</a>
                 </td>
             </tr>';
         }
 
         // Return the JSON response
         return response()->json(['template' => $tableRows]);
+    }
+
+    public function listlocation(Request $request)
+    {
+        // Fetch all records from the Screeningquestion model
+        $locations = Location::all();
+
+        // Generate the HTML for the table rows
+        $tableRows = '<option disabled selected>Please select your location</option>';
+
+        foreach ($locations as $location) {
+            $tableRows .= '<option value="'.$location->id.'">'.htmlspecialchars($location->name).'</option>';
+        }
+
+        // Return the JSON response
+        return response()->json(['location' => $tableRows]);
+    }
+
+    public function listdepartment(Request $request)
+    {
+        // Fetch all records from the Screeningquestion model
+        $departments = Department::all();
+
+        // Generate the HTML for the table rows
+        $tableRows = '<option disabled selected>Please select your department</option>';
+
+        foreach ($departments as $department) {
+            $tableRows .= '<option value="'.$department->id.'">'.htmlspecialchars($department->name).'</option>';
+        }
+
+        // Return the JSON response
+        return response()->json(['department' => $tableRows]);
+    }
+
+    public function listtemplate(Request $request)
+    {
+        // Fetch all records from the Screeningquestion model
+        $screens = Screeningquestion::all();
+
+        // Generate the HTML for the table rows
+        $tableRows = '<option disabled selected>Please select your template</option>';
+
+        foreach ($screens as $screen) {
+            $tableRows .= '<option value="'.$screen->id.'">'.htmlspecialchars($screen->data).'</option>';
+        }
+
+        // Return the JSON response
+        return response()->json(['screen' => $tableRows]);
     }
 
     // Method to save the title to the Screeningquestion table

@@ -1,28 +1,32 @@
 @push('styles')
 <style>
-      .nav-shortcuts li {
+    .nav-shortcuts li {
         margin-top: -15px;
         margin-left: 5px;
-      }
-      .btn-black {
-        background-color: #161616;
-      }
-      .btn-darkblue {
-        background-color: #233c63;
-      }
-      .btn-darkblue:hover !important {
-        background-color: #135b8e;
-      }
-      .dropdown-menu .dropdown-item:hover,
-      .dropdown-menu .dropdown-item:focus {
-        background-color: #2c7db7;
-      }
+    }
 
-      .navbar.navbar-absolute {
+    .btn-black {
+        background-color: #161616;
+    }
+
+    .btn-darkblue {
+        background-color: #233c63;
+    }
+
+    .btn-darkblue:hover !important {
+        background-color: #135b8e;
+    }
+
+    .dropdown-menu .dropdown-item:hover,
+    .dropdown-menu .dropdown-item:focus {
+        background-color: #2c7db7;
+    }
+
+    .navbar.navbar-absolute {
         padding-top: 7px;
         padding-bottom: 7px;
-      }
-    </style>
+    }
+</style>
 @endpush
 
 <div class="content">
@@ -42,7 +46,7 @@
     <div class="col-md-10">
         <div class="wizard-container">
             <div class="card card-wizard" data-color="primary" id="wizardProfile">
-                <form action="https://dash.recooty.com/openings/new" method="GET">
+                <form method="get">
                     <input type="hidden" name="_token" value="a2jrzsPry1jQAlrb0GurF44pdmN0ObkFts6Wsm2X" />
                     <div class="card-header text-center">
                         <div class="wizard-navigation">
@@ -75,34 +79,23 @@
                                                     <label>Job Title</label>
                                                 </div>
                                             </div>
-                                            <input class="form-control" type="text" name="job_title"
-                                                placeholder="eg: PHP developer" id="job_title" size="260"
-                                                style="text-transform: capitalize" />
+                                            <input class="form-control" type="text" wire:model="title" name="job_title" placeholder="eg: PHP developer" id="job_title" size="260" style="text-transform: capitalize" />
                                         </div>
                                     </div>
                                     <div class="col-lg-3">
                                         <div class="form-group">
-                                            <label>Job Code
-                                                <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="top"
-                                                    title="This job code is system generated, you can also use your own job code if required."></i></label>
-                                            <input class="form-control" type="text" name="job_code" value="ME101"
-                                                id="job_code" size="20" style="text-transform: uppercase" />
+                                            <label>Job Code <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" title="This job code is system generated, you can also use your own job code if required."></i></label>
+                                            <input class="form-control" type="text" wire:model="code" name="job_code" value="ME101" id="job_code" size="20" style="text-transform: uppercase" />
                                         </div>
                                     </div>
                                     <div class="col-lg-10 mt-3">
                                         <div class="form-group">
-                                            <label>Job Description
-                                                <small>(responsibilities, required skills, perks
-                                                    etc.)</small></label>
-                                            <textarea class="form-control" name="job_description" id="jobdesc">
-Job Brief:
-<br><br><br>
-Responsibilities:
-<br><br><br>
-Skills Required:</textarea>
+                                            <label>Job Description<small>(responsibilities, required skills, perks, etc.)</small></label>
+                                            <textarea class="form-control" name="job_description" id="jobdesc" wire:model="description">
+                                                
+                                            </textarea>
                                             <div class="alert alert-danger" id="validNotifyResp" style="display: none">
-                                                <span>Please make sure that Job Description has
-                                                    minimum 30 words</span>
+                                                <span>Please make sure that Job Description has minimum 30 words</span>
                                             </div>
                                         </div>
                                     </div>
@@ -122,30 +115,22 @@ Skills Required:</textarea>
                                                     </label>
                                                 </div>
                                                 <div class="col-md-4 pull-right text-right">
-                                                    <label class="control-label"><a
-                                                            href="https://dash.recooty.com/settings/locations/new"
-                                                            target="_blank">Add New</a>
+                                                    <label class="control-label">
+                                                        <a href="{{route('settings.locations.new')}}" target="_blank">Add New</a>
                                                     </label>
                                                 </div>
                                             </div>
-                                            <select class="form-control" name="job_location_id" data-size="7"
-                                                title="Single Select" required id="location_id" value="ddd">
-                                                <option disabled selected>
-                                                    Please add a location first
-                                                </option>
-                                                <option value="toctoc">Toc toc</option>
+                                            <select class="form-control" wire:model="location_id" name="job_location_id" data-size="7" title="Single Select" required id="location_id" value="ddd">
+                                                <option disabled selected>Please add a location first</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-sm-2">
                                         <div class="form-group select-wizard remote-toggle">
                                             <label>Remote Job?
-                                                <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="top"
-                                                    title="In case of remote jobs, location is compulsory to appear on the third party job boards. "></i></label><br />
-                                            <input class="bootstrap-switch" name="job_remote" type="checkbox"
-                                                data-toggle="switch" data-on-label="<i class='nc-icon nc-check-2'></i>"
-                                                data-off-label="<i class='nc-icon nc-simple-remove'></i>"
-                                                data-on-color="success" data-off-color="success" />
+                                                <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" title="In case of remote jobs, location is compulsory to appear on the third party job boards. "></i>
+                                            </label><br />
+                                            <input class="bootstrap-switch" wire:model="remote" name="job_remote" type="checkbox" data-toggle="switch" data-on-label="<i class='nc-icon nc-check-2'></i>" data-off-label="<i class='nc-icon nc-simple-remove'></i>" data-on-color="success" data-off-color="success" />
                                         </div>
                                     </div>
                                 </div>
@@ -153,33 +138,21 @@ Skills Required:</textarea>
                                     <div class="col-sm-3">
                                         <div class="form-group select-wizard">
                                             <label>Experience Required</label>
-                                            <select class="form-control" name="job_experience" data-size="7"
-                                                title="Single Select" required>
-                                                <option value="Internship">Internship</option>
-                                                <option value="Entry Level" selected>
-                                                    Entry Level
-                                                </option>
-                                                <option value="Associate">Associate</option>
-                                                <option value="Mid-Senior Level">
-                                                    Mid-Senior Level
-                                                </option>
-                                                <option value="Director/ Vice-President">
-                                                    Director/ Vice-President
-                                                </option>
-                                                <option value="Executive/ President">
-                                                    Executive/ President
-                                                </option>
+                                            <select class="form-control" wire:model="experience" name="job_experience" data-size="7" title="Single Select" required>
+                                                <option value="0">Internship</option>
+                                                <option value="1" selected>Entry Level</option>
+                                                <option value="2">Associate</option>
+                                                <option value="3">Mid-Senior Level</option>
+                                                <option value="4">Director/ Vice-President</option>
+                                                <option value="5">Executive/ President</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-sm-3">
                                         <div class="form-group select-wizard">
                                             <label>Employment Type</label>
-                                            <select name="job_employment_type" class="form-control" data-size="7"
-                                                title="Single Select" required>
-                                                <option selected value="Full Time">
-                                                    Full Time
-                                                </option>
+                                            <select name="job_employment_type" wire:model="employment_type" class="form-control" data-size="7" title="Single Select" required>
+                                                <option selected value="Full Time">Full Time</option>
                                                 <option value="Part Time">Part Time</option>
                                                 <option value="Contract">Contract</option>
                                                 <option value="Internship">Internship</option>
@@ -200,12 +173,12 @@ Skills Required:</textarea>
                                                 </div>
                                                 <div class="col-md-4 pull-right text-right">
                                                     <label class="control-label"><a
-                                                            href="https://dash.recooty.com/settings/departments/new"
+                                                            href="{{route('settings.departments.new')}}"
                                                             target="_blank">Add New</a>
                                                     </label>
                                                 </div>
                                             </div>
-                                            <select class="form-control" name="company_department"
+                                            <select class="form-control" wire:model="department_id" name="company_department"
                                                 id="company_department" data-size="7" title="Single Select">
                                                 <option value>--default--</option>
                                             </select>
@@ -225,15 +198,12 @@ Skills Required:</textarea>
                                                     </label>
                                                 </div>
                                                 <div class="col-md-4 pull-right text-right">
-                                                    <label class="control-label"><a
-                                                            href="https://dash.recooty.com/settings/form-templates"
-                                                            target="_blank">
-                                                            (view)</a>
+                                                    <label class="control-label">
+                                                        <a href="{{route('settings.screenquestion')}}" target="_blank">(view)</a>
                                                     </label>
                                                 </div>
                                             </div>
-                                            <select name="ft_id" class="form-control" data-size="7"
-                                                title="Single Select" required id="template_id">
+                                            <select name="ft_id" class="form-control" wire:model="template_id" data-size="7" title="Single Select" required id="template_id">
                                                 <option value="0">Default</option>
                                             </select>
                                         </div>
@@ -241,7 +211,7 @@ Skills Required:</textarea>
                                     <div class="col-sm-4">
                                         <div class="form-group select-wizard">
                                             <label>Job Industry</label>
-                                            <select class="form-control" name="job_industry" data-size="7"
+                                            <select class="form-control" wire:model="industry" name="job_industry" data-size="7"
                                                 title="Single Select" required>
                                                 <option value>--select--</option>
                                                 <option value="Accounting">Accounting</option>
@@ -379,7 +349,7 @@ Skills Required:</textarea>
                         <div class="pull-right">
                             <input type="button" class="btn btn-next btn-fill btn-rose btn-success btn-wd" name="next"
                                 value="Next" id="btnNext" />
-                            <input type="submit" class="btn btn-finish btn-fill btn-rose btn-success btn-wd"
+                            <input type="submit" wire:click="store" class="btn btn-finish btn-fill btn-rose btn-success btn-wd"
                                 name="finish" value="Finish" />
                         </div>
                         <div class="pull-left">
@@ -396,149 +366,123 @@ Skills Required:</textarea>
 
 @push('scripts')
 <script type="text/javascript">
-      $.ajaxSetup({
+    $.ajaxSetup({
         headers: {
-          "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
         },
-      });
-      $(document).ajaxStart(function () {
+    });
+    $(document).ajaxStart(function() {
         Pace.restart();
-      });
-    </script>
+    });
+</script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
 
-    <script src="https://dash.recooty.com/ckeditor/ckeditor.js"></script>
-    <script>
-      $(document).ready(function () {
+<script src="https://dash.recooty.com/ckeditor/ckeditor.js"></script>
+
+<script>
+    $(document).ready(function() {
         // Initialise the wizard
         demo.initWizard();
-        setTimeout(function () {
-          $(".card.card-wizard").addClass("active");
+        setTimeout(function() {
+            $(".card.card-wizard").addClass("active");
         }, 600);
-      });
-    </script>
-    <script>
-      //Function to count the words using regex
-      var counter = function (value) {
+    });
+</script>
+<script>
+    //Function to count the words using regex
+    var counter = function(value) {
         if (value.length == 0) {
-          return 0;
+            return 0;
         }
         var regex = /\s+/gi;
         var wordCount = value.trim().replace(regex, " ").split(" ").length;
         return wordCount;
-      };
-      jQuery(document).ready(function () {
+    };
+    jQuery(document).ready(function() {
         $("#btnNext").prop("disabled", true);
 
         CKEDITOR.replace("jobdesc");
         var jobdesc = CKEDITOR.instances.jobdesc;
         var jobdesccount = 30;
-        jobdesc.on("change", function (e) {
-          var count = counter(jobdesc.getData());
-          console.log(count);
-          if (count < jobdesccount) {
-            //Word count is less, disable next button and show error notification
-            $("#btnNext").prop("disabled", true);
-            $("#validNotifyResp").show();
-          } else {
-            $("#btnNext").prop("disabled", false);
-            $("#validNotifyResp").hide();
-          }
+        jobdesc.on("change", function(e) {
+            var count = counter(jobdesc.getData());
+            console.log(count);
+            if (count < jobdesccount) {
+                //Word count is less, disable next button and show error notification
+                $("#btnNext").prop("disabled", true);
+                $("#validNotifyResp").show();
+            } else {
+                $("#btnNext").prop("disabled", false);
+                $("#validNotifyResp").hide();
+            }
         });
 
         // partner job boards start
-        $("#job_google_status").on("change", function () {
-          if ($(this).prop("checked")) {
-            $(".partner-logo-icons").removeClass("partner-logo");
-            $("#unselect_msg").hide();
-          } else {
-            $(".partner-logo-icons").addClass("partner-logo");
-            $("#unselect_msg").show();
-          }
-        }),
-          // facebook job boards start
-          $("#job_fb_status").on("change", function () {
-            if ($(this).prop("checked")) {
-              $(".partner-logo-icons-fb").removeClass("partner-logo");
-            } else {
-              $(".partner-logo-icons-fb").addClass("partner-logo");
-            }
-          });
-      });
+        $("#job_google_status").on("change", function() {
+                if ($(this).prop("checked")) {
+                    $(".partner-logo-icons").removeClass("partner-logo");
+                    $("#unselect_msg").hide();
+                } else {
+                    $(".partner-logo-icons").addClass("partner-logo");
+                    $("#unselect_msg").show();
+                }
+            }),
+            // facebook job boards start
+            $("#job_fb_status").on("change", function() {
+                if ($(this).prop("checked")) {
+                    $(".partner-logo-icons-fb").removeClass("partner-logo");
+                } else {
+                    $(".partner-logo-icons-fb").addClass("partner-logo");
+                }
+            });
+    });
 
-      //updation locations dynamically
-      function refresh_locations() {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function () {
-          if (this.readyState == 4 && this.status == 200) {
-            document.getElementById("location_id").innerHTML =
-              this.responseText;
-          }
-        };
-        xhttp.open(
-          "POST",
-          "https://dash.recooty.com/ajax/refresh_locations",
-          true
-        );
-        xhttp.setRequestHeader(
-          "Content-type",
-          "application/x-www-form-urlencoded"
-        );
-        xhttp.setRequestHeader(
-          "X-CSRF-TOKEN",
-          document.head.querySelector("[name=csrf-token]").content
-        );
-        xhttp.send();
-      }
-      //updation templates dynamically
-      function refresh_templates() {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function () {
-          if (this.readyState == 4 && this.status == 200) {
-            document.getElementById("template_id").innerHTML =
-              this.responseText;
-          }
-        };
-        xhttp.open(
-          "POST",
-          "https://dash.recooty.com/ajax/refresh_templates",
-          true
-        );
-        xhttp.setRequestHeader(
-          "Content-type",
-          "application/x-www-form-urlencoded"
-        );
-        xhttp.setRequestHeader(
-          "X-CSRF-TOKEN",
-          document.head.querySelector("[name=csrf-token]").content
-        );
-        xhttp.send();
-      }
+    //updation locations dynamically
+    function refresh_locations() {
+        $.ajax({
+            url: "/api/listlocation",
+            type: "POST",
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                    "content"
+                ),
+            },
+            success: function(e) {
+                $("#location_id").html(e.location);
+            },
+        });
+    }
+    //updation templates dynamically
+    function refresh_templates() {
+        $.ajax({
+            url: "/api/listtemplate",
+            type: "POST",
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                    "content"
+                ),
+            },
+            success: function(e) {
+                $("#template_id").html(e.screen);
+            },
+        });
+    }
 
-      //updation departments dynamically
-      function refresh_departments() {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function () {
-          if (this.readyState == 4 && this.status == 200) {
-            document.getElementById("company_department").innerHTML =
-              this.responseText;
-          }
-        };
-        xhttp.open(
-          "POST",
-          "https://dash.recooty.com/ajax/refresh_departments",
-          true
-        );
-        xhttp.setRequestHeader(
-          "Content-type",
-          "application/x-www-form-urlencoded"
-        );
-        xhttp.setRequestHeader(
-          "X-CSRF-TOKEN",
-          document.head.querySelector("[name=csrf-token]").content
-        );
-        xhttp.send();
-      }
-    </script>
+    //updation departments dynamically
+    function refresh_departments() {
+        $.ajax({
+            url: "/api/listdepartment",
+            type: "POST",
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                    "content"
+                ),
+            },
+            success: function(e) {
+                $("#company_department").html(e.department);
+            },
+        });
+    }
+</script>
 @endpush
