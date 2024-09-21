@@ -21,14 +21,21 @@
                 </div>
             </div>
 
-            <div class="mt-4">
-                <x-label for="name" value="{{ __('Company Name') }}" />
-                <x-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
+            <div class="flex gap-2">
+                <div class="mt-4">
+                    <x-label for="name" value="{{ __('Company Name') }}" />
+                    <x-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
+                </div>
+
+                <div class="mt-4">
+                    <x-label for="name" value="{{ __('Company code') }}" />
+                    <x-input id="name" class="block mt-1 w-full" type="text" name="code" :value="old('code')" required autofocus autocomplete="code" />
+                </div>
             </div>
 
             <div class="mt-4">
                 <x-label for="website" value="{{ __('Website') }}" />
-                <x-input id="website" class="block mt-1 w-full" type="url" name="website" :value="old('website')" required autofocus autocomplete="name" />
+                <x-input id="website" class="block mt-1 w-full" type="url" placeholder="https://" name="website" :value="old('website')" required autofocus autocomplete="name" />
             </div>
 
             <div class="mt-4">

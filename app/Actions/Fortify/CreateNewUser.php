@@ -27,6 +27,7 @@ class CreateNewUser implements CreatesNewUsers
             'last_name' => ['required', 'string', 'max:255'],
             'website' => ['required', 'string', 'max:255'],
             'name' => ['required', 'string', 'max:255'],
+            'code' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => $this->passwordRules(),
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
@@ -47,6 +48,7 @@ class CreateNewUser implements CreatesNewUsers
             return tap(Company::create([
                 'id' => Str::uuid(),
                 'name' => $input['name'],
+                'code' => $input['code'],
                 'website' => $input['website'],
             ]), function (Company $company) use ($input) {
                 return $this->createUser($company, $input);
