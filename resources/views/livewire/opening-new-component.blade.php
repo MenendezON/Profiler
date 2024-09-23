@@ -43,10 +43,14 @@
             </li>
         </ol>
     </nav>
+    @if(Session::has('message'))
+    <p class="alert {{ Session::get('alert-class', 'alert-info') }}">{{ Session::get('message') }}</p>
+    @endif
+    
     <div class="col-md-10">
         <div class="wizard-container">
             <div class="card card-wizard" data-color="primary" id="wizardProfile">
-                <form method="get">
+                <form wire:submit.prevent="store">
                     <input type="hidden" name="_token" value="a2jrzsPry1jQAlrb0GurF44pdmN0ObkFts6Wsm2X" />
                     <div class="card-header text-center">
                         <div class="wizard-navigation">
@@ -139,6 +143,7 @@
                                         <div class="form-group select-wizard">
                                             <label>Experience Required</label>
                                             <select class="form-control" wire:model="experience" name="job_experience" data-size="7" title="Single Select" required>
+                                                <option value>--select--</option>    
                                                 <option value="0">Internship</option>
                                                 <option value="1" selected>Entry Level</option>
                                                 <option value="2">Associate</option>
@@ -151,7 +156,8 @@
                                     <div class="col-sm-3">
                                         <div class="form-group select-wizard">
                                             <label>Employment Type</label>
-                                            <select name="job_employment_type" wire:model="employment_type" class="form-control" data-size="7" title="Single Select" required>
+                                            <select name="job_employment_type" wire:model="type" class="form-control" data-size="7" title="Single Select" required>
+                                                <option value>--select--</option>    
                                                 <option selected value="Full Time">Full Time</option>
                                                 <option value="Part Time">Part Time</option>
                                                 <option value="Contract">Contract</option>
@@ -178,9 +184,9 @@
                                                     </label>
                                                 </div>
                                             </div>
-                                            <select class="form-control" wire:model="department_id" name="company_department"
+                                            <select class="form-control" wire:model="department_id" required title="--select--" name="company_department"
                                                 id="company_department" data-size="7" title="Single Select">
-                                                <option value>--default--</option>
+                                                <option disabled selected>Please add a department first</option>
                                             </select>
                                         </div>
                                     </div>
@@ -204,7 +210,7 @@
                                                 </div>
                                             </div>
                                             <select name="ft_id" class="form-control" wire:model="template_id" data-size="7" title="Single Select" required id="template_id">
-                                                <option value="0">Default</option>
+                                                <option disabled selected>Please add a department first</option>
                                             </select>
                                         </div>
                                     </div>
@@ -349,7 +355,7 @@
                         <div class="pull-right">
                             <input type="button" class="btn btn-next btn-fill btn-rose btn-success btn-wd" name="next"
                                 value="Next" id="btnNext" />
-                            <input type="submit" wire:click="store" class="btn btn-finish btn-fill btn-rose btn-success btn-wd"
+                            <input type="submit" class="btn btn-finish btn-fill btn-rose btn-success btn-wd"
                                 name="finish" value="Finish" />
                         </div>
                         <div class="pull-left">
@@ -400,9 +406,9 @@
         return wordCount;
     };
     jQuery(document).ready(function() {
-        $("#btnNext").prop("disabled", true);
+        $("#btnNext").prop("disabled", false); //turn this in true
 
-        CKEDITOR.replace("jobdesc");
+        CKEDITOR.replace("jobdesca");
         var jobdesc = CKEDITOR.instances.jobdesc;
         var jobdesccount = 30;
         jobdesc.on("change", function(e) {

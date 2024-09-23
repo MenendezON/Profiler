@@ -134,6 +134,20 @@
         padding-left: 10px;
         padding-right: 10px;
     }
+    .badge-published {
+        background-color: #4AADA6;
+        border-color: #4AADA6;
+    }
+
+    .badge-unpublished {
+        background-color: #89949E;
+        border-color: #89949E;
+    }
+
+    .badge-internal {
+        background-color: #F8C558;
+        border-color: #F8C558;
+    }
 </style>
 <style>
     .pipeline {
@@ -240,7 +254,7 @@
                 <a href="{{ route('openings', 'all') }}">Openings</a>
             </li>
             <li class="breadcrumb-item active" aria-current="page">
-                HR Assistant
+                {{$opening->title}}
             </li>
         </ol>
     </nav>
@@ -250,123 +264,63 @@
             <div class="card">
                 <div class="card-header card-header-primary text-right">
                     <div class="status">
-                        <span class="badge badge-pill badge-primary">Published</span>
+                        <span class="badge badge-pill 
+                         @if($opening->status==='published')
+                            {{'badge-published'}}
+                        @elseif($opening->status==='unpublished')
+                            {{'badge-unpublished'}}
+                        @else
+                            {{'badge-internal'}}
+                        @endif
+                        ">{{$opening->status}}</span>
                     </div>
                     <div>
                         <h3 class="card-title text-center">
-                            HR Assistant
-                            <span>(<i class="fas fa-hashtag"></i> ME102)</span>
+                            {{$opening->title}}
+                            <span>(<i class="fas fa-hashtag"></i> {{$opening->code}})</span>
                         </h3>
                     </div>
                 </div>
                 <div class="card-body">
                     <h6 class="card-subtitle mb-2 text-center">
                         <span class="job_desc"><i class="fas fa-map-marker-alt"></i>
-                            Dakar
+                            {{\App\Models\Location::findOrFail($opening->location_id)->city}}
                         </span>
                         <span class="job_desc"><i class="fas fa-user-graduate"></i> Entry Level</span>
-                        <span class="job_desc"><i class="fas fa-briefcase"></i> Full Time</span>
-                        <span class="job_desc"><i class="fas fa-building"></i> Human Resources</span>
-                        <span class="job_desc"><i class="fas fa-landmark"></i> Logistic</span>
+                        <span class="job_desc"><i class="fas fa-briefcase"></i> {{$opening->type}}</span>
+                        <span class="job_desc"><i class="fas fa-building"></i> {{\App\Models\Department::findOrFail($opening->department_id)->name}}</span>
+                        <span class="job_desc"><i class="fas fa-landmark"></i> {{$opening->industry}}</span>
                     </h6>
                     <hr />
                     <div class="card card-plain pt-3">
                         <article>
-                            <p>Job Responsibilities:</p>
-                            <ul>
-                                <li>
-                                    Assist with day to day operations of the HR functions
-                                    and duties
-                                </li>
-                                <li>
-                                    Provide clerical and administrative support to Human
-                                    Resources executives
-                                </li>
-                                <li>
-                                    Compile and update employee records (hard and soft
-                                    copies)
-                                </li>
-                                <li>
-                                    Process documentation and prepare reports relating to
-                                    personnel activities (staffing, recruitment, training,
-                                    grievances, performance evaluations etc)
-                                </li>
-                                <li>
-                                    Coordinate HR projects (meetings, training, surveys
-                                    etc) and take minutes
-                                </li>
-                                <li>
-                                    Deal with employee requests regarding human resources
-                                    issues, rules, and regulations
-                                </li>
-                                <li>
-                                    Assist in payroll preparation by providing relevant
-                                    data (absences, bonus, leaves, etc)
-                                </li>
-                                <li>Communicate with public services when necessary</li>
-                                <li>
-                                    Properly handle complaints and grievance procedures
-                                </li>
-                                <li>
-                                    Coordinate communication with candidates and schedule
-                                    interviews
-                                </li>
-                                <li>
-                                    Conduct initial orientation to newly hired employees
-                                </li>
-                                <li>
-                                    Assist our recruiters to source candidates and update
-                                    our database
-                                </li>
-                            </ul>
-                            <p>
-                                <br />
-                                Job Skills:
-                            </p>
-                            <ul>
-                                <li>
-                                    Proven experience as an HR assistant,&nbsp;staff
-                                    assistant&nbsp;or relevant human
-                                    resources/administrative position
-                                </li>
-                                <li>
-                                    Fast computer typing skills (MS Office, in particular)
-                                </li>
-                                <li>Hands-on experience with an HRIS or HRMS</li>
-                                <li>
-                                    Familiarity with ATS software and resume databases
-                                </li>
-                                <li>Basic knowledge of labor laws</li>
-                                <li>Excellent organizational skills</li>
-                                <li>Strong communications skills</li>
-                                <li>Degree in Human Resources or related field</li>
-                            </ul>
+                            {{html_entity_decode($opening->description)}}
                         </article>
                     </div>
                 </div>
                 <div class="card-footer text-muted">
                     <div class="row">
                         <div class="col">
-                            <a href="{{ route('opening.edit', '6b0ac5c5ab0f8939442c42704c5493b0') }}"><button type="button" class="btn btn-default m-1 big-button-mobile">Edit Opening</button></a>
-                            <a name id class="btn btn-danger m-1 big-button-mobile" href="https://dash.recooty.com/openings/details/6b0ac5c5ab0f8939442c42704c5493b0/unpublish" role="button">Unpublish</a>
-                            <a name id class="btn btn-warning m-1 big-button-mobile" href="https://dash.recooty.com/openings/details/6b0ac5c5ab0f8939442c42704c5493b0/internal" role="button">Move to Internal</a>
+                            <a href="{{ route('opening.edit', $opening->id) }}"><button type="button" class="btn btn-default m-1 big-button-mobile">Edit Opening</button></a>
+                            <a name id class="btn btn-danger m-1 big-button-mobile" href="https://dash.recooty.com/openings/details/6b0ac5c5ab0f8939442c42704c5493b0/unpublish" role="button">{{($opening->status === 'published')?'Unpublish':'republish'}}</a>
+                            <a name id class="btn btn-warning m-1 big-button-mobile" href="https://dash.recooty.com/openings/details/6b0ac5c5ab0f8939442c42704c5493b0/internal" role="button">{{($opening->status === 'internal')?'Unpublish':'Move to internal'}}</a>
                         </div>
                     </div>
                     <hr />
                     <div class="row">
                         <div class="col-6">
-                            <span class="job_desc"><i class="fas fa-calendar-alt"></i> 08 Aug 2024
+                            <span class="job_desc"><i class="fas fa-calendar-alt"></i> {{$opening->created_at->diffForHumans()}}
                             </span>
                         </div>
                         <div class="col-6 text-right">
-                            <span class="job_desc"><i class="fas fa-user"></i> Menendez NELSON</span>
+                            <span class="job_desc"><i class="fas fa-user"></i> {{\App\Models\User::findOrFail($opening->user_id)->first_name}} {{\App\Models\User::findOrFail($opening->user_id)->last_name}}</span>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="row pipeline">
                 <div class="col-6 col-sm-4 col-lg-2 pipeline-item" data-toggle="tooltip" data-placement="top" title="Applied">
-                    <a href="{{ route('applications', ['pipeline'=>['new'], 'state'=>'all', 'opening_id'=>'6b0ac5c5ab0f8939442c42704c5493b0']) }}" target="_blank">
+                    <a href="{{ route('applications', ['pipeline'=>['new'], 'state'=>'all', 'opening_id'=>$opening->id]) }}" target="_blank">
                         <div class="stage">
                             <span class="stat-bg"><i class="fa fa-user"></i>
                                 2
@@ -381,7 +335,7 @@
                     data-placement="top"
                     title="Shorlisted">
                     <a
-                        href="{{ route('applications', ['pipeline'=>['shortlisted'], 'state'=>'all', 'opening_id'=>'6b0ac5c5ab0f8939442c42704c5493b0']) }}"
+                        href="{{ route('applications', ['pipeline'=>['shortlisted'], 'state'=>'all', 'opening_id'=>$opening->id]) }}"
                         target="_blank">
                         <div class="stage">
                             <span class="stat-bg"><i class="fa fa-user"></i>
@@ -397,7 +351,7 @@
                     data-placement="top"
                     title="Interview">
                     <a
-                        href={{ route('applications', ['pipeline'=>['interview'], 'state'=>'all', 'opening_id'=>'6b0ac5c5ab0f8939442c42704c5493b0']) }}"
+                        href={{ route('applications', ['pipeline'=>['interview'], 'state'=>'all', 'opening_id'=>$opening->id]) }}"
                         target="_blank">
                         <div class="stage">
                             <span class="stat-bg"><i class="fa fa-user"></i>
@@ -413,7 +367,7 @@
                     data-placement="top"
                     title="Offered">
                     <a
-                        href="{{ route('applications', ['pipeline'=>['offered'], 'state'=>'all', 'opening_id'=>'6b0ac5c5ab0f8939442c42704c5493b0']) }}"
+                        href="{{ route('applications', ['pipeline'=>['offered'], 'state'=>'all', 'opening_id'=>$opening->id]) }}"
                         target="_blank">
                         <div class="stage">
                             <span class="stat-bg"><i class="fa fa-user"></i>
@@ -429,7 +383,7 @@
                     data-placement="top"
                     title="Hired">
                     <a
-                        href="{{ route('applications', ['pipeline'=>['hired'], 'state'=>'all', 'opening_id'=>'6b0ac5c5ab0f8939442c42704c5493b0']) }}"
+                        href="{{ route('applications', ['pipeline'=>['hired'], 'state'=>'all', 'opening_id'=>$opening->id]) }}"
                         target="_blank">
                         <div class="stage">
                             <span class="stat-bg"><i class="fa fa-user"></i>
@@ -445,7 +399,7 @@
                     data-placement="top"
                     title="Rejected">
                     <a
-                        href="{{ route('applications', ['pipeline'=>['rejected'], 'state'=>'all', 'opening_id'=>'6b0ac5c5ab0f8939442c42704c5493b0']) }}"
+                        href="{{ route('applications', ['pipeline'=>['rejected'], 'state'=>'all', 'opening_id'=>$opening->id]) }}"
                         target="_blank">
                         <div class="stage">
                             <span class="stat-bg"><i class="fa fa-user"></i>

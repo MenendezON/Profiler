@@ -140,44 +140,61 @@
             <li class="breadcrumb-item active" aria-current="page">Job Openings</li>
         </ol>
     </nav>
+    @if(Session::has('message'))
+    <p class="alert {{ Session::get('alert-class', 'alert-info') }}">{{ Session::get('message') }}</p>
+    @endif
     <ul class="nav nav-pills nav-pills-icons  justify-content-center" role="tablist">
         <li class="nav-item">
-            <a class="nav-link " href="{{ route('openings', 'published') }}" role="tablist">
-                <i class="now-ui-icons shopping_shop"></i> Published (2)
+            <a class="nav-link {{($activeLink==='published')?'active':''}}" href="{{ route('openings', 'published') }}" role="tablist">
+                <i class="now-ui-icons shopping_shop"></i> Published ({{$jobStatusCounts->firstWhere('status', 'published')->total_records ?? 0;}})
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link " href="{{ route('openings', 'internal') }}" role="tablist">
-                <i class="now-ui-icons shopping_shop"></i> Internal (0)
+            <a class="nav-link {{($activeLink==='internal')?'active':''}}" href="{{ route('openings', 'internal') }}" role="tablist">
+                <i class="now-ui-icons shopping_shop"></i> Internal ({{$jobStatusCounts->firstWhere('status', 'internal')->total_records ?? 0;}})
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link " href="{{ route('openings', 'unpublished') }}" role="tablist">
-                <i class="now-ui-icons ui-2_settings-90"></i> Unpublished (0)
+            <a class="nav-link {{($activeLink==='unpublished')?'active':''}}" href="{{ route('openings', 'unpublished') }}" role="tablist">
+                <i class="now-ui-icons ui-2_settings-90"></i> Unpublished ({{$jobStatusCounts->firstWhere('status', 'unpublished')->total_records ?? 0;}})
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" href="{{ route('openings', 'all') }}" role="tablist">
-                <i class="now-ui-icons objects_umbrella-13"></i> All (2)
+            <a class="nav-link {{($activeLink==='all')?'active':''}}" href="{{ route('openings', 'all') }}" role="tablist">
+                <i class="now-ui-icons objects_umbrella-13"></i> All ({{$jobStatusCounts->sum('total_records');}})
             </a>
         </li>
     </ul>
     <div class="row">
 
-        <a href="{{ route('opening.show', '6b0ac5c5ab0f8939442c42704c5493b0') }}">
+        @foreach ($openings as $opening)
+        <a href="{{ route('opening.show', $opening->id) }}">
             <div class="col-md-6 col-xl-4">
-                <div style="width:100%; right:0px; background-color:#4AADA6; height:7px; "></div>
+                <div style="width:100%; right:0px; height:7px;" class="
+                    @if($opening->status==='published')
+                        {{'badge-published'}}
+                    @elseif($opening->status==='unpublished')
+                        {{'badge-unpublished'}}
+                    @else
+                        {{'badge-internal'}}
+                    @endif
+                "></div>
                 <div class="card text-center">
                     <div class="card-body">
-
-                        <span class="badge badge-pill badge-jobcode
-                                                    badge-published
-                                                ">Job Code: ME102</span>
-                        <h4 class="card-title text-truncate">HR Assistant</h4>
+                        <span class="badge badge-pill badge-jobcode 
+                        @if($opening->status==='published')
+                            {{'badge-published'}}
+                        @elseif($opening->status==='unpublished')
+                            {{'badge-unpublished'}}
+                        @else
+                            {{'badge-internal'}}
+                        @endif
+                        ">Job Code: {{$opening->code}}</span>
+                        <h4 class="card-title text-truncate">{{$opening->title}}</h4>
                         <h6 class="card-subtitle mb-2 text-muted">
-                            Dakar
+                            {{\App\Models\Location::findOrFail($opening->location_id)->city}}, {{\App\Models\Location::findOrFail($opening->location_id)->country}}
                         </h6>
-                        <p class="card-text"><i class="fas fa-calendar-check"></i> 08 Aug 2024 </p>
+                        <p class="card-text"><i class="fas fa-calendar-check"></i> {{$opening->created_at->diffForHumans()}}</p>
                         <hr class="can-timeline">
                         <div class="row icon-stats flex-row flex-nowrap">
                             <div class="col blue" data-toggle="tooltip" data-placement="top"
@@ -234,78 +251,7 @@
                 </div>
             </div>
         </a>
-
-
-        <a href="{{route('opening.show', '2252b347a04841cf0c35467a47d2cc29')}}">
-            <div class="col-md-6 col-xl-4">
-                <div style="width:100%; right:0px; background-color:#4AADA6; height:7px; "></div>
-                <div class="card text-center">
-                    <div class="card-body">
-
-                        <span class="badge badge-pill badge-jobcode
-                                                    badge-published
-                                                ">Job Code: ME101</span>
-                        <h4 class="card-title text-truncate">IT Consultant</h4>
-                        <h6 class="card-subtitle mb-2 text-muted">
-                            Dakar
-                        </h6>
-                        <p class="card-text"><i class="fas fa-calendar-check"></i> 08 Aug 2024 </p>
-                        <hr class="can-timeline">
-                        <div class="row icon-stats flex-row flex-nowrap">
-                            <div class="col blue" data-toggle="tooltip" data-placement="top"
-                                title="Applied">
-                                <a href="https://dash.recooty.com/applications?pipeline[]=new&state=all&opening_id=2252b347a04841cf0c35467a47d2cc29"
-                                    target="_blank">
-                                    <span class="stat-bg"><i class="fa fa-user"></i>
-                                        0
-                                    </span>
-                                    <div class="stat-text">New</div>
-                                </a>
-                            </div>
-                            <div class="col blue" data-toggle="tooltip" data-placement="top"
-                                title="Shortlisted">
-                                <a href="https://dash.recooty.com/applications?pipeline[]=shortlisted&state=all&opening_id=2252b347a04841cf0c35467a47d2cc29"
-                                    target="_blank">
-                                    <span class="stat-bg"><i class="fa fa-user"></i>
-                                        0
-                                    </span>
-                                    <div class="stat-text">Shortlisted</div>
-                                </a>
-                            </div>
-                            <div class="col blue" data-toggle="tooltip" data-placement="top"
-                                title="Interview">
-                                <a href="https://dash.recooty.com/applications?pipeline[]=interview&state=all&opening_id=2252b347a04841cf0c35467a47d2cc29"
-                                    target="_blank">
-                                    <span class="stat-bg"><i class="fa fa-user"></i>
-                                        0
-                                    </span>
-                                    <div class="stat-text">Interview</div>
-                                </a>
-                            </div>
-                            <div class="col blue" data-toggle="tooltip" data-placement="top"
-                                title="Offered">
-                                <a href="https://dash.recooty.com/applications?pipeline[]=offered&state=all&opening_id=2252b347a04841cf0c35467a47d2cc29"
-                                    target="_blank">
-                                    <span class="stat-bg"><i class="fa fa-user"></i>
-                                        0
-                                    </span>
-                                    <div class="stat-text">Offered</div>
-                                </a>
-                            </div>
-                            <div class="col green" data-toggle="tooltip" data-placement="top" title="Hired">
-                                <a href="https://dash.recooty.com/applications?pipeline[]=hired&state=all&opening_id=2252b347a04841cf0c35467a47d2cc29"
-                                    target="_blank">
-                                    <span class="stat-bg"><i class="fa fa-user"></i>
-                                        0
-                                    </span>
-                                    <div class="stat-text">Hired</div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </a>
+        @endforeach
 
     </div>
 </div>

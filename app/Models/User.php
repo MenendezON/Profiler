@@ -21,7 +21,7 @@ class User extends Authenticatable
     use Notifiable;
     use TwoFactorAuthenticatable;
 
-    protected $keyType = 'string';
+    //protected $keyType = 'string';
 
     /**
      * The attributes that are mass assignable.
@@ -72,15 +72,15 @@ class User extends Authenticatable
         ];
     }
 
-    protected static function boot()
-    {
-        parent::boot();
-        static::creating(function ($model) {
-            if (empty($model->{$model->getKeyName()})) {
-                $model->{$model->getKeyName()} = (string) Str::uuid();
-            }
-        });
-    }
+    // protected static function boot()
+    // {
+    //     parent::boot();
+    //     static::creating(function ($model) {
+    //         if (empty($model->{$model->getKeyName()})) {
+    //             $model->{$model->getKeyName()} = (string) Str::uuid();
+    //         }
+    //     });
+    // }
 
     public function company():BelongsTo
     {
@@ -96,4 +96,5 @@ class User extends Authenticatable
     {
         return $this->hasMany(Screeningquestion::class);
     }
+
 }

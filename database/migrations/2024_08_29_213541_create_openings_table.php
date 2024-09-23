@@ -14,16 +14,16 @@ return new class extends Migration
         Schema::create('openings', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('code');
+            $table->string('code')->nullable(false);
             $table->text('description');
             $table->foreignId('location_id')->references('id')->on('locations');
             $table->boolean('remote');
-            $table->string('experience_required');
-            $table->string('employment_type');
+            $table->string('experience');
+            $table->string('type');
             $table->foreignId('department_id')->references('id')->on('departments');
             $table->foreignId('screeningquestion_id')->references('id')->on('screeningquestions');
             $table->string('industry');
-            $table->foreignUuid('user_id')->references('id')->on('users');
+            $table->foreignId('user_id')->references('id')->on('users');
             $table->string('status');
             $table->timestamps();
         });
