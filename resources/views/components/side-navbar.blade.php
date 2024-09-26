@@ -49,37 +49,37 @@
       </div>
     </div>
     <ul class="nav">
-      <li class="active">
+      <li class="{{ Request::segment(1) === 'dashboard' ? 'active' : '' }}">
         <a href="{{ route('dashboard') }}">
           <i class="nc-icon nc-palette"></i>
           <p>Dashboard</p>
         </a>
       </li>
-      <li class="  ">
+      <li class="{{ Request::segment(1) === 'openings' ? 'active' : '' }}">
         <a href="{{ route('openings', 'published') }}">
           <i class="nc-icon nc-briefcase-24"></i>
           <p>Job Openings</p>
         </a>
       </li>
-      <li class=" ">
+      <li class="{{ Request::segment(1) === 'applicantions' ? 'active' : '' }}">
         <a href="{{ route('applications',  ['pipeline' => ['new', 'shortlisted', 'interview', 'offered']]) }}">
           <i class="nc-icon nc-badge"></i>
           <p>Applications</p>
         </a>
       </li>
-      <li class=" ">
+      <li class="{{ Request::segment(1) === 'interviews' ? 'active' : '' }}">
         <a href="{{ route('interviews') }}">
           <i class="nc-icon nc-calendar-60"></i>
           <p>Interviews</p>
         </a>
       </li>
-      <li class=" ">
+      <li class="{{ Request::segment(1) === 'reports' ? 'active' : '' }}">
         <a href="{{ route('reports') }}">
           <i class="nc-icon nc-chart-pie-36"></i>
           <p>Reports</p>
         </a>
       </li>
-      <li class="active-pro">
+      <li class="{{ Request::segment(1) === 'settings' ? 'active' : '' }}">
         <a href="{{ route('settings') }}">
           <i class="nc-icon nc-settings"></i>
           <p>Settings</p>

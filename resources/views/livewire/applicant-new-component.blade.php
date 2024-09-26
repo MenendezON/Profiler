@@ -100,7 +100,7 @@
                 <a href="{{route('dashboard')}}">Dashboard</a>
               </li>
               <li class="breadcrumb-item">
-                <a href="{{route('applications', ['pipepline'=>['new', 'shortlisted', 'interview', 'offered']])}}">Applications</a>
+                <a href="{{route('applications', ['pipeline'=>['new', 'shortlisted', 'interview', 'offered']])}}">Applications</a>
               </li>
               <li class="breadcrumb-item active" aria-current="page">
                 Add Candidate

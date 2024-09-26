@@ -199,7 +199,7 @@
                         <div class="row icon-stats flex-row flex-nowrap">
                             <div class="col blue" data-toggle="tooltip" data-placement="top"
                                 title="Applied">
-                                <a href="{{ route('applications', ['pipeline'=>['new'], 'state'=>'all', 'opening_id'=>'6b0ac5c5ab0f8939442c42704c5493b0']) }}"
+                                <a href="{{ route('applications', ['pipeline'=>['new'], 'state'=>'all', 'opening_id'=>$opening->id]) }}"
                                     target="_blank">
                                     <span class="stat-bg"><i class="fa fa-user"></i>
                                         0
@@ -209,7 +209,7 @@
                             </div>
                             <div class="col blue" data-toggle="tooltip" data-placement="top"
                                 title="Shortlisted">
-                                <a href="{{ route('applications', ['pipeline'=>['shortlisted'], 'state'=>'all', 'opening_id'=>'6b0ac5c5ab0f8939442c42704c5493b0']) }}"
+                                <a href="{{ route('applications', ['pipeline'=>['shortlisted'], 'state'=>'all', 'opening_id'=>$opening->id]) }}"
                                     target="_blank">
                                     <span class="stat-bg"><i class="fa fa-user"></i>
                                         0
@@ -219,7 +219,7 @@
                             </div>
                             <div class="col blue" data-toggle="tooltip" data-placement="top"
                                 title="Interview">
-                                <a href="{{ route('applications', ['pipeline'=>['interview'], 'state'=>'all', 'opening_id'=>'6b0ac5c5ab0f8939442c42704c5493b0']) }}"
+                                <a href="{{ route('applications', ['pipeline'=>['interview'], 'state'=>'all', 'opening_id'=>$opening->id]) }}"
                                     target="_blank">
                                     <span class="stat-bg"><i class="fa fa-user"></i>
                                         0
@@ -229,7 +229,7 @@
                             </div>
                             <div class="col blue" data-toggle="tooltip" data-placement="top"
                                 title="Offered">
-                                <a href="{{ route('applications', ['pipeline'=>['offered'], 'state'=>'all', 'opening_id'=>'6b0ac5c5ab0f8939442c42704c5493b0']) }}"
+                                <a href="{{ route('applications', ['pipeline'=>['offered'], 'state'=>'all', 'opening_id'=>$opening->id]) }}"
                                     target="_blank">
                                     <span class="stat-bg"><i class="fa fa-user"></i>
                                         0
@@ -238,7 +238,7 @@
                                 </a>
                             </div>
                             <div class="col green" data-toggle="tooltip" data-placement="top" title="Hired">
-                                <a href="{{ route('applications', ['pipeline'=>['hired'], 'state'=>'all', 'opening_id'=>'6b0ac5c5ab0f8939442c42704c5493b0']) }}"
+                                <a href="{{ route('applications', ['pipeline'=>['hired'], 'state'=>'all', 'opening_id'=>$opening->id]) }}"
                                     target="_blank">
                                     <span class="stat-bg"><i class="fa fa-user"></i>
                                         0

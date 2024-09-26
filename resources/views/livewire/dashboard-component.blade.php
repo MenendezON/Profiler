@@ -120,7 +120,7 @@
                             padding-left: 10px;
                             padding-top: 10px;
                           ">Job Openings
-                    <span style="font-weight: 500; font-size: 18px">- 0</span></span>
+                    <span style="font-weight: 500; font-size: 18px">- {{$jobStatusCounts->sum('total_records');}}</span></span>
                 </span>
                 <a href="{{ route('opening.new') }}"><button
                     class="btn btn-sm btn-info pull-right d-none d-md-block">
@@ -137,7 +137,7 @@
               <div class="col stat-pointers" data-toggle="tooltip" data-placement="top" title="Published">
                 <a href="{{ route('openings', 'published') }}">
                   <span class="stat-bg"><i class="fas fa-briefcase"></i>
-                    0
+                  {{$jobStatusCounts->firstWhere('status', 'published')->total_records ?? 0;}}
                   </span>
                   <div class="stat-text">Published</div>
                 </a>
@@ -145,7 +145,7 @@
               <div class="col stat-pointers" data-toggle="tooltip" data-placement="top" title="Internal">
                 <a href="{{ route('openings', 'internal') }}">
                   <span class="stat-bg"><i class="fas fa-briefcase"></i>
-                    0
+                  {{$jobStatusCounts->firstWhere('status', 'internal')->total_records ?? 0;}}
                   </span>
                   <div class="stat-text">Internal</div>
                 </a>
@@ -153,7 +153,7 @@
               <div class="col stat-pointers" data-toggle="tooltip" data-placement="top" title="Unpublished">
                 <a href="{{ route('openings', 'unpublished') }}">
                   <span class="stat-bg"><i class="fas fa-briefcase"></i>
-                    0
+                  {{$jobStatusCounts->firstWhere('status', 'unpublished')->total_records ?? 0;}}
                   </span>
                   <div class="stat-text">Unpublished</div>
                 </a>
