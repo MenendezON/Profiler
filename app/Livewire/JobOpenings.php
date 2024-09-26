@@ -26,6 +26,7 @@ class JobOpenings extends Component
 
         $this->openings = ($categ === "all") ? Opening::orderBy('created_at', 'desc')->get() : Opening::where('status', $categ)->orderBy('created_at', 'desc')->get();
 
+        
     }
 
     #[Title('Job Openings')] 
