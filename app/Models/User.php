@@ -4,11 +4,14 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -18,15 +21,21 @@ class User extends Authenticatable
     use Notifiable;
     use TwoFactorAuthenticatable;
 
+    //protected $keyType = 'string';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'firt_name',
+        'last_name',
         'email',
         'password',
+        'designation',
+        'role',
+        'status',
     ];
 
     /**
@@ -62,4 +71,30 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    // protected static function boot()
+    // {
+    //     parent::boot();
+    //     static::creating(function ($model) {
+    //         if (empty($model->{$model->getKeyName()})) {
+    //             $model->{$model->getKeyName()} = (string) Str::uuid();
+    //         }
+    //     });
+    // }
+
+    public function company():BelongsTo
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    public function openings()
+    {
+        return $this->hasMany(Opening::class);
+    }
+
+    public function screeningquestions()
+    {
+        return $this->hasMany(Screeningquestion::class);
+    }
+
 }
