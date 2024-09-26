@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Opening extends Model
 {
@@ -33,4 +34,10 @@ class Opening extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function applicants(): BelongsToMany
+    {
+        return $this->belongsToMany(Applicants::class, 'openingapplicants')->withPivot('stage', 'rating', 'source')->withTimestamps();
+    }
+
 }
