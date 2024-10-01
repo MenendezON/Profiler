@@ -202,7 +202,7 @@
                                 <a href="{{ route('applications', ['pipeline'=>['new'], 'state'=>'all', 'opening_id'=>$opening->id]) }}"
                                     target="_blank">
                                     <span class="stat-bg"><i class="fa fa-user"></i>
-                                        0
+                                        {{$applicantStatusCounts->Where('opening_id', $opening->id)->firstWhere('stage', 'new')->total_records ?? 0}}
                                     </span>
                                     <div class="stat-text">New</div>
                                 </a>
@@ -212,7 +212,7 @@
                                 <a href="{{ route('applications', ['pipeline'=>['shortlisted'], 'state'=>'all', 'opening_id'=>$opening->id]) }}"
                                     target="_blank">
                                     <span class="stat-bg"><i class="fa fa-user"></i>
-                                        0
+                                        {{$applicantStatusCounts->Where('opening_id', $opening->id)->firstWhere('stage', 'shortlisted')->total_records ?? 0}}
                                     </span>
                                     <div class="stat-text">Shortlisted</div>
                                 </a>
@@ -222,7 +222,7 @@
                                 <a href="{{ route('applications', ['pipeline'=>['interview'], 'state'=>'all', 'opening_id'=>$opening->id]) }}"
                                     target="_blank">
                                     <span class="stat-bg"><i class="fa fa-user"></i>
-                                        0
+                                        {{$applicantStatusCounts->Where('opening_id', $opening->id)->firstWhere('stage', 'interview')->total_records ?? 0}}
                                     </span>
                                     <div class="stat-text">Interview</div>
                                 </a>
@@ -232,7 +232,7 @@
                                 <a href="{{ route('applications', ['pipeline'=>['offered'], 'state'=>'all', 'opening_id'=>$opening->id]) }}"
                                     target="_blank">
                                     <span class="stat-bg"><i class="fa fa-user"></i>
-                                        0
+                                        {{$applicantStatusCounts->Where('opening_id', $opening->id)->firstWhere('stage', 'offered')->total_records ?? 0}}
                                     </span>
                                     <div class="stat-text">Offered</div>
                                 </a>
@@ -241,7 +241,7 @@
                                 <a href="{{ route('applications', ['pipeline'=>['hired'], 'state'=>'all', 'opening_id'=>$opening->id]) }}"
                                     target="_blank">
                                     <span class="stat-bg"><i class="fa fa-user"></i>
-                                        0
+                                        {{$applicantStatusCounts->Where('opening_id', $opening->id)->firstWhere('stage', 'hired')->total_records ?? 0}}
                                     </span>
                                     <div class="stat-text">Hired</div>
                                 </a>
