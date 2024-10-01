@@ -39,7 +39,7 @@ class DashboardComponent extends Component
         )
         ->get();
 
-        dd($this->applicationStatusCounts);
+        //dd($this->applicationStatusCounts);
     }
 
     public function render()
