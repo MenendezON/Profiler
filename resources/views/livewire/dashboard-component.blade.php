@@ -172,7 +172,7 @@
                           padding-top: 10px;
                           padding-left: 10px;
                         ">Total Applications
-                  <span style="font-weight: 500; font-size: 18px">- 0</span></span>
+                  <span style="font-weight: 500; font-size: 18px">- {{$applicationStatusCounts->sum('total_records');}}</span></span>
                 <a href="{{ route('applicant.new' )}}">
                   <button class="btn btn-sm btn-info d-none d-md-block pull-right">
                     Add Applicant
@@ -187,56 +187,58 @@
           <div class="card-footer text-center">
             <hr class="dashed-line" />
             <div class="row">
-              <div class="col-6 col-md-4 col-lg-2 mb-3 mb-md-0 stat-pointers" data-toggle="tooltip"
-                data-placement="top" title="Applied">
+              <div class="col-6 col-md-4 col-lg-2 mb-3 mb-md-0 stat-pointers" data-toggle="tooltip" data-placement="top" title="Applied">
                 <a href="{{ route('applications', ['pipeline'=>['new'], 'state'=>'all']) }}">
                   <span class="stat-bg"><i class="fa fa-user"></i>
-                    0
+                  {{$applicationStatusCounts->firstWhere('stage', 'new')->total_records ?? 0;}}
                   </span>
                   <div class="stat-text">New</div>
                 </a>
               </div>
-              <div class="col-6 col-md-4 col-lg-2 mb-4 mb-md-0 3 stat-pointers" data-toggle="tooltip"
-                data-placement="top" title="Shortlisted">
+              <div class="col-6 col-md-4 col-lg-2 mb-4 mb-md-0 3 stat-pointers" data-toggle="tooltip" data-placement="top" title="Shortlisted">
                 <a href="{{ route('applications', ['pipeline'=>['shortlisted'], 'state'=>'all']) }}">
                   <span class="stat-bg"><i class="fa fa-user"></i>
-                    0
+                  {{$applicationStatusCounts->firstWhere('stage', 'shortlisted')->total_records ?? 0;}}
                   </span>
                   <div class="stat-text">Shortlisted</div>
                 </a>
               </div>
-              <div class="col-6 col-md-4 col-lg-2 mb-4 mb-md-0 stat-pointers" data-toggle="tooltip"
-                data-placement="top" title="Interview">
+              <div class="col-6 col-md-4 col-lg-2 mb-4 mb-md-0 stat-pointers" data-toggle="tooltip" data-placement="top" title="Interview">
                 <a href="{{ route('applications', ['pipeline'=>['interview'], 'state'=>'all']) }}">
                   <span class="stat-bg"><i class="fa fa-user"></i>
-                    0
+                  {{$applicationStatusCounts->firstWhere('stage', 'interview')->total_records ?? 0;}}
                   </span>
                   <div class="stat-text">Interview</div>
                 </a>
               </div>
-              <div class="col-6 col-md-4 col-lg-2 mb-4 mb-md-0 stat-pointers" data-toggle="tooltip"
-                data-placement="top" title="Offered">
+              <div class="col-6 col-md-4 col-lg-2 mb-4 mb-md-0 stat-pointers" data-toggle="tooltip" data-placement="top" title="Offered">
                 <a href="{{ route('applications', ['pipeline'=>['offered'], 'state'=>'all']) }}">
                   <span class="stat-bg"><i class="fa fa-user"></i>
-                    0
+                  {{$applicationStatusCounts->firstWhere('stage', 'offered')->total_records ?? 0;}}
                   </span>
                   <div class="stat-text">Offered</div>
                 </a>
               </div>
-              <div class="col-6 col-md-4 col-lg-2 mb-4 mb-md-0 stat-pointers" data-toggle="tooltip"
-                data-placement="top" title="Hired">
+              <div class="col-6 col-md-4 col-lg-2 mb-4 mb-md-0 stat-pointers" data-toggle="tooltip" data-placement="top" title="Hired">
                 <a href="{{ route('applications', ['pipeline'=>['hired'], 'state'=>'all']) }}">
                   <span class="stat-bg"><i class="fa fa-user"></i>
-                    0
+                  {{$applicationStatusCounts->firstWhere('stage', 'hired')->total_records ?? 0;}}
                   </span>
                   <div class="stat-text">Hired</div>
                 </a>
               </div>
-              <div class="col-6 col-md-4 col-lg-2 mb-4 mb-md-0 stat-pointers" data-toggle="tooltip"
-                data-placement="top" title="Talent Pool">
+              <div class="col-6 col-md-4 col-lg-2 mb-4 mb-md-0 stat-pointers" data-toggle="tooltip" data-placement="top" title="Rejected">
+                <a href="{{ route('applications', ['pipeline'=>['rejected'], 'state'=>'all']) }}">
+                  <span class="stat-bg"><i class="fa fa-user"></i>
+                  {{$applicationStatusCounts->firstWhere('stage', 'rejected')->total_records ?? 0;}}
+                  </span>
+                  <div class="stat-text">Rejected</div>
+                </a>
+              </div>
+              <div class="col-6 col-md-4 col-lg-2 mb-4 mb-md-0 stat-pointers" data-toggle="tooltip" data-placement="top" title="Talent Pool">
                 <a href="{{ route('applications', ['pipeline'=>['talentpool'],]) }}">
                   <span class="stat-bg"><i class="fa fa-user"></i>
-                    0
+                  {{$applicationStatusCounts->firstWhere('stage', 'talentpool')->total_records ?? 0;}}
                   </span>
                   <div class="stat-text">Talent Pool</div>
                 </a>
