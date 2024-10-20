@@ -61,7 +61,7 @@
           <p>Job Openings</p>
         </a>
       </li>
-      <li class="{{ Request::segment(1) === 'applicantions' ? 'active' : '' }}">
+      <li class="{{ Request::segment(1) === 'applications' ? 'active' : '' }}">
         <a href="{{ route('applications',  ['pipeline' => ['new', 'shortlisted', 'interview', 'offered']]) }}">
           <i class="nc-icon nc-badge"></i>
           <p>Applications</p>

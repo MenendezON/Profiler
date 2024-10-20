@@ -185,12 +185,12 @@
                     <div id="accordion" role="tablist" aria-multiselectable="true" class="card-collapse">
                       <div class="card card-plain">
                         <div class="card-header" role="tab" id="headingThree">
-                          <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                          <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="{{$opening_id?"true":"false"}}" aria-controls="collapseThree">
                             Filter By Openings
                             <i class="nc-icon nc-icon nc-minimal-down"></i>
                           </a>
                         </div>
-                        <div id="collapseThree" class="collapse" role="tabpanel" aria-labelledby="headingThree">
+                        <div id="collapseThree" class="collapse {{$opening_id?"show":""}}" role="tabpanel" aria-labelledby="headingThree">
                           <div class="card-body">
                             <div class="form-group">
                               <label for="opening">Opening Status</label>
@@ -213,7 +213,7 @@
                                 <select class="form-control" name="opening_id" required id="openings">
                                   <option value="all">All</option>
                                   @foreach (\App\Models\Opening::all() as $opening)
-                                  <option value="{{$opening->id}}">{{$opening->title}} ({{$opening->code}})</option>
+                                  <option value="{{$opening->id}}" {{$opening->id == $opening_id?"selected":""}}>{{$opening->title}} ({{$opening->code}})</option>
                                   @endforeach
                                 </select>
                               </div>

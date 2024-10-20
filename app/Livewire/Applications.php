@@ -13,7 +13,7 @@ class Applications extends Component
 {
     public $pipelines = [];
     public $jbs = [];
-    public $sources = ['career page','dashboard'];
+    public $sources = ['career page', 'dashboard'];
     public $search_name;
     public $state;
     public $opening_id;
@@ -32,46 +32,50 @@ class Applications extends Component
         $this->rating = $request->query('rating');
         $this->experience = $request->query('experience');
         $this->tags = $request->query('tags');
-        
+
         $jb = $request->query('jb', []);
-       
-        foreach($pipeline as $item){
+
+        foreach ($pipeline as $item) {
             $this->pipelines[] = $item;
         }
 
-        foreach($jb as $item){
+        foreach ($jb as $item) {
             $this->jbs[] = $item;
         }
 
-//dd($this->opening_id);
-$this->listOfApplicants = DB::table('OpeningApplicants as oa')
-->join('Applicants as a', 'oa.applicant_id', '=', 'a.id')
-->join('Openings as o', 'oa.opening_id', '=', 'o.id')
-->select(
-    'a.id as idap', 
-    'o.id as idop', 
-    'a.first_name', 
-    'a.last_name', 
-    'oa.stage', 
-    'oa.rating', 
-    'oa.source', 
-    'oa.created_at', 
-    'o.title', 
-    'o.code', 
-    'o.status'
-)
-->where('o.id', $this->opening_id)
-->whereIn('oa.stage', $this->pipelines)
-->where(function ($query) {
-    $query->orWhere('a.first_name', 'like', '%' . $this->search_name . '%')
-          ->orWhere('a.last_name', 'like', '%' . $this->search_name . '%')
-          ->orWhere('o.title', 'like', '%' . $this->search_name . '%');
-})
-->limit($this->showNum)
-->get();
+        //dd($this->opening_id);
+        $this->listOfApplicants = DB::table('OpeningApplicants as oa')
+            ->join('Applicants as a', 'oa.applicant_id', '=', 'a.id')
+            ->join('Openings as o', 'oa.opening_id', '=', 'o.id')
+            ->select(
+                'a.id as idap',
+                'o.id as idop',
+                'a.first_name',
+                'a.last_name',
+                'oa.stage',
+                'oa.rating',
+                'oa.source',
+                'oa.created_at',
+                'o.title',
+                'o.code',
+                'o.status'
+            )
+            ->where(function ($query) {
+                if ($this->opening_id !== null && $this->opening_id !== 'all') {
+                    $query->where('o.id', $this->opening_id);
+                }
+            })
+            ->whereIn('oa.stage', $this->pipelines)
+            ->where(function ($query) {
+                $query->orWhere('a.first_name', 'like', '%' . $this->search_name . '%')
+                    ->orWhere('a.last_name', 'like', '%' . $this->search_name . '%')
+                    ->orWhere('o.title', 'like', '%' . $this->search_name . '%');
+            })
+            ->limit($this->showNum)
+            ->get();
 
 
-      
+
         //dd($this->listOfApplicants);
         //dd(explode(",",$this->tags));
     }
