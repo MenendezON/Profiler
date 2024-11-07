@@ -178,8 +178,8 @@
         </div>
         <div class="card-footer text-center">
           <hr class="dashed-line" />
-          <div class="row">
-            <div class="col-6 col-md-4 col-lg-2 mb-3 mb-md-0 stat-pointers" data-toggle="tooltip" data-placement="top" title="Applied">
+          <div class="flex-row">
+            <div class="col-6 col-md-4 col-lg-1 mb-3 mb-md-0 stat-pointers" data-toggle="tooltip" data-placement="top" title="Applied">
               <a href="{{ route('applications', ['pipeline'=>['new'], 'state'=>'all']) }}">
                 <span class="stat-bg"><i class="fa fa-user"></i>
                   {{$applicationStatusCounts->firstWhere('stage', 'new')->total_records ?? 0;}}
@@ -211,7 +211,7 @@
                 <div class="stat-text">Offered</div>
               </a>
             </div>
-            <div class="col-6 col-md-4 col-lg-2 mb-4 mb-md-0 stat-pointers" data-toggle="tooltip" data-placement="top" title="Hired">
+            <div class="col-6 col-md-4 col-lg-1 mb-4 mb-md-0 stat-pointers" data-toggle="tooltip" data-placement="top" title="Hired">
               <a href="{{ route('applications', ['pipeline'=>['hired'], 'state'=>'all']) }}">
                 <span class="stat-bg"><i class="fa fa-user"></i>
                   {{$applicationStatusCounts->firstWhere('stage', 'hired')->total_records ?? 0;}}

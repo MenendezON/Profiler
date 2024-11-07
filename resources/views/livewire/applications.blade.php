@@ -1,4 +1,10 @@
 @push('styles')
+<script>
+  console.group = function(){};
+  console.groupEnd = function(){};
+  console.log = function(){};
+  </script>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
 <style type="text/css">
   .nav-pills {
     margin-top: 0px;
@@ -72,8 +78,7 @@
   }
 </style>
 <link href="{{ URL::asset('assets/css/application.css?ver=1.5')}}" rel="stylesheet" />
-<link rel="stylesheet" type="text/css"
-  href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.18/b-1.5.6/b-html5-1.5.6/r-2.2.2/rg-1.1.0/sc-2.0.0/datatables.min.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.18/b-1.5.6/b-html5-1.5.6/r-2.2.2/rg-1.1.0/sc-2.0.0/datatables.min.css" />
 <style>
   .offer-btn {
     background-color: aliceblue;
@@ -342,8 +347,7 @@
             </li>
             <li class="nav-item mt-1">
               <a class="nav-link {{(in_array('talentpool', $pipelines))?'active':''}}" href="{{ route('applications', ['pipeline' => ['talentpool']]) }}" role="tablist">
-                <i class="now-ui-icons ui-2_settings-90"></i> Talent
-                Pool
+                <i class="now-ui-icons ui-2_settings-90"></i> Talent Pool
               </a>
             </li>
           </ul>
@@ -391,7 +395,7 @@
                 <tbody id="applicationsTableData">
                   @if($listOfApplicants && $listOfApplicants->isNotEmpty())
                   @foreach($listOfApplicants as $applicant)
-                 
+                  
                   <tr id="applicant_details_a03b6150d443b2884a49831d5d47978c">
                     <td class="text-center">
                       <input type="checkbox" class="applicant_checkbox" value="{{$applicant->idap}}"
@@ -399,7 +403,7 @@
                     </td>
                     <td style="width: 30%">
                       <span style="display: inline-flex">
-                        <a href="#!" onclick="sibc(this)" id="applicant_detail_a03b6150d443b2884a49831d5d47978c">
+                        <a href="#!" onclick="sibc(this)" id="applicant_detail_{{$applicant->idap}}">
                           <span class="applicant_name" id="applicant_name_a03b6150d443b2884a49831d5d47978c">
                             {{$applicant->first_name}} {{$applicant->last_name}}
                           </span>
@@ -526,7 +530,7 @@
     list_applications: "https://dash.recooty.com/ajax/list_applications/1",
     application_action: "https://dash.recooty.com/ajax/application_action/1",
     delete_application: "https://dash.recooty.com/ajax/delete_application/1",
-    view_application: "https://dash.recooty.com/ajax/view_application",
+    view_application: "/api/viewapplicant",
     update_application: "https://dash.recooty.com/ajax/update_application",
     schedule_interview: "https://dash.recooty.com/ajax/schedule_interview",
     reschedule_interview: "https://dash.recooty.com/ajax/reschedule_interview",

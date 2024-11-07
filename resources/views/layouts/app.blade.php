@@ -3,11 +3,9 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <link rel="apple-touch-icon" sizes="76x76" href="{{ URL::asset('assets/img/apple-icon.png')}}" />
     <link rel="icon" type="image/png" href="{{ URL::asset('assets/img/favicon.png')}}" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <title>{{ $title ?? config('app.name', 'Laravel') }}</title>
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no" name="viewport" />
 
@@ -19,7 +17,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ URL::asset('assets/css/pace.min.css')}}" />
     <link href="{{ URL::asset('assets/css/demo.css')}}" rel="stylesheet" />
-    
+
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     @stack('styles')
     @livewireStyles
 </head>
@@ -38,7 +38,39 @@
 
             {{ $slot }}
 
-            <div id="applicant_modal"></div>
+            <div id="applicant_modal">youpii</div>
+            <!-- Modal for bulk rejection-->
+            <div class="modal fade" id="bulkRejectCandidate">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+
+                            <h4 class="modal-title">Reject Candidates</h4>
+                        </div>
+                        <div class="container"></div>
+                        <div class="modal-body modal-edit-profile">
+                            <div class="form-group">
+                                <label for="rejection_reason">Rejection Reason <small><span> Visible to your team only. (Optional) </span></small></label>
+                                <textarea class="form-control" id="bulk_application_rejection_reason"></textarea>
+                            </div>
+
+                            <div class="form-check mt-3">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="checkbox" value="yes" id="bulk_application_rejection_notify" checked> Notify candidates via email.
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <a href="#" data-dismiss="modal" class="btn">Close</a>
+                            <a href="#" class="btn btn-danger" id="bulk_reject_btn">Bulk Reject Candidates</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- end of the main content -->
 
             <!-- start to the foooter -->
@@ -92,7 +124,7 @@
 
     @stack('scripts')
     @livewireScripts
-    
+
 </body>
 
 </html>
