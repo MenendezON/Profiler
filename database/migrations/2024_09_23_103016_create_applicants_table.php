@@ -21,6 +21,9 @@ return new class extends Migration
             $table->string('phone');
             $table->string('resume');
             $table->string('cover_letter');
+            $table->text('skills');
+            $table->text('notes')->nullable();
+            $table->boolean('talent_pool')->default(false);
             $table->timestamps();
         });
     }

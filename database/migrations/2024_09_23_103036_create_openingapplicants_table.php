@@ -17,12 +17,11 @@ return new class extends Migration
         Schema::create('openingapplicants', function (Blueprint $table) {
             $table->foreignIdFor(Opening::class);
             $table->foreignIdFor(Applicant::class);
-            //$table->foreignId('opening_id')->references('id')->on('openings');
-            //$table->foreignId('applicant_id')->references('id')->on('applicants');
-            $table->string('stage');
+            $table->enum('state', ['new', 'shortlisted', 'interviewed', 'offered', 'hired', 'rejected']);
             $table->integer('rating')->default(0);
             $table->string('source')->default('Career page');
             $table->primary(['opening_id', 'applicant_id']);
+            $table->text('notes')->nullable();
             $table->timestamps();
         });
     }
@@ -32,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('applicants');
+        Schema::dropIfExists('openingapplicants');
     }
 };
