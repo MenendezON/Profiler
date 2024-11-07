@@ -24,8 +24,8 @@ class DashboardComponent extends Component
         $this->applicationStatusCounts = DB::table('OpeningApplicants as oa')
         ->join('Applicants as a', 'oa.applicant_id', '=', 'a.id')
         ->join('Openings as o', 'oa.opening_id', '=', 'o.id')
-        ->select('oa.stage', DB::raw('COUNT(*) as total_records'))
-        ->groupBy('oa.stage')
+        ->select('oa.state', DB::raw('COUNT(*) as total_records'))
+        ->groupBy('oa.state')
         ->get();
 
         //dd($this->applicationStatusCounts);
