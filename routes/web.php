@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApplicantController;
 use App\Http\Controllers\ScreeningController;
 use App\Livewire\ApplicantNewComponent;
 use App\Livewire\Applications;
@@ -45,6 +46,8 @@ Route::middleware([
     Route::POST('/api/listlocation', [ScreeningController::class, 'listlocation']);
     Route::POST('/api/listdepartment', [ScreeningController::class, 'listdepartment']);
     Route::POST('/api/listtemplate', [ScreeningController::class, 'listtemplate']);
+
+    Route::GET('/api/viewapplicant', [ApplicantController::class, 'view']);
 
     Route::get('/dashboard', DashboardComponent::class)->name('dashboard');
 
