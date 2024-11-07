@@ -36,8 +36,6 @@ class ApplicantController extends Controller
                                 document.querySelector("#buttons_a").insertAdjacentHTML("beforeend", sdbvjasdbvsdkjvbsasjkndkasdnadsjndkansdaknsjd);
                             }
                         </script>
-
-                    
                         </div>
             <div class="modal-header">
                 <div class="row">
