@@ -38,7 +38,7 @@
 
             {{ $slot }}
 
-            <div id="applicant_modal">youpii</div>
+            <div id="applicant_modal"></div>
             <!-- Modal for bulk rejection-->
             <div class="modal fade" id="bulkRejectCandidate">
                 <div class="modal-dialog">

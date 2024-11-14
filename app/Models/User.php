@@ -72,15 +72,17 @@ class User extends Authenticatable
         ];
     }
 
-    // protected static function boot()
-    // {
-    //     parent::boot();
-    //     static::creating(function ($model) {
-    //         if (empty($model->{$model->getKeyName()})) {
-    //             $model->{$model->getKeyName()} = (string) Str::uuid();
-    //         }
-    //     });
-    // }
+    public $incrementing = false; // UUIDs are not auto-incrementing
+    protected $keyType = 'string'; // UUIDs are strings
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            if (empty($model->{$model->getKeyName()})) {
+                $model->{$model->getKeyName()} = str_replace('-', '', (string) Str::uuid());
+            }
+        });
+    }
 
     public function company():BelongsTo
     {

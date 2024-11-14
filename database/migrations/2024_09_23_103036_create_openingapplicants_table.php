@@ -15,12 +15,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('openingapplicants', function (Blueprint $table) {
-            $table->foreignIdFor(Opening::class);
-            $table->foreignIdFor(Applicant::class);
-            $table->enum('state', ['new', 'shortlisted', 'interviewed', 'offered', 'hired', 'rejected']);
+            $table->foreignUuid('opening_id')->nullable()->references('id')->on('openings');
+            $table->foreignUuid('applicant_id')->references('id')->on('applicants');
+            $table->enum('stage', ['new', 'shortlisted', 'interviewed', 'offered', 'hired', 'rejected', 'talentpool']);
             $table->integer('rating')->default(0);
-            $table->string('source')->default('Career page');
-            $table->primary(['opening_id', 'applicant_id']);
             $table->text('notes')->nullable();
             $table->timestamps();
         });

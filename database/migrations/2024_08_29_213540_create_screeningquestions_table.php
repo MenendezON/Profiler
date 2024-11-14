@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('screeningquestions', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('data');
             $table->foreignUuid('company_id')->references('id')->on('companies');
             $table->timestamps();

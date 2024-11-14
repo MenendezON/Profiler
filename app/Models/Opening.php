@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Str;
 
 class Opening extends Model
 {
@@ -25,6 +26,19 @@ class Opening extends Model
         'user_id'
     ];
 
+    protected $keyType = 'string';
+    public $incrementing = false;
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            if (empty($model->{$model->getKeyName()})) {
+                $model->{$model->getKeyName()} = str_replace('-', '', (string) Str::uuid());
+            }
+        });
+    }
+
     public function location()
     {
         return $this->belongsTo(Location::class);
@@ -37,7 +51,7 @@ class Opening extends Model
 
     public function applicants(): BelongsToMany
     {
-        return $this->belongsToMany(Applicants::class, 'openingapplicants')->withPivot('stage', 'rating', 'source')->withTimestamps();
+        return $this->belongsToMany(Applicant::class, 'openingapplicants')->withPivot('stage', 'rating', 'source')->withTimestamps();
     }
 
 }

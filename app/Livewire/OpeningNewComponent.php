@@ -61,9 +61,7 @@ class OpeningNewComponent extends Component
         session()->flash('message', 'Opening successfully created.');
  
         //return $this->redirect('/openings/published');
-        return redirect()->route('opening.show', $opening->id);
-
-        
+        return redirect()->route('opening.show', $opening->id);        
     }
 
 

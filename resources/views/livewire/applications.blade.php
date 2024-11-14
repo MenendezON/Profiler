@@ -1,10 +1,10 @@
 @push('styles')
 <script>
-  console.group = function(){};
-  console.groupEnd = function(){};
-  console.log = function(){};
-  </script>
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
+  console.group = function() {};
+  console.groupEnd = function() {};
+  console.log = function() {};
+</script>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
 <style type="text/css">
   .nav-pills {
     margin-top: 0px;
@@ -378,10 +378,18 @@
           <div class="card-body">
             <div class="table-responsive">
               <table class="table table-striped table-bordered" cellspacing="0" width="100%">
+                @if($listOfApplicants && $listOfApplicants->isNotEmpty())
                 <thead>
                   <tr>
                     <th class="text-center">
-                      <input type="checkbox" class id="selectAll" />
+                      @foreach($listOfApplicants as $applicant)
+                        @if($applicant->stage != "talentpool")
+                            <input type="checkbox" class id="selectAll" />
+                          @else
+                            <input type="hidden" class id="selectAll" />
+                            @break
+                        @endif
+                      @endforeach
                     </th>
                     <th style="padding-left: 20px">Name</th>
                     <th class="text-center">Stage</th>
@@ -393,13 +401,13 @@
                   </tr>
                 </thead>
                 <tbody id="applicationsTableData">
-                  @if($listOfApplicants && $listOfApplicants->isNotEmpty())
                   @foreach($listOfApplicants as $applicant)
-                  
-                  <tr id="applicant_details_a03b6150d443b2884a49831d5d47978c">
+
+                  <tr id="applicant_details_{{$applicant->idap}}">
                     <td class="text-center">
-                      <input type="checkbox" class="applicant_checkbox" value="{{$applicant->idap}}"
-                        name="bulk_ids[]" />
+                      @if($applicant->stage != "talentpool")
+                      <input type="checkbox" class="applicant_checkbox" value="{{$applicant->idap}}" name="bulk_ids[]" />
+                      @endif
                     </td>
                     <td style="width: 30%">
                       <span style="display: inline-flex">
@@ -438,7 +446,7 @@
                             {{'text-warning'}}
                         @endif
                       "></i></small>
-                      <strong>{{$applicant->title}}</strong><br />
+                      <strong>{{($applicant->title)?$applicant->title:"Talent Pool"}}</strong><br />
                       <small class="pl-3">{{$applicant->code}}</small>
                     </td>
                     <td class="text-center" style="white-space: nowrap">

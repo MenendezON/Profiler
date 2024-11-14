@@ -40,7 +40,6 @@ class Company extends Authenticatable
         parent::boot();
         static::creating(function ($model) {
             if (empty($model->{$model->getKeyName()})) {
-                //$model->{$model->getKeyName()} = (string) Str::uuid();
                 $model->{$model->getKeyName()} = str_replace('-', '', (string) Str::uuid());
             }
         });
@@ -49,6 +48,11 @@ class Company extends Authenticatable
     public function users():HasMany
     {
         return $this->hasMany(User::class);
+    }
+
+    public function screeningquestions():HasMany
+    {
+        return $this->hasMany(Screeningquestion::class);
     }
 
     public function locations()

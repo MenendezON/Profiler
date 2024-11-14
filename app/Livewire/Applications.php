@@ -43,10 +43,9 @@ class Applications extends Component
             $this->jbs[] = $item;
         }
 
-        //dd($this->opening_id);
-        $this->listOfApplicants = DB::table('OpeningApplicants as oa')
-            ->join('Applicants as a', 'oa.applicant_id', '=', 'a.id')
-            ->join('Openings as o', 'oa.opening_id', '=', 'o.id')
+        $this->listOfApplicants = DB::table('Applicants as a')
+            ->leftJoin('OpeningApplicants as oa', 'a.id', '=', 'oa.applicant_id') // Left join to include applicants without an opening
+            ->leftJoin('Openings as o', 'oa.opening_id', '=', 'o.id') // Left join to include null openings if oa.opening_id is null
             ->select(
                 'a.id as idap',
                 'o.id as idop',
@@ -54,9 +53,9 @@ class Applications extends Component
                 'a.last_name',
                 'oa.stage',
                 'oa.rating',
-                'oa.source',
                 'oa.created_at',
                 'o.title',
+                'a.source',
                 'o.code',
                 'o.status'
             )
@@ -73,11 +72,6 @@ class Applications extends Component
             })
             ->limit($this->showNum)
             ->get();
-
-
-
-        //dd($this->listOfApplicants);
-        //dd(explode(",",$this->tags));
     }
 
     #[Title('Applications')]

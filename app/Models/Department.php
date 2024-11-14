@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Department extends Model
 {
@@ -12,6 +13,19 @@ class Department extends Model
     protected $fillable = [
         'name',
     ];
+
+    protected $keyType = 'string';
+    public $incrementing = false;
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            if (empty($model->{$model->getKeyName()})) {
+                $model->{$model->getKeyName()} = str_replace('-', '', (string) Str::uuid());
+            }
+        });
+    }
 
     public function company()
     {

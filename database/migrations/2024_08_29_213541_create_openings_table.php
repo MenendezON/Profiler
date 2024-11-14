@@ -12,18 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('openings', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('title');
             $table->string('code')->nullable(false);
             $table->text('description');
-            $table->foreignId('location_id')->references('id')->on('locations');
+            $table->foreignUuid('location_id')->references('id')->on('locations');
             $table->boolean('remote');
             $table->string('experience');
             $table->string('type');
-            $table->foreignId('department_id')->references('id')->on('departments');
-            $table->foreignId('screeningquestion_id')->references('id')->on('screeningquestions');
+            $table->foreignUuid('department_id')->references('id')->on('departments');
+            $table->foreignUuid('screeningquestion_id')->references('id')->on('screeningquestions');
             $table->string('industry');
-            $table->foreignId('user_id')->references('id')->on('users');
+            $table->foreignUuid('user_id')->references('id')->on('users');
             $table->string('status');
             $table->timestamps();
         });
