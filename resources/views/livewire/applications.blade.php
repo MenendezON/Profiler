@@ -1,4 +1,10 @@
 @push('styles')
+<script>
+  console.group = function() {};
+  console.groupEnd = function() {};
+  console.log = function() {};
+</script>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
 <style type="text/css">
   .nav-pills {
     margin-top: 0px;
@@ -72,8 +78,7 @@
   }
 </style>
 <link href="{{ URL::asset('assets/css/application.css?ver=1.5')}}" rel="stylesheet" />
-<link rel="stylesheet" type="text/css"
-  href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.18/b-1.5.6/b-html5-1.5.6/r-2.2.2/rg-1.1.0/sc-2.0.0/datatables.min.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.18/b-1.5.6/b-html5-1.5.6/r-2.2.2/rg-1.1.0/sc-2.0.0/datatables.min.css" />
 <style>
   .offer-btn {
     background-color: aliceblue;
@@ -185,12 +190,12 @@
                     <div id="accordion" role="tablist" aria-multiselectable="true" class="card-collapse">
                       <div class="card card-plain">
                         <div class="card-header" role="tab" id="headingThree">
-                          <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                          <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="{{$opening_id?"true":"false"}}" aria-controls="collapseThree">
                             Filter By Openings
                             <i class="nc-icon nc-icon nc-minimal-down"></i>
                           </a>
                         </div>
-                        <div id="collapseThree" class="collapse" role="tabpanel" aria-labelledby="headingThree">
+                        <div id="collapseThree" class="collapse {{$opening_id?"show":""}}" role="tabpanel" aria-labelledby="headingThree">
                           <div class="card-body">
                             <div class="form-group">
                               <label for="opening">Opening Status</label>
@@ -213,7 +218,7 @@
                                 <select class="form-control" name="opening_id" required id="openings">
                                   <option value="all">All</option>
                                   @foreach (\App\Models\Opening::all() as $opening)
-                                  <option value="{{$opening->id}}">{{$opening->title}} ({{$opening->code}})</option>
+                                  <option value="{{$opening->id}}" {{$opening->id == $opening_id?"selected":""}}>{{$opening->title}} ({{$opening->code}})</option>
                                   @endforeach
                                 </select>
                               </div>
@@ -342,8 +347,7 @@
             </li>
             <li class="nav-item mt-1">
               <a class="nav-link {{(in_array('talentpool', $pipelines))?'active':''}}" href="{{ route('applications', ['pipeline' => ['talentpool']]) }}" role="tablist">
-                <i class="now-ui-icons ui-2_settings-90"></i> Talent
-                Pool
+                <i class="now-ui-icons ui-2_settings-90"></i> Talent Pool
               </a>
             </li>
           </ul>
@@ -374,10 +378,18 @@
           <div class="card-body">
             <div class="table-responsive">
               <table class="table table-striped table-bordered" cellspacing="0" width="100%">
+                @if($listOfApplicants && $listOfApplicants->isNotEmpty())
                 <thead>
                   <tr>
                     <th class="text-center">
-                      <input type="checkbox" class id="selectAll" />
+                      @foreach($listOfApplicants as $applicant)
+                        @if($applicant->stage != "talentpool")
+                            <input type="checkbox" class id="selectAll" />
+                          @else
+                            <input type="hidden" class id="selectAll" />
+                            @break
+                        @endif
+                      @endforeach
                     </th>
                     <th style="padding-left: 20px">Name</th>
                     <th class="text-center">Stage</th>
@@ -389,17 +401,17 @@
                   </tr>
                 </thead>
                 <tbody id="applicationsTableData">
-                  @if($listOfApplicants && $listOfApplicants->isNotEmpty())
                   @foreach($listOfApplicants as $applicant)
-                 
-                  <tr id="applicant_details_a03b6150d443b2884a49831d5d47978c">
+
+                  <tr id="applicant_details_{{$applicant->idap}}">
                     <td class="text-center">
-                      <input type="checkbox" class="applicant_checkbox" value="{{$applicant->idap}}"
-                        name="bulk_ids[]" />
+                      @if($applicant->stage != "talentpool")
+                      <input type="checkbox" class="applicant_checkbox" value="{{$applicant->idap}}" name="bulk_ids[]" />
+                      @endif
                     </td>
                     <td style="width: 30%">
                       <span style="display: inline-flex">
-                        <a href="#!" onclick="sibc(this)" id="applicant_detail_a03b6150d443b2884a49831d5d47978c">
+                        <a href="#!" onclick="sibc(this)" id="applicant_detail_{{$applicant->idap}}">
                           <span class="applicant_name" id="applicant_name_a03b6150d443b2884a49831d5d47978c">
                             {{$applicant->first_name}} {{$applicant->last_name}}
                           </span>
@@ -434,7 +446,7 @@
                             {{'text-warning'}}
                         @endif
                       "></i></small>
-                      <strong>{{$applicant->title}}</strong><br />
+                      <strong>{{($applicant->title)?$applicant->title:"Talent Pool"}}</strong><br />
                       <small class="pl-3">{{$applicant->code}}</small>
                     </td>
                     <td class="text-center" style="white-space: nowrap">
@@ -526,7 +538,7 @@
     list_applications: "https://dash.recooty.com/ajax/list_applications/1",
     application_action: "https://dash.recooty.com/ajax/application_action/1",
     delete_application: "https://dash.recooty.com/ajax/delete_application/1",
-    view_application: "https://dash.recooty.com/ajax/view_application",
+    view_application: "/api/viewapplicant",
     update_application: "https://dash.recooty.com/ajax/update_application",
     schedule_interview: "https://dash.recooty.com/ajax/schedule_interview",
     reschedule_interview: "https://dash.recooty.com/ajax/reschedule_interview",

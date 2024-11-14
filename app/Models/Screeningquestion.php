@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Str;
 
 class Screeningquestion extends Model
 {
@@ -26,9 +27,22 @@ class Screeningquestion extends Model
         'company_id',
     ];
 
-    public function user()
+    protected $keyType = 'string';
+    public $incrementing = false;
+
+    protected static function boot()
     {
-        return $this->belongsTo(User::class);
+        parent::boot();
+        static::creating(function ($model) {
+            if (empty($model->{$model->getKeyName()})) {
+                $model->{$model->getKeyName()} = str_replace('-', '', (string) Str::uuid());
+            }
+        });
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
     }
 
     public function questions()

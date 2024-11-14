@@ -1,8 +1,8 @@
 function initPlugins() {
   if (
     ((status = !1),
-    0 != $(".tagsinput").length && $(".tagsinput").tagsinput(),
-    0 != $(".datetimepicker").length &&
+      0 != $(".tagsinput").length && $(".tagsinput").tagsinput(),
+      0 != $(".datetimepicker").length &&
       ($(".datetimepicker").datetimepicker({
         icons: {
           time: "fa fa-clock-o",
@@ -16,8 +16,8 @@ function initPlugins() {
           close: "fa fa-remove",
         },
       }),
-      (status = !0)),
-    0 != $(".datepicker").length)
+        (status = !0)),
+      0 != $(".datepicker").length)
   ) {
     var e = new Date();
     e.setDate(e.getDate() + 30),
@@ -41,55 +41,55 @@ function initPlugins() {
   }
   return (
     0 != $(".timepicker").length &&
-      ($(".timepicker").datetimepicker({
-        format: "h:mm A",
-        icons: {
-          time: "fa fa-clock-o",
-          date: "fa fa-calendar",
-          up: "fa fa-chevron-up",
-          down: "fa fa-chevron-down",
-          previous: "fa fa-chevron-left",
-          next: "fa fa-chevron-right",
-          today: "fa fa-screenshot",
-          clear: "fa fa-trash",
-          close: "fa fa-remove",
-        },
-        stepping: 15,
-      }),
+    ($(".timepicker").datetimepicker({
+      format: "h:mm A",
+      icons: {
+        time: "fa fa-clock-o",
+        date: "fa fa-calendar",
+        up: "fa fa-chevron-up",
+        down: "fa fa-chevron-down",
+        previous: "fa fa-chevron-left",
+        next: "fa fa-chevron-right",
+        today: "fa fa-screenshot",
+        clear: "fa fa-trash",
+        close: "fa fa-remove",
+      },
+      stepping: 15,
+    }),
       (status = !0)),
     0 != $(".selectpicker").length &&
-      (($sp = $(".selectpicker").selectpicker()),
+    (($sp = $(".selectpicker").selectpicker()),
       (status = !0),
       $sp.on("changed.bs.select", function (e, t, a, o) {
         var n = $(this).children("option:selected").val();
         move_stages($(this).attr("id"), n);
       })),
     0 != $('[data-toggle="tooltip"]').length &&
-      ($('[data-toggle="tooltip"]').tooltip(), (status = !0)),
+    ($('[data-toggle="tooltip"]').tooltip(), (status = !0)),
     $(document).on("click", ".remove", function (e) {
       e.preventDefault(), delete_application($(this)), (status = !0);
     }),
     0 != $(".name_rating").length &&
-      $(".name_rating").on("change", function () {
-        var e = $(this).val();
-        $.ajax({
-          url: routes.set_rating,
-          method: "POST",
-          data: { application_id: applicant_id, rating: e },
-          success: function (e) {
-            "success" == e.status &&
-              ($.notify(
-                { icon: "fa fa-check", message: e.message },
-                {
-                  type: "success",
-                  duration: 2e3,
-                  placement: { from: "top", align: "left" },
-                }
-              ),
+    $(".name_rating").on("change", function () {
+      var e = $(this).val();
+      $.ajax({
+        url: routes.set_rating,
+        method: "POST",
+        data: { application_id: applicant_id, rating: e },
+        success: function (e) {
+          "success" == e.status &&
+            ($.notify(
+              { icon: "fa fa-check", message: e.message },
+              {
+                type: "success",
+                duration: 2e3,
+                placement: { from: "top", align: "left" },
+              }
+            ),
               refresh_table());
-          },
-        });
-      }),
+        },
+      });
+    }),
     status
   );
 }
@@ -109,22 +109,22 @@ function edit_profile(e) {
       success: function (t) {
         "success" == t.status
           ? ($.notify(
-              { icon: "fa fa-check", message: t.message },
-              {
-                type: "success",
-                duration: 2e3,
-                placement: { from: "top", align: "center" },
-              }
-            ),
+            { icon: "fa fa-check", message: t.message },
+            {
+              type: "success",
+              duration: 2e3,
+              placement: { from: "top", align: "center" },
+            }
+          ),
             view_application(e, initPlugins))
           : $.notify(
-              { message: t.message },
-              {
-                type: "danger",
-                duration: 2e3,
-                placement: { from: "top", align: "center" },
-              }
-            );
+            { message: t.message },
+            {
+              type: "danger",
+              duration: 2e3,
+              placement: { from: "top", align: "center" },
+            }
+          );
       },
       error: function (e) {
         console.log(e);
@@ -142,22 +142,22 @@ function schedule_interview(e) {
       success: function (t) {
         "success" == t.status
           ? ($.notify(
-              { icon: "fa fa-check", message: t.message },
-              {
-                type: "success",
-                duration: 2e3,
-                placement: { from: "top", align: "center" },
-              }
-            ),
+            { icon: "fa fa-check", message: t.message },
+            {
+              type: "success",
+              duration: 2e3,
+              placement: { from: "top", align: "center" },
+            }
+          ),
             view_application(e, initPlugins))
           : $.notify(
-              { message: t.message },
-              {
-                type: "danger",
-                duration: 2e3,
-                placement: { from: "top", align: "center" },
-              }
-            );
+            { message: t.message },
+            {
+              type: "danger",
+              duration: 2e3,
+              placement: { from: "top", align: "center" },
+            }
+          );
       },
       error: function (e) {
         console.log(e);
@@ -175,22 +175,22 @@ function reschedule_interview(e) {
       success: function (t) {
         "success" == t.status
           ? ($.notify(
-              { icon: "fa fa-check", message: t.message },
-              {
-                type: "success",
-                duration: 2e3,
-                placement: { from: "top", align: "center" },
-              }
-            ),
+            { icon: "fa fa-check", message: t.message },
+            {
+              type: "success",
+              duration: 2e3,
+              placement: { from: "top", align: "center" },
+            }
+          ),
             view_application(e, initPlugins))
           : $.notify(
-              { message: t.message },
-              {
-                type: "danger",
-                duration: 2e3,
-                placement: { from: "top", align: "center" },
-              }
-            );
+            { message: t.message },
+            {
+              type: "danger",
+              duration: 2e3,
+              placement: { from: "top", align: "center" },
+            }
+          );
       },
       error: function (e) {
         console.log(e);
@@ -210,22 +210,22 @@ function interview_feedback(e, t = !1) {
       success: function (t) {
         "success" == t.status
           ? ($.notify(
-              { icon: "fa fa-check", message: t.message },
-              {
-                type: "success",
-                duration: 2e3,
-                placement: { from: "top", align: "center" },
-              }
-            ),
+            { icon: "fa fa-check", message: t.message },
+            {
+              type: "success",
+              duration: 2e3,
+              placement: { from: "top", align: "center" },
+            }
+          ),
             view_application(e, initPlugins))
           : $.notify(
-              { message: t.message },
-              {
-                type: "danger",
-                duration: 2e3,
-                placement: { from: "top", align: "center" },
-              }
-            );
+            { message: t.message },
+            {
+              type: "danger",
+              duration: 2e3,
+              placement: { from: "top", align: "center" },
+            }
+          );
       },
       error: function (e) {
         console.log(e);
@@ -235,12 +235,12 @@ function interview_feedback(e, t = !1) {
 function application_comment(e, t = !1) {
   t
     ? (($formData = new FormData(
-        document.querySelector("#application_comment_2")
-      )),
+      document.querySelector("#application_comment_2")
+    )),
       $formData.append("edit", "yes"))
     : (($formData = new FormData(
-        document.querySelector("#application_comment")
-      )),
+      document.querySelector("#application_comment")
+    )),
       $formData.append("edit", "no")),
     $.ajax({
       url: routes.application_comment,
@@ -251,13 +251,13 @@ function application_comment(e, t = !1) {
       success: function (e) {
         "success" == e.status
           ? ($.notify(
-              { icon: "fa fa-check", message: e.message },
-              {
-                type: "success",
-                duration: 2e3,
-                placement: { from: "top", align: "center" },
-              }
-            ),
+            { icon: "fa fa-check", message: e.message },
+            {
+              type: "success",
+              duration: 2e3,
+              placement: { from: "top", align: "center" },
+            }
+          ),
             view_application(applicant_id, initPlugins))
           : (console.log(e),
             $.notify(
@@ -309,7 +309,7 @@ function deleteComment(e) {
                   placement: { from: "top", align: "left" },
                 }
               ),
-              view_application(applicant_id, initPlugins));
+                view_application(applicant_id, initPlugins));
           },
           error: function (e) {
             console.log(e),
@@ -337,22 +337,22 @@ function move_stages(e, t) {
         success: function (t) {
           "success" == t.status
             ? ($.notify(
-                { icon: "fa fa-check", message: t.message },
-                {
-                  type: "success",
-                  duration: 2e3,
-                  placement: { from: "top", align: "center" },
-                }
-              ),
+              { icon: "fa fa-check", message: t.message },
+              {
+                type: "success",
+                duration: 2e3,
+                placement: { from: "top", align: "center" },
+              }
+            ),
               view_application(e, initPlugins))
             : $.notify(
-                { message: t.message },
-                {
-                  type: "danger",
-                  duration: 2e3,
-                  placement: { from: "top", align: "center" },
-                }
-              );
+              { message: t.message },
+              {
+                type: "danger",
+                duration: 2e3,
+                placement: { from: "top", align: "center" },
+              }
+            );
         },
         error: function (e) {
           console.log(e);
@@ -360,7 +360,7 @@ function move_stages(e, t) {
       }))
     : $("#RejectCandidate").modal("show");
 }
-function refresh_table() {}
+function refresh_table() { }
 function delete_application(e) {
   sibc(e, !1),
     swal({
@@ -381,14 +381,14 @@ function delete_application(e) {
             success: function (e) {
               "deleted" == e.status &&
                 ($("#applicant_details_" + applicant_id).remove(),
-                $.notify(
-                  { icon: "fa fa-check", message: e.message },
-                  {
-                    type: "success",
-                    duration: 2e3,
-                    placement: { from: "top", align: "left" },
-                  }
-                )),
+                  $.notify(
+                    { icon: "fa fa-check", message: e.message },
+                    {
+                      type: "success",
+                      duration: 2e3,
+                      placement: { from: "top", align: "left" },
+                    }
+                  )),
                 $("#ApplicantModal").hide(),
                 $("body").removeClass("modal-open"),
                 $(".modal-backdrop.fade").remove();
@@ -432,7 +432,7 @@ function move_to_talent(e) {
                     placement: { from: "top", align: "left" },
                   }
                 ),
-                view_application(applicant_id, initPlugins));
+                  view_application(applicant_id, initPlugins));
             },
             error: function (e) {
               console.log(e);
@@ -459,7 +459,7 @@ function move_to_another(e) {
               placement: { from: "top", align: "center" },
             }
           ),
-          view_application(e, initPlugins));
+            view_application(e, initPlugins));
       },
       error: function (e) {
         console.log(e);
@@ -482,6 +482,7 @@ function sibc(e, t = !0) {
       (applicant_id = (applicant_id = clicked_id.split("_"))[2])),
     t && view_application(applicant_id, initPlugins);
 }
+
 function refreshFrame() {
   var e = document.getElementById("_resumeFrame"),
     t = e.src;
@@ -493,7 +494,7 @@ function refreshFrame() {
   );
 }
 function view_application(e, t) {
-   (reload_count = 10),
+  (reload_count = 10),
     console.group("view_application - " + e),
     console.log("Initiating cursor."),
     $("body").css("cursor", "progress"),
@@ -509,36 +510,35 @@ function view_application(e, t) {
     }),
     console.log("Setting Timeout"),
     setTimeout(function () {
-      refreshFrame(), refresh_table();
+      refreshFrame(),
+        refresh_table();
     }, 2e3),
     console.log("All ok."),
     console.groupEnd();
 }
+//$("#applicant_modal").html(modal(e));
 function viewXHR(e, t) {
-  $("#applicant_modal").html(modal(e));
-  // return (
-  //   console.log("Promise Created"),
-  //   $.ajax({
-  //     url: "https://cors-anywhere.herokuapp.com/https://dash.recooty.com/ajax/view_application",
-  //     type: "POST",
-  //     data: { id: e },
-  //     success: function (e) {
-  //       //console.log("Data Received"), $("#applicant_modal").html(e.modal), t();
-
-  //       console.log("Data Received:", e); // Log the entire response object
-  //       console.log("Modal HTML:", e.modal); // Log only the `modal` property
-  //       $("#applicant_modal").html(e.modal); // Insert the modal HTML into the DOM
-  //       t(); // Call the callback function
-  //     },
-  //     error: function (e) {
-  //       $("body").css("cursor", "default"), console.error(e);
-  //     },
-  //   })
-  // );
+  return console.log("Promise Created"),
+    $.ajax({
+      url: routes.view_application,
+      type: "GET",
+      data: {
+        id: e
+      },
+      success: function (e) {
+        console.log("Data Received"),
+          $("#applicant_modal").html(e.modal),
+          t()
+      },
+      error: function (e) {
+        $("body").css("cursor", "default"),
+          console.error(e)
+      }
+    })
 }
 
-function modal(e){
- const div = document.createElement('div');
+function modal(e) {
+  const div = document.createElement('div');
   div.setAttribute('class', 'modal fade show');
   div.setAttribute('id', 'ApplicantModal');
   div.setAttribute('role', 'dialog');
@@ -611,7 +611,7 @@ var actions = {
                 placement: { from: "top", align: "left" },
               }
             ),
-            view_application(e, initPlugins));
+              view_application(e, initPlugins));
         },
         error: function (e) {
           console.log(e);
@@ -638,7 +638,7 @@ var actions = {
                 placement: { from: "top", align: "center" },
               }
             ),
-            view_application(e, initPlugins));
+              view_application(e, initPlugins));
         },
         error: function (e) {
           console.log(e);
@@ -665,7 +665,7 @@ var actions = {
                 placement: { from: "top", align: "left" },
               }
             ),
-            view_application(e, initPlugins));
+              view_application(e, initPlugins));
         },
         error: function (e) {
           console.log(e);
@@ -694,7 +694,7 @@ var actions = {
                 placement: { from: "top", align: "left" },
               }
             ),
-            view_application(e, initPlugins));
+              view_application(e, initPlugins));
         },
         error: function (e) {
           console.log(e);
@@ -719,7 +719,7 @@ var actions = {
                 placement: { from: "top", align: "left" },
               }
             ),
-            view_application(e, initPlugins));
+              view_application(e, initPlugins));
         },
         error: function (e) {
           console.log(e);
@@ -746,7 +746,7 @@ var actions = {
                 placement: { from: "top", align: "left" },
               }
             ),
-            view_application(e, initPlugins));
+              view_application(e, initPlugins));
         },
         error: function (e) {
           console.log(e);
@@ -795,22 +795,22 @@ function update_resume() {
       success: function (e) {
         "success" == e.status
           ? ($.notify(
-              { icon: "fa fa-check", message: e.message },
-              {
-                type: "success",
-                duration: 2e3,
-                placement: { from: "top", align: "center" },
-              }
-            ),
+            { icon: "fa fa-check", message: e.message },
+            {
+              type: "success",
+              duration: 2e3,
+              placement: { from: "top", align: "center" },
+            }
+          ),
             view_application(applicant_id, initPlugins))
           : $.notify(
-              { message: e.message },
-              {
-                type: "danger",
-                duration: 2e3,
-                placement: { from: "top", align: "center" },
-              }
-            );
+            { message: e.message },
+            {
+              type: "danger",
+              duration: 2e3,
+              placement: { from: "top", align: "center" },
+            }
+          );
       },
       error: function (e) {
         console.error(e);
@@ -863,19 +863,19 @@ $(function () {
     $("form#filters input#talentpool").on("change", function () {
       this.checked
         ? $("form#filters input,select")
-            .not("form#filters input#talentpool")
-            .not("form#filters input#search_name")
-            .not("form#filters select#rating")
-            .not("form#filters input#tags")
-            .not("form#filters input.not-disabled")
-            .attr("disabled", !0)
+          .not("form#filters input#talentpool")
+          .not("form#filters input#search_name")
+          .not("form#filters select#rating")
+          .not("form#filters input#tags")
+          .not("form#filters input.not-disabled")
+          .attr("disabled", !0)
         : $("form#filters input,select")
-            .not("form#filters input#talentpool")
-            .not("form#filters input#search_name")
-            .not("form#filters select#rating")
-            .not("form#filters input#tags")
-            .not("form#filters input.not-disabled")
-            .attr("disabled", !1);
+          .not("form#filters input#talentpool")
+          .not("form#filters input#search_name")
+          .not("form#filters select#rating")
+          .not("form#filters input#tags")
+          .not("form#filters input.not-disabled")
+          .attr("disabled", !1);
     }),
     $(document).on("click", ".remove", function (e) {
       e.preventDefault(), delete_application($(this));

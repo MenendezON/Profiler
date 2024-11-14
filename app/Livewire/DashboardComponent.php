@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\TalentPool;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
@@ -17,33 +18,20 @@ class DashboardComponent extends Component
     public function mount()
     {
         $this->jobStatusCounts = DB::table('openings')
-                        ->select('status', DB::raw('COUNT(*) as total_records'))
-                        ->groupBy('status')
-                        ->get();
-        
-        $this->applicationStatusCounts = DB::table('OpeningApplicants as oa')
-        ->join('Applicants as a', 'oa.applicant_id', '=', 'a.id')
-        ->join('Openings as o', 'oa.opening_id', '=', 'o.id')
-        ->select(
-            'a.id as idap', 
-            'o.id as idop', 
-            'a.first_name', 
-            'a.last_name', 
-            'oa.stage', 
-            'oa.rating', 
-            'oa.source', 
-            'oa.created_at', 
-            'o.title', 
-            'o.code', 
-            'o.status'
-        )
-        ->get();
+            ->select('status', DB::raw('COUNT(*) as total_records'))
+            ->groupBy('status')
+            ->get();
 
-        dd($this->applicationStatusCounts);
+        $this->applicationStatusCounts = DB::table('Applicants as a')
+            ->leftJoin('OpeningApplicants as oa', 'a.id', '=', 'oa.applicant_id') // Left join to include applicants without an opening
+            ->leftJoin('Openings as o', 'oa.opening_id', '=', 'o.id') // Left join to include null openings if oa.opening_id is null
+            ->select('oa.stage', DB::raw('COUNT(*) as total_records'))
+            ->groupBy('oa.stage')
+            ->get();
     }
 
     public function render()
     {
-       return view('livewire.dashboard-component');
+        return view('livewire.dashboard-component');
     }
 }

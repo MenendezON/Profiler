@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('applicants', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('first_name');
             $table->string('last_name');
             $table->integer('experience');
@@ -21,6 +21,9 @@ return new class extends Migration
             $table->string('phone');
             $table->string('resume');
             $table->string('cover_letter');
+            $table->text('skills');
+            $table->string('source')->default('Dashboard');
+            $table->boolean('talent_pool')->default(false);
             $table->timestamps();
         });
     }
