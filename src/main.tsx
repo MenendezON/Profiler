@@ -22,7 +22,9 @@ import { InterviewsPage } from '@/pages/InterviewsPage'
 import { UsersPage } from '@/pages/settings/UsersPage'
 import { ProfilePage } from '@/pages/settings/ProfilePage'
 import { AcceptInvitePage } from '@/pages/AcceptInvitePage'
-import { ComingSoon } from '@/pages/ComingSoon'
+import { ActivityLogPage } from '@/pages/settings/ActivityLogPage'
+import { EmailTemplateEditorPage, EmailTemplatesListPage } from '@/pages/settings/EmailTemplatesPages'
+import { ReportsPage } from '@/pages/ReportsPage'
 import { NotFound } from '@/pages/NotFound'
 
 const queryClient = new QueryClient({
@@ -48,7 +50,7 @@ const router = createBrowserRouter([
       { path: 'applications', element: <ApplicationsPage /> },
       { path: 'applications/new', element: <RequireRole edit><AddCandidatePage /></RequireRole> },
       { path: 'interviews', element: <InterviewsPage /> },
-      { path: 'reports', element: <ComingSoon title="Reports" /> },
+      { path: 'reports', element: <ReportsPage /> },
       { path: 'settings', element: <SettingsPage /> },
       { path: 'settings/locations', element: <LocationsListPage /> },
       { path: 'settings/locations/new', element: <RequireRole admin><LocationFormPage /></RequireRole> },
@@ -57,6 +59,10 @@ const router = createBrowserRouter([
       { path: 'settings/departments/new', element: <RequireRole admin><DepartmentFormPage /></RequireRole> },
       { path: 'settings/departments/:id/edit', element: <RequireRole admin><DepartmentFormPage /></RequireRole> },
       { path: 'settings/users', element: <UsersPage /> },
+      { path: 'settings/activity-log', element: <ActivityLogPage /> },
+      { path: 'settings/email-templates', element: <EmailTemplatesListPage /> },
+      { path: 'settings/email-templates/new', element: <RequireRole edit><EmailTemplateEditorPage /></RequireRole> },
+      { path: 'settings/email-templates/:id', element: <EmailTemplateEditorPage /> },
       { path: 'settings/profile', element: <ProfilePage /> },
       { path: 'settings/screening-templates', element: <ScreeningTemplatesListPage /> },
       { path: 'settings/screening-templates/:id', element: <ScreeningTemplateDetailPage /> },

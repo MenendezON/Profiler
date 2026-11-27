@@ -17,6 +17,8 @@ import {
 import { Alert, Avatar, Badge, Button, Dialog, Field, Input, Select, Spinner, Stars, Textarea } from '@/components/ui'
 import { ScheduleInterviewDialog } from '@/components/interviews/InterviewDialogs'
 import { InterviewItem } from '@/components/interviews/InterviewItem'
+import { ActivityItem } from '@/components/ActivityTimeline'
+import { SendEmailDialog } from '@/components/SendEmailDialog'
 
 export function CandidateDrawer({ applicationId, onClose, onOpen }: {
   applicationId: string
@@ -28,7 +30,7 @@ export function CandidateDrawer({ applicationId, onClose, onOpen }: {
   const { canEdit } = useRole()
   const fileInput = useRef<HTMLInputElement>(null)
   const [menu, setMenu] = useState(false)
-  const [dialog, setDialog] = useState<'edit' | 'move' | 'schedule' | null>(null)
+  const [dialog, setDialog] = useState<'edit' | 'move' | 'schedule' | 'email' | null>(null)
   const [copied, setCopied] = useState(false)
 
   useEffect(() => {
@@ -60,7 +62,10 @@ export function CandidateDrawer({ applicationId, onClose, onOpen }: {
       const interviews = unwrap(
         await supabase.from('interview_list').select('*').eq('application_id', applicationId).order('scheduled_at', { ascending: false }),
       )
-      return { app, others, interviews }
+      const activity = unwrap(
+        await supabase.from('activity_feed').select('*').eq('applicant_id', app.applicant_id).order('created_at', { ascending: false }).limit(50),
+      )
+      return { app, others, interviews, activity }
     },
   })
 
@@ -183,7 +188,12 @@ export function CandidateDrawer({ applicationId, onClose, onOpen }: {
                   </p>
                   <div className="mt-2"><Stars value={app.rating} size="md" onChange={canEdit ? (rating) => patchApp.mutate({ rating }) : undefined} disabled={patchApp.isPending} /></div>
                 </div>
-                <Can edit><Button size="sm" onClick={() => setDialog('schedule')}><CalendarPlus className="size-4" />Schedule interview</Button></Can>
+                <Can edit>
+                  <div className="flex flex-col gap-2">
+                    <Button size="sm" onClick={() => setDialog('schedule')}><CalendarPlus className="size-4" />Schedule interview</Button>
+                    <Button size="sm" variant="secondary" onClick={() => setDialog('email')}><Mail className="size-4" />Email</Button>
+                  </div>
+                </Can>
               </div>
 
               {/* stage */}
@@ -288,6 +298,16 @@ export function CandidateDrawer({ applicationId, onClose, onOpen }: {
                 </div>
               )}
 
+              {/* activity */}
+              {!!data?.activity.length && (
+                <details className="group" open={data.activity.length <= 6}>
+                  <summary className="mb-1 cursor-pointer list-none text-xs font-medium uppercase tracking-wide text-slate-500 hover:text-slate-700">
+                    Activity ({data.activity.length}) <span className="group-open:hidden">▸</span><span className="hidden group-open:inline">▾</span>
+                  </summary>
+                  <ul className="divide-y divide-slate-100">{data.activity.map((r) => <ActivityItem key={r.id} row={r} compact />)}</ul>
+                </details>
+              )}
+
               {/* other applications */}
               {!!data?.others.length && (
                 <div>
@@ -315,11 +335,20 @@ export function CandidateDrawer({ applicationId, onClose, onOpen }: {
           candidate={{
             applicationId: app.id,
             stage: app.stage,
+            firstName: a.first_name,
+            lastName: a.last_name,
             candidateName: `${a.first_name} ${a.last_name}`,
             candidateEmail: a.email,
             openingTitle: app.opening?.title ?? null,
           }}
           onClose={() => setDialog(null)}
+        />
+      )}
+      {dialog === 'email' && app && a && (
+        <SendEmailDialog
+          kind={app.stage === 'rejected' ? 'rejection' : app.stage === 'offered' ? 'offer' : undefined}
+          recipient={{ applicationId: app.id, firstName: a.first_name, lastName: a.last_name, email: a.email, jobTitle: app.opening?.title ?? null }}
+          onClose={() => { setDialog(null); qc.invalidateQueries({ queryKey: ['application', applicationId] }) }}
         />
       )}
       {dialog === 'move' && app && (

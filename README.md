@@ -74,6 +74,12 @@ Roles are enforced by RLS (`private.can_edit()`, `private.is_company_admin()`) a
 
 Invitations: an admin creates one in **Settings → Users** and shares the link (copy or prefilled email). `/invite/<token>` lets the person set a password; the sign-up trigger checks the token, the email and expiry, then adds them to the company with the chosen role instead of creating a new company. Someone who already has a Profiler account can't join a second company yet.
 
+### Activity log, email templates, reports
+
+- `activity_log` is written **only** by `SECURITY DEFINER` triggers (`private.trg_log_*`); members can read their company's log through `activity_feed`, nobody can edit or delete it. The candidate's history survives the candidate's deletion.
+- Emails open in the user's own mail app (`mailto:`); `log_email_prepared()` lets editors add "Email to X: subject" to the timeline after checking role and company. Sending emails automatically would need an email provider (e.g. Resend/Brevo via an Edge Function).
+- `report_summary(from, to, opening?)` is `SECURITY INVOKER`, so RLS limits it to the caller's company. The funnel counts the highest stage each application ever reached (from the activity log), so a candidate rejected after an interview still counts as "Interviewed". Time to hire = first move to *Hired* minus application date.
+
 Regenerate types after schema changes: `npm run gen:types` (needs the Supabase CLI and `supabase login`).
 
 ## Migration status
@@ -92,5 +98,6 @@ Regenerate types after schema changes: `npm run gen:types` (needs the Supabase C
 | Public careers page + online application (screening questions, CV upload, consent) | ✅ |
 | Interviews: schedule / reschedule / cancel from the candidate panel, feedback with hire–maybe–no-hire + rating, Interviews page (upcoming, pending feedback, feedback given, cancelled), dashboard card, email invitation (mailto) + calendar file (.ics) | ✅ |
 | Users & roles: invitations by link (single-use, 14 days), Admin / Recruiter / Viewer enforced in RLS and Storage, deactivation, last-admin protection, My profile + password | ✅ |
-| Reports | ⏳ next |
-| Email templates, Activity log | ⏳ |
+| Activity log: recorded by database triggers (openings, applications, stage changes, ratings, interviews, team, settings), Settings page with filters, timeline in the candidate panel | ✅ |
+| Email templates: EN + FR defaults per company, editor with placeholders and live preview, "Email" from the candidate panel, interview invitation/cancellation use them | ✅ |
+| Reports: KPIs, hiring funnel (uses stage history), applications per week, sources, interviews, per-opening table, CSV export | ✅ |

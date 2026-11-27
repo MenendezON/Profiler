@@ -3,7 +3,9 @@ import { Link } from 'react-router'
 import { Ban, CalendarClock, CalendarPlus, ClipboardCheck, Mail, MoreHorizontal, User } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useProfile, useRole } from '@/lib/auth'
-import { DECISIONS, INTERVIEW_TYPES, downloadIcs, formatDateTime, formatTime, inviteMailto } from '@/lib/interviews'
+import { DECISIONS, INTERVIEW_TYPES, downloadIcs, formatDateTime, formatTime } from '@/lib/interviews'
+import { interviewVars } from '@/lib/emailTemplates'
+import { SendEmailDialog } from '@/components/SendEmailDialog'
 import { Badge, Button, Stars } from '@/components/ui'
 import { CancelInterviewDialog, FeedbackDialog, ScheduleInterviewDialog, inviteFromRow, type InterviewRow } from './InterviewDialogs'
 
@@ -11,7 +13,7 @@ import { CancelInterviewDialog, FeedbackDialog, ScheduleInterviewDialog, inviteF
 export function InterviewItem({ row, compact }: { row: InterviewRow; compact?: boolean }) {
   const { data: profile } = useProfile()
   const { canEdit } = useRole()
-  const [dialog, setDialog] = useState<'reschedule' | 'feedback' | 'cancel' | null>(null)
+  const [dialog, setDialog] = useState<'reschedule' | 'feedback' | 'cancel' | 'email' | null>(null)
   const [menu, setMenu] = useState(false)
   const type = INTERVIEW_TYPES[row.type ?? 'in_person']
   const Icon = type.icon
@@ -71,7 +73,7 @@ export function InterviewItem({ row, compact }: { row: InterviewRow; compact?: b
             <div className="absolute right-0 top-8 z-20 w-52 overflow-hidden rounded-lg border border-slate-200 bg-white py-1 text-sm shadow-lg" onMouseLeave={() => setMenu(false)}>
               {row.status === 'scheduled' && (
                 <>
-                  <MenuLink href={inviteMailto(invite)} icon={Mail} onClick={() => setMenu(false)}>Email invitation</MenuLink>
+                  {canEdit && <MenuButton icon={Mail} onClick={() => { setMenu(false); setDialog('email') }}>Email invitation</MenuButton>}
                   <MenuButton icon={CalendarPlus} onClick={() => { setMenu(false); downloadIcs(invite) }}>Add to calendar</MenuButton>
                   {canEdit && (
                     <>
@@ -96,11 +98,20 @@ export function InterviewItem({ row, compact }: { row: InterviewRow; compact?: b
       {dialog === 'reschedule' && (
         <ScheduleInterviewDialog
           interview={row}
-          candidate={{ applicationId: row.application_id!, stage: row.stage!, candidateName: row.full_name ?? '', candidateEmail: row.email ?? '', openingTitle: row.opening_title }}
+          candidate={{ applicationId: row.application_id!, stage: row.stage!, firstName: row.first_name ?? '', lastName: row.last_name ?? '', candidateName: row.full_name ?? '', candidateEmail: row.email ?? '', openingTitle: row.opening_title }}
           onClose={() => setDialog(null)}
         />
       )}
       {dialog === 'feedback' && <FeedbackDialog interview={row} onClose={() => setDialog(null)} />}
+      {dialog === 'email' && (
+        <SendEmailDialog
+          title="Email the invitation"
+          kind="interview_invitation"
+          recipient={{ applicationId: row.application_id!, firstName: row.first_name ?? '', lastName: row.last_name ?? '', email: row.email ?? '', jobTitle: row.opening_title }}
+          extraVars={(lang) => interviewVars(invite, lang)}
+          onClose={() => setDialog(null)}
+        />
+      )}
       {dialog === 'cancel' && <CancelInterviewDialog interview={row} onClose={() => setDialog(null)} />}
     </div>
   )
@@ -111,13 +122,5 @@ function MenuButton({ icon: Icon, children, onClick, danger }: { icon: typeof Ma
     <button onClick={onClick} className={cn('flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-slate-50', danger ? 'text-red-600' : 'text-slate-700')}>
       <Icon className="size-4" />{children}
     </button>
-  )
-}
-
-function MenuLink({ href, icon: Icon, children, onClick }: { href: string; icon: typeof Mail; children: React.ReactNode; onClick: () => void }) {
-  return (
-    <a href={href} onClick={onClick} className="flex w-full items-center gap-2 px-3 py-2 text-left text-slate-700 hover:bg-slate-50">
-      <Icon className="size-4" />{children}
-    </a>
   )
 }

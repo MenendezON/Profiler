@@ -8,16 +8,20 @@ import { Constants, type Tables } from '@/lib/database.types'
 import { STAGE_LABELS } from '@/lib/constants'
 import type { Stage } from '@/lib/applications'
 import {
-  DECISIONS, DURATIONS, INTERVIEW_TYPES, cancelMailto, defaultSlot, downloadIcs, formatDateTime, invalidateInterviews,
-  inviteMailto, toLocalInput, type InterviewDecision, type InterviewType, type InviteInfo,
+  DECISIONS, DURATIONS, INTERVIEW_TYPES, defaultSlot, downloadIcs, formatDateTime, invalidateInterviews,
+  toLocalInput, type InterviewDecision, type InterviewType, type InviteInfo,
 } from '@/lib/interviews'
 import { Alert, Button, Checkbox, Dialog, Field, Input, Select, Spinner, Stars, Textarea } from '@/components/ui'
+import { SendEmailDialog } from '@/components/SendEmailDialog'
+import { interviewVars } from '@/lib/emailTemplates'
 
 export type InterviewRow = Tables<'interview_list'>
 
 export interface CandidateContext {
   applicationId: string
   stage: Stage
+  firstName: string
+  lastName: string
   candidateName: string
   candidateEmail: string
   openingTitle: string | null
@@ -65,6 +69,7 @@ export function ScheduleInterviewDialog({ candidate, interview, onClose }: {
   const options = useSchedulingOptions()
   const [type, setType] = useState<InterviewType>(interview?.type ?? 'in_person')
   const [saved, setSaved] = useState<InviteInfo | null>(null)
+  const [emailing, setEmailing] = useState(false)
   const isEdit = !!interview
   const canAdvance = !isEdit && (candidate.stage === 'new' || candidate.stage === 'shortlisted')
 
@@ -113,6 +118,18 @@ export function ScheduleInterviewDialog({ candidate, interview, onClose }: {
     save.mutate(new FormData(e.currentTarget))
   }
 
+  if (saved && emailing) {
+    return (
+      <SendEmailDialog
+        title="Email the invitation"
+        kind="interview_invitation"
+        recipient={{ applicationId: candidate.applicationId, firstName: candidate.firstName, lastName: candidate.lastName, email: candidate.candidateEmail, jobTitle: candidate.openingTitle }}
+        extraVars={(lang) => interviewVars(saved, lang)}
+        onClose={onClose}
+      />
+    )
+  }
+
   if (saved) {
     return (
       <Dialog open onClose={onClose} title={isEdit ? 'Interview updated' : 'Interview scheduled'} footer={<Button onClick={onClose}>Done</Button>}>
@@ -123,7 +140,7 @@ export function ScheduleInterviewDialog({ candidate, interview, onClose }: {
           </p>
           <p className="text-sm text-slate-500">Let the candidate know and add it to your calendar:</p>
           <div className="flex flex-col gap-2 sm:flex-row sm:justify-center">
-            <a href={inviteMailto(saved)}><Button variant="secondary" className="w-full"><Mail className="size-4" />Email candidate</Button></a>
+            <Button variant="secondary" onClick={() => setEmailing(true)}><Mail className="size-4" />Email candidate</Button>
             <Button variant="secondary" onClick={() => downloadIcs(saved)}><CalendarPlus className="size-4" />Add to calendar (.ics)</Button>
           </div>
         </div>
@@ -322,6 +339,7 @@ export function CancelInterviewDialog({ interview, onClose }: { interview: Inter
   const qc = useQueryClient()
   const { data: profile } = useProfile()
   const [done, setDone] = useState(false)
+  const [emailing, setEmailing] = useState(false)
 
   const cancel = useMutation({
     mutationFn: async (reason: string) =>
@@ -329,14 +347,25 @@ export function CancelInterviewDialog({ interview, onClose }: { interview: Inter
     onSuccess: () => { invalidateInterviews(qc); setDone(true) },
   })
 
+  if (done && emailing) {
+    const info = inviteFromRow(interview, profile?.company?.name ?? '')
+    return (
+      <SendEmailDialog
+        title="Tell the candidate"
+        kind="interview_cancellation"
+        recipient={{ applicationId: interview.application_id!, firstName: interview.first_name ?? '', lastName: interview.last_name ?? '', email: interview.email ?? '', jobTitle: interview.opening_title }}
+        extraVars={(lang) => interviewVars(info, lang)}
+        onClose={onClose}
+      />
+    )
+  }
+
   if (done) {
     return (
       <Dialog open onClose={onClose} title="Interview cancelled" footer={<Button onClick={onClose}>Done</Button>}>
         <div className="space-y-3 text-center">
           <p className="text-sm text-slate-600">Let {interview.full_name} know:</p>
-          <a href={cancelMailto(inviteFromRow(interview, profile?.company?.name ?? ''))}>
-            <Button variant="secondary"><Mail className="size-4" />Email candidate</Button>
-          </a>
+          <Button variant="secondary" onClick={() => setEmailing(true)}><Mail className="size-4" />Email candidate</Button>
         </div>
       </Dialog>
     )

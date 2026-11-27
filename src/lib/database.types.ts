@@ -13,6 +13,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      activity_log: {
+        Row: {
+          action: string
+          actor_id: string | null
+          applicant_id: string | null
+          company_id: string
+          created_at: string
+          details: Json
+          entity_id: string | null
+          entity_type: string
+          id: number
+          opening_id: string | null
+          summary: string
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          applicant_id?: string | null
+          company_id: string
+          created_at?: string
+          details?: Json
+          entity_id?: string | null
+          entity_type: string
+          id?: number
+          opening_id?: string | null
+          summary: string
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          applicant_id?: string | null
+          company_id?: string
+          created_at?: string
+          details?: Json
+          entity_id?: string | null
+          entity_type?: string
+          id?: number
+          opening_id?: string | null
+          summary?: string
+        }
+        Relationships: []
+      }
       applicants: {
         Row: {
           city: string
@@ -142,6 +184,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      email_templates: {
+        Row: {
+          body: string
+          company_id: string
+          created_at: string
+          id: string
+          kind: Database["public"]["Enums"]["email_template_kind"]
+          language: string
+          name: string
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          body: string
+          company_id?: string
+          created_at?: string
+          id?: string
+          kind?: Database["public"]["Enums"]["email_template_kind"]
+          language?: string
+          name: string
+          subject: string
+          updated_at?: string
+        }
+        Update: {
+          body?: string
+          company_id?: string
+          created_at?: string
+          id?: string
+          kind?: Database["public"]["Enums"]["email_template_kind"]
+          language?: string
+          name?: string
+          subject?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       interviews: {
         Row: {
@@ -584,6 +662,24 @@ export type Database = {
       }
     }
     Views: {
+      activity_feed: {
+        Row: {
+          action: string | null
+          actor_email: string | null
+          actor_id: string | null
+          actor_name: string | null
+          applicant_id: string | null
+          company_id: string | null
+          created_at: string | null
+          details: Json | null
+          entity_id: string | null
+          entity_type: string | null
+          id: number | null
+          opening_id: string | null
+          summary: string | null
+        }
+        Relationships: []
+      }
       applications: {
         Row: {
           applicant_id: string | null
@@ -680,6 +776,8 @@ export type Database = {
     Functions: {
       get_careers_page: { Args: { p_slug: string }; Returns: Json }
       get_invitation: { Args: { p_token: string }; Returns: Json }
+      log_email_prepared: { Args: { p_application_id: string; p_subject: string; p_template_name: string }; Returns: undefined }
+      report_summary: { Args: { p_from: string; p_opening?: string; p_to: string }; Returns: Json }
       get_public_opening: { Args: { p_opening_id: string; p_slug: string }; Returns: Json }
       submit_application: {
         Args: {
@@ -706,6 +804,13 @@ export type Database = {
         | "hired"
         | "rejected"
         | "talentpool"
+      email_template_kind:
+        | "acknowledgement"
+        | "interview_invitation"
+        | "interview_cancellation"
+        | "rejection"
+        | "offer"
+        | "custom"
       interview_decision: "hire" | "maybe" | "no_hire"
       interview_status: "scheduled" | "completed" | "cancelled"
       interview_type: "in_person" | "phone" | "video"
@@ -735,6 +840,7 @@ export const Constants = {
   public: {
     Enums: {
       applicant_stage: ["new", "shortlisted", "interviewed", "offered", "hired", "rejected", "talentpool"],
+      email_template_kind: ["acknowledgement", "interview_invitation", "interview_cancellation", "rejection", "offer", "custom"],
       interview_decision: ["hire", "maybe", "no_hire"],
       interview_status: ["scheduled", "completed", "cancelled"],
       interview_type: ["in_person", "phone", "video"],
