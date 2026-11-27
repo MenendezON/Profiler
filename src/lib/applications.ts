@@ -60,13 +60,20 @@ export async function signedFileUrl(path: string, download = false) {
   return data.signedUrl
 }
 
-/** Remove every stored file of an applicant (used before deleting the candidate). */
-export async function deleteApplicantFiles(companyId: string, applicantId: string) {
-  const folder = `${companyId}/${applicantId}`
+/**
+ * Remove every stored file of an applicant (used before deleting the candidate):
+ * files uploaded by recruiters under <company>/<applicant>/ plus the current CV and cover letter,
+ * which live under <company>/applications/<uuid>/ when they came from the careers page.
+ */
+export async function deleteApplicantFiles(companyId: string, applicant: { id: string; resume_path: string | null; cover_letter_path: string | null }) {
+  const folder = `${companyId}/${applicant.id}`
   const { data, error } = await supabase.storage.from(RESUME_BUCKET).list(folder)
   if (error) throw new Error(error.message)
-  if (data.length) {
-    const { error: rmError } = await supabase.storage.from(RESUME_BUCKET).remove(data.map((f) => `${folder}/${f.name}`))
+  const paths = new Set(data.map((f) => `${folder}/${f.name}`))
+  if (applicant.resume_path) paths.add(applicant.resume_path)
+  if (applicant.cover_letter_path) paths.add(applicant.cover_letter_path)
+  if (paths.size) {
+    const { error: rmError } = await supabase.storage.from(RESUME_BUCKET).remove([...paths])
     if (rmError) throw new Error(rmError.message)
   }
 }

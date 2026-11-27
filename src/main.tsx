@@ -16,6 +16,8 @@ import { OpeningFormPage } from '@/pages/openings/OpeningFormPage'
 import { OpeningDetailPage } from '@/pages/openings/OpeningDetailPage'
 import { ApplicationsPage } from '@/pages/applications/ApplicationsPage'
 import { AddCandidatePage } from '@/pages/applications/AddCandidatePage'
+import { CareersPage } from '@/pages/careers/CareersPage'
+import { JobPage } from '@/pages/careers/JobPage'
 import { ComingSoon } from '@/pages/ComingSoon'
 import { NotFound } from '@/pages/NotFound'
 
@@ -26,6 +28,9 @@ const queryClient = new QueryClient({
 const router = createBrowserRouter([
   { path: '/login', element: <LoginPage /> },
   { path: '/signup', element: <SignupPage /> },
+  // public careers site (no account needed)
+  { path: '/careers/:slug', element: <CareersPage /> },
+  { path: '/careers/:slug/jobs/:openingId', element: <JobPage /> },
   {
     element: <RequireAuth />,
     children: [

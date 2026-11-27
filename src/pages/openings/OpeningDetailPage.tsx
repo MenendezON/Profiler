@@ -7,6 +7,9 @@ import { Constants, type Enums } from '@/lib/database.types'
 import { OPENING_STATUS, STAGE_LABELS, questionTypeLabel } from '@/lib/constants'
 import { Alert, Badge, Button, Card, PageHeader, Spinner } from '@/components/ui'
 import { BackTo } from '../settings/LocationsPages'
+import { CopyField } from '@/components/CopyField'
+import { useProfile } from '@/lib/auth'
+import { jobUrl } from '@/lib/careers'
 import { OPENINGS_KEY } from './OpeningsListPage'
 
 export function OpeningDetailPage() {
@@ -14,6 +17,7 @@ export function OpeningDetailPage() {
   const navigate = useNavigate()
   const qc = useQueryClient()
   const key = [...OPENINGS_KEY, 'detail', id]
+  const { data: profile } = useProfile()
 
   const { data: o, isLoading, error } = useQuery({
     queryKey: key,
@@ -124,6 +128,12 @@ export function OpeningDetailPage() {
             <h2 className="text-sm font-semibold">Status</h2>
             <div className="mt-3"><Badge tone={st.tone}>{st.label}</Badge></div>
             <p className="mt-2 text-xs text-slate-500">{st.hint}</p>
+            {o.status === 'published' && profile?.company && (
+              <div className="mt-4">
+                <p className="mb-1.5 text-xs font-medium text-slate-600">Application link</p>
+                <CopyField value={jobUrl(profile.company.slug, o.id)} label="Application link" />
+              </div>
+            )}
             <div className="mt-4 flex flex-wrap gap-2">
               {Constants.public.Enums.opening_status.filter((s) => s !== o.status).map((s) => (
                 <Button key={s} size="sm" variant="secondary" loading={setStatus.isPending && setStatus.variables === s} onClick={() => setStatus.mutate(s)}>

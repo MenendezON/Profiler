@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { supabase } from './supabase'
 import type { Tables } from './database.types'
 
-type Profile = Tables<'profiles'> & { company: Pick<Tables<'companies'>, 'id' | 'name' | 'code'> | null }
+type Profile = Tables<'profiles'> & { company: Pick<Tables<'companies'>, 'id' | 'name' | 'code' | 'slug'> | null }
 
 interface AuthState {
   session: Session | null
@@ -41,7 +41,7 @@ export function useProfile() {
     queryFn: async (): Promise<Profile> => {
       const { data, error } = await supabase
         .from('profiles')
-        .select('*, company:companies(id, name, code)')
+        .select('*, company:companies(id, name, code, slug)')
         .eq('id', userId!)
         .single()
       if (error) throw new Error(error.message)

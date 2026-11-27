@@ -43,6 +43,24 @@ Migrations live in `supabase/migrations/` and are already applied to the project
 
 CVs and cover letters live in the private Storage bucket `resumes` under `<company_id>/<applicant_id>/`. Storage policies only let a company read or write its own folder; the app opens files through 10-minute signed URLs.
 
+### Public careers page
+
+`/careers/<company-slug>` lists a company's **published** openings; `/careers/<slug>/jobs/<id>` shows one and takes applications (no account needed). The company link is in **Settings**, and each published opening shows its own application link.
+
+Anonymous visitors have **no table privileges at all**. They only call three `SECURITY DEFINER` functions, which Supabase's advisor lists as warnings on purpose:
+
+| Function | What it allows |
+|---|---|
+| `get_careers_page(slug)` | Company name + published openings |
+| `get_public_opening(slug, id)` | One published opening + its screening questions |
+| `submit_application(...)` | Validates name/email/phone/city/experience, the CV upload, required answers and allowed options; reuses the candidate by email; refuses duplicates; source = "Career page" |
+
+Candidates upload files insert-only to `<company_id>/applications/<random>/` — only for companies with a published opening, and they can't list or read anything back.
+
+Known limits: no CAPTCHA/rate limiting yet, and a file uploaded by a candidate who then abandons the form stays in Storage.
+
+Deploying: the SPA needs a catch-all rewrite to `index.html` so `/careers/...` links work — `vercel.json` (Vercel) and `public/_redirects` (Netlify) are included.
+
 Regenerate types after schema changes: `npm run gen:types` (needs the Supabase CLI and `supabase login`).
 
 ## Migration status
@@ -58,5 +76,6 @@ Regenerate types after schema changes: `npm run gen:types` (needs the Supabase C
 | Applications (stage tabs, filters, search, pagination, bulk stage moves, ratings) | ✅ |
 | Candidate panel (stage, rating, notes, CV open/replace, screening answers, move to another opening, talent pool, delete) | ✅ |
 | Add candidate (dedupe by email, CV + cover letter upload, screening answers) | ✅ |
-| Public careers page + online application | ⏳ next |
-| Interviews, Reports, Email templates, Activity log, Users/invites | ⏳ |
+| Public careers page + online application (screening questions, CV upload, consent) | ✅ |
+| Interviews (scheduling from the candidate panel) | ⏳ next |
+| Reports, Email templates, Activity log, Users/invites | ⏳ |

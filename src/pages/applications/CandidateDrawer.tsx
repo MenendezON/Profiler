@@ -86,7 +86,7 @@ export function CandidateDrawer({ applicationId, onClose, onOpen }: {
 
   const deleteCandidate = useMutation({
     mutationFn: async () => {
-      await deleteApplicantFiles(profile!.company_id, a!.id)
+      await deleteApplicantFiles(profile!.company_id, a!)
       unwrap(await supabase.from('applicants').delete().eq('id', a!.id))
     },
     onSuccess: () => { done(); onClose() },

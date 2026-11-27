@@ -84,6 +84,7 @@ export type Database = {
           created_at: string
           id: string
           name: string
+          slug: string
           status: string
           updated_at: string
           website: string | null
@@ -93,6 +94,7 @@ export type Database = {
           created_at?: string
           id?: string
           name: string
+          slug: string
           status?: string
           updated_at?: string
           website?: string | null
@@ -102,6 +104,7 @@ export type Database = {
           created_at?: string
           id?: string
           name?: string
+          slug?: string
           status?: string
           updated_at?: string
           website?: string | null
@@ -520,7 +523,23 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      get_careers_page: { Args: { p_slug: string }; Returns: Json }
+      get_public_opening: { Args: { p_opening_id: string; p_slug: string }; Returns: Json }
+      submit_application: {
+        Args: {
+          p_answers?: Json
+          p_city: string
+          p_cover_letter_path?: string
+          p_email: string
+          p_experience: number
+          p_first_name: string
+          p_last_name: string
+          p_opening_id: string
+          p_phone: string
+          p_resume_path: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
       applicant_stage:

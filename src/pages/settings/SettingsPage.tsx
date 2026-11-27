@@ -1,6 +1,9 @@
 import { Link } from 'react-router'
 import { Building2, ClipboardList, History, Mail, MapPin, Users } from 'lucide-react'
 import { Badge, Card, PageHeader } from '@/components/ui'
+import { CopyField } from '@/components/CopyField'
+import { useProfile } from '@/lib/auth'
+import { careersUrl } from '@/lib/careers'
 
 const sections = [
   { to: '/settings/locations', title: 'Locations', description: 'Offices and sites for your openings.', icon: MapPin, ready: true },
@@ -12,9 +15,21 @@ const sections = [
 ]
 
 export function SettingsPage() {
+  const { data: profile } = useProfile()
   return (
     <>
       <PageHeader title="Settings" description="Configure Profiler for your organization." />
+      {profile?.company && (
+        <Card className="mb-6 flex flex-col gap-4 p-5 sm:flex-row sm:items-center">
+          <div className="flex-1">
+            <h2 className="font-semibold text-slate-900">Careers page</h2>
+            <p className="mt-1 text-sm text-slate-500">
+              Share this link on your website, LinkedIn or WhatsApp. It lists your <strong>published</strong> openings and lets candidates apply with their CV.
+            </p>
+          </div>
+          <div className="sm:w-96"><CopyField value={careersUrl(profile.company.slug)} label="Careers page link" /></div>
+        </Card>
+      )}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {sections.map(({ to, title, description, icon: Icon, ready }) => {
           const body = (
