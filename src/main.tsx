@@ -18,6 +18,7 @@ import { ApplicationsPage } from '@/pages/applications/ApplicationsPage'
 import { AddCandidatePage } from '@/pages/applications/AddCandidatePage'
 import { CareersPage } from '@/pages/careers/CareersPage'
 import { JobPage } from '@/pages/careers/JobPage'
+import { InterviewsPage } from '@/pages/InterviewsPage'
 import { ComingSoon } from '@/pages/ComingSoon'
 import { NotFound } from '@/pages/NotFound'
 
@@ -42,7 +43,7 @@ const router = createBrowserRouter([
       { path: 'openings/:id/edit', element: <OpeningFormPage key="edit" /> },
       { path: 'applications', element: <ApplicationsPage /> },
       { path: 'applications/new', element: <AddCandidatePage /> },
-      { path: 'interviews', element: <ComingSoon title="Interviews" /> },
+      { path: 'interviews', element: <InterviewsPage /> },
       { path: 'reports', element: <ComingSoon title="Reports" /> },
       { path: 'settings', element: <SettingsPage /> },
       { path: 'settings/locations', element: <LocationsListPage /> },

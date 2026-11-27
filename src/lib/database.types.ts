@@ -143,6 +143,80 @@ export type Database = {
           },
         ]
       }
+      interviews: {
+        Row: {
+          application_id: string
+          cancel_reason: string | null
+          company_id: string
+          created_at: string
+          created_by: string | null
+          decision: Database["public"]["Enums"]["interview_decision"] | null
+          duration_minutes: number
+          feedback: string | null
+          feedback_at: string | null
+          id: string
+          interviewer_id: string | null
+          location_id: string | null
+          meeting_details: string | null
+          message: string | null
+          rating: number | null
+          scheduled_at: string
+          status: Database["public"]["Enums"]["interview_status"]
+          type: Database["public"]["Enums"]["interview_type"]
+          updated_at: string
+        }
+        Insert: {
+          application_id: string
+          cancel_reason?: string | null
+          company_id?: string
+          created_at?: string
+          created_by?: string | null
+          decision?: Database["public"]["Enums"]["interview_decision"] | null
+          duration_minutes?: number
+          feedback?: string | null
+          feedback_at?: string | null
+          id?: string
+          interviewer_id?: string | null
+          location_id?: string | null
+          meeting_details?: string | null
+          message?: string | null
+          rating?: number | null
+          scheduled_at: string
+          status?: Database["public"]["Enums"]["interview_status"]
+          type?: Database["public"]["Enums"]["interview_type"]
+          updated_at?: string
+        }
+        Update: {
+          application_id?: string
+          cancel_reason?: string | null
+          company_id?: string
+          created_at?: string
+          created_by?: string | null
+          decision?: Database["public"]["Enums"]["interview_decision"] | null
+          duration_minutes?: number
+          feedback?: string | null
+          feedback_at?: string | null
+          id?: string
+          interviewer_id?: string | null
+          location_id?: string | null
+          meeting_details?: string | null
+          message?: string | null
+          rating?: number | null
+          scheduled_at?: string
+          status?: Database["public"]["Enums"]["interview_status"]
+          type?: Database["public"]["Enums"]["interview_type"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "interviews_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "opening_applicants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       locations: {
         Row: {
           address: string
@@ -491,6 +565,42 @@ export type Database = {
         }
         Relationships: []
       }
+      interview_list: {
+        Row: {
+          applicant_id: string | null
+          application_id: string | null
+          cancel_reason: string | null
+          created_at: string | null
+          decision: Database["public"]["Enums"]["interview_decision"] | null
+          duration_minutes: number | null
+          email: string | null
+          feedback: string | null
+          feedback_at: string | null
+          first_name: string | null
+          full_name: string | null
+          id: string | null
+          interviewer_email: string | null
+          interviewer_id: string | null
+          interviewer_name: string | null
+          last_name: string | null
+          location_address: string | null
+          location_city: string | null
+          location_id: string | null
+          location_name: string | null
+          meeting_details: string | null
+          message: string | null
+          opening_code: string | null
+          opening_id: string | null
+          opening_title: string | null
+          phone: string | null
+          rating: number | null
+          scheduled_at: string | null
+          stage: Database["public"]["Enums"]["applicant_stage"] | null
+          status: Database["public"]["Enums"]["interview_status"] | null
+          type: Database["public"]["Enums"]["interview_type"] | null
+        }
+        Relationships: []
+      }
       opening_pipeline_counts: {
         Row: {
           opening_id: string | null
@@ -550,6 +660,9 @@ export type Database = {
         | "hired"
         | "rejected"
         | "talentpool"
+      interview_decision: "hire" | "maybe" | "no_hire"
+      interview_status: "scheduled" | "completed" | "cancelled"
+      interview_type: "in_person" | "phone" | "video"
       opening_status: "published" | "internal" | "unpublished"
       user_role: "admin" | "recruiter" | "viewer"
     }
@@ -576,6 +689,9 @@ export const Constants = {
   public: {
     Enums: {
       applicant_stage: ["new", "shortlisted", "interviewed", "offered", "hired", "rejected", "talentpool"],
+      interview_decision: ["hire", "maybe", "no_hire"],
+      interview_status: ["scheduled", "completed", "cancelled"],
+      interview_type: ["in_person", "phone", "video"],
       opening_status: ["published", "internal", "unpublished"],
       user_role: ["admin", "recruiter", "viewer"],
     },

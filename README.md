@@ -37,6 +37,7 @@ Every business table carries a `company_id`. RLS policies restrict each signed-i
 | `questions`            | `questions`             | `screeningquestion_id` → `template_id`, new `position`, `options text[]` for predefined answers, `type` limited to 8 field types |
 | `openings`             | `openings`              | `status` is an enum; `user_id` → `created_by`; `code` auto-generated per company (`FABR-001`) when blank |
 | `applicants`           | `applicants`            | **added `company_id`** (was missing → data leaked across companies); `skills` is `text[]`; one record per email per company; CV paths point to Storage |
+| —                      | `interviews`            | new: one row per interview, linked to an application; venue, interviewer and application must be in the same company |
 | `openingapplicants`    | `opening_applicants`    | own `id`, `stage` enum, unique (opening, applicant) incl. one talent-pool row, `answers jsonb` for screening answers. Read through the `applications` view |
 
 Migrations live in `supabase/migrations/` and are already applied to the project. Tenancy helpers live in a non-exposed `private` schema. Triggers stop non-admins from changing their role/status, stop anyone from switching companies, and stop an opening from referencing another company's location, department or template.
@@ -77,5 +78,6 @@ Regenerate types after schema changes: `npm run gen:types` (needs the Supabase C
 | Candidate panel (stage, rating, notes, CV open/replace, screening answers, move to another opening, talent pool, delete) | ✅ |
 | Add candidate (dedupe by email, CV + cover letter upload, screening answers) | ✅ |
 | Public careers page + online application (screening questions, CV upload, consent) | ✅ |
-| Interviews (scheduling from the candidate panel) | ⏳ next |
-| Reports, Email templates, Activity log, Users/invites | ⏳ |
+| Interviews: schedule / reschedule / cancel from the candidate panel, feedback with hire–maybe–no-hire + rating, Interviews page (upcoming, pending feedback, feedback given, cancelled), dashboard card, email invitation (mailto) + calendar file (.ics) | ✅ |
+| Users & invitations (needed for multiple interviewers) | ⏳ next |
+| Reports, Email templates, Activity log | ⏳ |

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Link } from 'react-router'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
-  Briefcase, Calendar, Check, Copy, Download, ExternalLink, FileText, FolderOpen, Mail, MapPin, MoreHorizontal,
+  Briefcase, Calendar, CalendarPlus, Check, Copy, Download, ExternalLink, FileText, FolderOpen, Mail, MapPin, MoreHorizontal,
   Pencil, Phone, Repeat, Trash2, Upload, UserMinus, X,
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
@@ -15,6 +15,8 @@ import {
   uploadApplicantFile, validateResume, type Stage,
 } from '@/lib/applications'
 import { Alert, Avatar, Badge, Button, Dialog, Field, Input, Select, Spinner, Stars, Textarea } from '@/components/ui'
+import { ScheduleInterviewDialog } from '@/components/interviews/InterviewDialogs'
+import { InterviewItem } from '@/components/interviews/InterviewItem'
 
 export function CandidateDrawer({ applicationId, onClose, onOpen }: {
   applicationId: string
@@ -25,7 +27,7 @@ export function CandidateDrawer({ applicationId, onClose, onOpen }: {
   const { data: profile } = useProfile()
   const fileInput = useRef<HTMLInputElement>(null)
   const [menu, setMenu] = useState(false)
-  const [dialog, setDialog] = useState<'edit' | 'move' | null>(null)
+  const [dialog, setDialog] = useState<'edit' | 'move' | 'schedule' | null>(null)
   const [copied, setCopied] = useState(false)
 
   useEffect(() => {
@@ -54,7 +56,10 @@ export function CandidateDrawer({ applicationId, onClose, onOpen }: {
           .neq('id', applicationId)
           .order('created_at', { ascending: false }),
       )
-      return { app, others }
+      const interviews = unwrap(
+        await supabase.from('interview_list').select('*').eq('application_id', applicationId).order('scheduled_at', { ascending: false }),
+      )
+      return { app, others, interviews }
     },
   })
 
@@ -177,6 +182,7 @@ export function CandidateDrawer({ applicationId, onClose, onOpen }: {
                   </p>
                   <div className="mt-2"><Stars value={app.rating} size="md" onChange={(rating) => patchApp.mutate({ rating })} disabled={patchApp.isPending} /></div>
                 </div>
+                <Button size="sm" onClick={() => setDialog('schedule')}><CalendarPlus className="size-4" />Schedule interview</Button>
               </div>
 
               {/* stage */}
@@ -246,6 +252,16 @@ export function CandidateDrawer({ applicationId, onClose, onOpen }: {
                 {replaceCv.isPending && a.resume_path && <p className="mt-2 text-xs text-slate-500">Uploading…</p>}
               </div>
 
+              {/* interviews */}
+              {!!data?.interviews.length && (
+                <div>
+                  <p className="mb-2 text-xs font-medium uppercase tracking-wide text-slate-500">Interviews</p>
+                  <div className="divide-y divide-slate-100 rounded-lg border border-slate-200">
+                    {data.interviews.map((iv) => <InterviewItem key={iv.id} row={iv} compact />)}
+                  </div>
+                </div>
+              )}
+
               {/* notes */}
               <NotesEditor key={app.id} initial={app.notes ?? ''} saving={patchApp.isPending} onSave={(notes) => patchApp.mutate({ notes: notes || null })} />
 
@@ -291,6 +307,18 @@ export function CandidateDrawer({ applicationId, onClose, onOpen }: {
       </aside>
 
       {dialog === 'edit' && a && <EditProfileDialog applicant={a} onClose={() => setDialog(null)} onSaved={() => { done(); setDialog(null) }} />}
+      {dialog === 'schedule' && app && a && (
+        <ScheduleInterviewDialog
+          candidate={{
+            applicationId: app.id,
+            stage: app.stage,
+            candidateName: `${a.first_name} ${a.last_name}`,
+            candidateEmail: a.email,
+            openingTitle: app.opening?.title ?? null,
+          }}
+          onClose={() => setDialog(null)}
+        />
+      )}
       {dialog === 'move' && app && (
         <MoveDialog
           applicationId={app.id}

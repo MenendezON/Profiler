@@ -1,6 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router'
-import { Briefcase, Building2, MapPin, Users } from 'lucide-react'
+import { InterviewItem } from '@/components/interviews/InterviewItem'
+import { formatDay } from '@/lib/interviews'
+import { Briefcase, Building2, CalendarClock, MapPin, Users } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { unwrap } from '@/lib/utils'
 import { useProfile } from '@/lib/auth'
@@ -44,6 +46,48 @@ function Stat({ label, value, icon: Icon, to }: { label: string; value: number; 
         </div>
       </Card>
     </Link>
+  )
+}
+
+function UpcomingInterviews() {
+  const { data, isLoading } = useQuery({
+    queryKey: ['dashboard-upcoming'],
+    queryFn: async () =>
+      unwrap(
+        await supabase
+          .from('interview_list')
+          .select('*')
+          .eq('status', 'scheduled')
+          .gte('scheduled_at', new Date().toISOString())
+          .order('scheduled_at')
+          .limit(5),
+      ),
+  })
+  return (
+    <Card>
+      <div className="flex items-center justify-between border-b border-slate-100 px-5 py-3">
+        <h2 className="text-sm font-semibold text-slate-900">Upcoming interviews</h2>
+        <Link to="/interviews" className="text-xs font-medium text-brand-600 hover:underline">See all</Link>
+      </div>
+      {isLoading ? (
+        <div className="p-5"><Spinner /></div>
+      ) : !data?.length ? (
+        <p className="flex items-center gap-2 px-5 py-6 text-sm text-slate-500"><CalendarClock className="size-4" />No interviews scheduled.</p>
+      ) : (
+        <div className="divide-y divide-slate-100">
+          {data.map((r, i) => {
+            const day = formatDay(r.scheduled_at!)
+            const newDay = i === 0 || formatDay(data[i - 1].scheduled_at!) !== day
+            return (
+              <div key={r.id}>
+                {newDay && <p className="px-4 pt-2 text-[11px] font-medium uppercase tracking-wide text-slate-400">{day}</p>}
+                <InterviewItem row={r} />
+              </div>
+            )
+          })}
+        </div>
+      )}
+    </Card>
   )
 }
 
@@ -104,6 +148,8 @@ export function DashboardPage() {
               </ul>
             </Card>
           </div>
+
+          <UpcomingInterviews />
         </div>
       )}
     </>
