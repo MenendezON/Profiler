@@ -34,12 +34,12 @@ Every business table carries a `company_id`. RLS policies restrict each signed-i
 | `locations`            | `locations`             | `code_postal` → `postal_code` |
 | `departments`          | `departments`           | |
 | `screeningquestions`   | `screening_templates`   | `data` → `name` |
-| `questions`            | `questions`             | `screeningquestion_id` → `template_id`, new `position` |
-| `openings`             | `openings`              | `status` is an enum; `user_id` → `created_by` |
+| `questions`            | `questions`             | `screeningquestion_id` → `template_id`, new `position`, `options text[]` for predefined answers, `type` limited to 8 field types |
+| `openings`             | `openings`              | `status` is an enum; `user_id` → `created_by`; `code` auto-generated per company (`FABR-001`) when blank |
 | `applicants`           | `applicants`            | **added `company_id`** (was missing → data leaked across companies); `skills` is `text[]` |
 | `openingapplicants`    | `opening_applicants`    | own `id`, `stage` enum, unique (opening, applicant) |
 
-Migrations live in `supabase/migrations/` and are already applied to the project. Tenancy helpers live in a non-exposed `private` schema; a trigger stops non-admins from changing their role/status or anyone from switching companies.
+Migrations live in `supabase/migrations/` and are already applied to the project. Tenancy helpers live in a non-exposed `private` schema. Triggers stop non-admins from changing their role/status, stop anyone from switching companies, and stop an opening from referencing another company's location, department or template.
 
 Regenerate types after schema changes: `npm run gen:types` (needs the Supabase CLI and `supabase login`).
 
@@ -51,7 +51,7 @@ Regenerate types after schema changes: `npm run gen:types` (needs the Supabase C
 | Dashboard (pipeline + opening stats) | ✅ |
 | Settings → Locations (list/create/edit/delete) | ✅ |
 | Settings → Departments (list/create/edit/delete) | ✅ |
-| Settings → Screening question templates | ⏳ next |
-| Job openings (list by status, create, edit, details) | ⏳ |
-| Applications (pipeline, add candidate, bulk moves, CV upload → Supabase Storage) | ⏳ |
+| Settings → Screening question templates (questions, predefined answers, ordering, form preview) | ✅ |
+| Job openings (status tabs + search, create, edit, details with pipeline, status switch) | ✅ |
+| Applications (pipeline, add candidate, bulk moves, CV upload → Supabase Storage) | ⏳ next |
 | Interviews, Reports, Email templates, Activity log, Users/invites | ⏳ |

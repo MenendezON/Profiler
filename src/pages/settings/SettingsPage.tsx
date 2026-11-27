@@ -5,7 +5,7 @@ import { Badge, Card, PageHeader } from '@/components/ui'
 const sections = [
   { to: '/settings/locations', title: 'Locations', description: 'Offices and sites for your openings.', icon: MapPin, ready: true },
   { to: '/settings/departments', title: 'Departments', description: 'Teams that own job openings.', icon: Building2, ready: true },
-  { to: '/settings/screening-templates', title: 'Screening questions', description: 'Reusable application form templates.', icon: ClipboardList, ready: false },
+  { to: '/settings/screening-templates', title: 'Screening questions', description: 'Reusable application form templates.', icon: ClipboardList, ready: true },
   { to: '/settings/users', title: 'Users', description: 'Invite recruiters and manage roles.', icon: Users, ready: false },
   { to: '/settings/email-templates', title: 'Email templates', description: 'Messages sent to candidates.', icon: Mail, ready: false },
   { to: '/settings/activity-log', title: 'Activity log', description: 'Who changed what, and when.', icon: History, ready: false },

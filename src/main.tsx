@@ -10,6 +10,10 @@ import { DashboardPage } from '@/pages/DashboardPage'
 import { SettingsPage } from '@/pages/settings/SettingsPage'
 import { LocationFormPage, LocationsListPage } from '@/pages/settings/LocationsPages'
 import { DepartmentFormPage, DepartmentsListPage } from '@/pages/settings/DepartmentsPages'
+import { ScreeningTemplateDetailPage, ScreeningTemplatesListPage } from '@/pages/settings/ScreeningTemplatesPages'
+import { OpeningsListPage } from '@/pages/openings/OpeningsListPage'
+import { OpeningFormPage } from '@/pages/openings/OpeningFormPage'
+import { OpeningDetailPage } from '@/pages/openings/OpeningDetailPage'
 import { ComingSoon } from '@/pages/ComingSoon'
 import { NotFound } from '@/pages/NotFound'
 
@@ -25,7 +29,10 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="/dashboard" replace /> },
       { path: 'dashboard', element: <DashboardPage /> },
-      { path: 'openings/*', element: <ComingSoon title="Job Openings" /> },
+      { path: 'openings', element: <OpeningsListPage /> },
+      { path: 'openings/new', element: <OpeningFormPage /> },
+      { path: 'openings/:id', element: <OpeningDetailPage /> },
+      { path: 'openings/:id/edit', element: <OpeningFormPage key="edit" /> },
       { path: 'applications/*', element: <ComingSoon title="Applications" /> },
       { path: 'interviews', element: <ComingSoon title="Interviews" /> },
       { path: 'reports', element: <ComingSoon title="Reports" /> },
@@ -36,6 +43,8 @@ const router = createBrowserRouter([
       { path: 'settings/departments', element: <DepartmentsListPage /> },
       { path: 'settings/departments/new', element: <DepartmentFormPage /> },
       { path: 'settings/departments/:id/edit', element: <DepartmentFormPage /> },
+      { path: 'settings/screening-templates', element: <ScreeningTemplatesListPage /> },
+      { path: 'settings/screening-templates/:id', element: <ScreeningTemplateDetailPage /> },
     ],
   },
   { path: '*', element: <NotFound /> },

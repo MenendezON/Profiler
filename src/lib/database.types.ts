@@ -258,7 +258,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
-          code: string
+          code?: string
           company_id?: string
           created_at?: string
           created_by?: string | null
@@ -385,6 +385,7 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          options: string[]
           position: number
           required: boolean
           template_id: string
@@ -395,6 +396,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          options?: string[]
           position?: number
           required?: boolean
           template_id: string
@@ -405,6 +407,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          options?: string[]
           position?: number
           required?: boolean
           template_id?: string
@@ -456,6 +459,22 @@ export type Database = {
       }
     }
     Views: {
+      opening_pipeline_counts: {
+        Row: {
+          opening_id: string | null
+          stage: Database["public"]["Enums"]["applicant_stage"] | null
+          total: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "opening_applicants_opening_id_fkey"
+            columns: ["opening_id"]
+            isOneToOne: false
+            referencedRelation: "openings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       opening_status_counts: {
         Row: {
           status: Database["public"]["Enums"]["opening_status"] | null

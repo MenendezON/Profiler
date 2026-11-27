@@ -6,22 +6,8 @@ import { unwrap } from '@/lib/utils'
 import { useProfile } from '@/lib/auth'
 import { Constants, type Enums } from '@/lib/database.types'
 import { Card, PageHeader, Spinner } from '@/components/ui'
+import { OPENING_STATUS, STAGE_LABELS } from '@/lib/constants'
 
-const stageLabels: Record<Enums<'applicant_stage'>, string> = {
-  new: 'New',
-  shortlisted: 'Shortlisted',
-  interviewed: 'Interviewed',
-  offered: 'Offered',
-  hired: 'Hired',
-  rejected: 'Rejected',
-  talentpool: 'Talent pool',
-}
-
-const openingLabels: Record<Enums<'opening_status'>, string> = {
-  published: 'Published',
-  internal: 'Internal',
-  unpublished: 'Unpublished',
-}
 
 function useDashboardStats() {
   return useQuery({
@@ -95,7 +81,7 @@ export function DashboardPage() {
                   const value = data.stages[stage] ?? 0
                   return (
                     <li key={stage} className="grid grid-cols-[7rem_1fr_2.5rem] items-center gap-3 text-sm">
-                      <span className="text-slate-600">{stageLabels[stage]}</span>
+                      <span className="text-slate-600">{STAGE_LABELS[stage]}</span>
                       <div className="h-2 rounded-full bg-slate-100">
                         <div className="h-2 rounded-full bg-brand-500" style={{ width: `${(value / pipelineMax) * 100}%` }} />
                       </div>
@@ -111,7 +97,7 @@ export function DashboardPage() {
               <ul className="mt-4 divide-y divide-slate-100">
                 {Constants.public.Enums.opening_status.map((status) => (
                   <li key={status} className="flex items-center justify-between py-2.5 text-sm">
-                    <span className="text-slate-600">{openingLabels[status]}</span>
+                    <span className="text-slate-600">{OPENING_STATUS[status].label}</span>
                     <span className="font-medium tabular-nums">{data.openings[status] ?? 0}</span>
                   </li>
                 ))}

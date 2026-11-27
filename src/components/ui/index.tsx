@@ -1,5 +1,5 @@
 import { forwardRef, type ButtonHTMLAttributes, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes, type TextareaHTMLAttributes } from 'react'
-import { Loader2 } from 'lucide-react'
+import { Loader2, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 // ---------- Button ----------
@@ -116,5 +116,41 @@ export function EmptyState({ icon, title, description, action }: { icon: ReactNo
       <p className="mt-1 max-w-sm text-sm text-slate-500">{description}</p>
       {action && <div className="mt-4">{action}</div>}
     </div>
+  )
+}
+
+// ---------- Dialog ----------
+export function Dialog({ open, onClose, title, children, footer, size = 'md' }: {
+  open: boolean
+  onClose: () => void
+  title: string
+  children: ReactNode
+  footer?: ReactNode
+  size?: 'md' | 'lg'
+}) {
+  if (!open) return null
+  return (
+    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4 sm:items-center" role="dialog" aria-modal="true" aria-label={title}>
+      <div className="fixed inset-0 bg-slate-900/40" onClick={onClose} />
+      <div className={cn('relative w-full rounded-xl bg-white shadow-xl', size === 'lg' ? 'max-w-2xl' : 'max-w-md')}>
+        <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+          <h2 className="text-base font-semibold text-slate-900">{title}</h2>
+          <button type="button" onClick={onClose} className="rounded-md p-1 text-slate-500 hover:bg-slate-100" aria-label="Close">
+            <X className="size-4" />
+          </button>
+        </div>
+        <div className="px-5 py-4">{children}</div>
+        {footer && <div className="flex justify-end gap-2 border-t border-slate-200 px-5 py-3">{footer}</div>}
+      </div>
+    </div>
+  )
+}
+
+export function Checkbox({ label, ...props }: InputHTMLAttributes<HTMLInputElement> & { label: ReactNode }) {
+  return (
+    <label className="inline-flex cursor-pointer items-center gap-2 text-sm text-slate-700">
+      <input type="checkbox" className="size-4 rounded border-slate-300 accent-brand-600" {...props} />
+      {label}
+    </label>
   )
 }
