@@ -14,11 +14,12 @@ import {
   RESUME_ACCEPT, STAGE_TONES, deleteApplicantFiles, initials, invalidateApplications, signedFileUrl,
   uploadApplicantFile, validateResume, type Stage,
 } from '@/lib/applications'
-import { Alert, Avatar, Badge, Button, Dialog, Field, Input, Select, Spinner, Stars, Textarea } from '@/components/ui'
+import { Alert, Avatar, Badge, Button, Dialog, Field, Input, Spinner, Stars, Textarea } from '@/components/ui'
 import { ScheduleInterviewDialog } from '@/components/interviews/InterviewDialogs'
 import { InterviewItem } from '@/components/interviews/InterviewItem'
 import { ActivityItem } from '@/components/ActivityTimeline'
 import { SendEmailDialog } from '@/components/SendEmailDialog'
+import { MoveToOpeningDialog } from '@/components/MoveToOpening'
 
 export function CandidateDrawer({ applicationId, onClose, onOpen }: {
   applicationId: string
@@ -142,8 +143,8 @@ export function CandidateDrawer({ applicationId, onClose, onOpen }: {
             {menu && app && (
               <div className="absolute right-8 top-9 z-10 w-56 overflow-hidden rounded-lg border border-slate-200 bg-white py-1 text-sm shadow-lg" onMouseLeave={() => setMenu(false)}>
                 <MenuItem icon={Pencil} onClick={() => { setMenu(false); setDialog('edit') }}>Edit profile</MenuItem>
-                <MenuItem icon={Repeat} onClick={() => { setMenu(false); setDialog('move') }}>Move to another opening</MenuItem>
-                <MenuItem icon={FolderOpen} onClick={() => { setMenu(false); patchApp.mutate({ stage: 'talentpool' }) }}>Move to talent pool</MenuItem>
+                <MenuItem icon={Repeat} onClick={() => { setMenu(false); setDialog('move') }}>{app.stage === 'talentpool' ? 'Move to an opening' : 'Move to another opening'}</MenuItem>
+                {app.stage !== 'talentpool' && <MenuItem icon={FolderOpen} onClick={() => { setMenu(false); patchApp.mutate({ stage: 'talentpool' }) }}>Move to talent pool</MenuItem>}
                 {!!data?.others.length && (
                   <MenuItem icon={UserMinus} onClick={() => { setMenu(false); confirm('Remove this application? The candidate keeps their other applications.') && removeApplication.mutate() }}>
                     Remove this application
@@ -195,6 +196,17 @@ export function CandidateDrawer({ applicationId, onClose, onOpen }: {
                   </div>
                 </Can>
               </div>
+
+              {/* talent pool → opening */}
+              {app.stage === 'talentpool' && canEdit && (
+                <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-brand-200 bg-brand-50 px-4 py-3">
+                  <p className="text-sm text-brand-800">
+                    <FolderOpen className="mr-1.5 inline size-4" />
+                    In your talent pool{app.opening ? ` (from ${app.opening.title})` : ''}.
+                  </p>
+                  <Button size="sm" onClick={() => setDialog('move')}><Repeat className="size-4" />Move to an opening</Button>
+                </div>
+              )}
 
               {/* stage */}
               <div>
@@ -351,12 +363,12 @@ export function CandidateDrawer({ applicationId, onClose, onOpen }: {
           onClose={() => { setDialog(null); qc.invalidateQueries({ queryKey: ['application', applicationId] }) }}
         />
       )}
-      {dialog === 'move' && app && (
-        <MoveDialog
-          applicationId={app.id}
-          currentOpeningId={app.opening_id}
+      {dialog === 'move' && app && a && (
+        <MoveToOpeningDialog
+          applicationIds={[app.id]}
+          label={`${a.first_name} ${a.last_name}${app.stage === 'talentpool' ? ' is in your talent pool.' : app.opening ? ` · currently in ${app.opening.title}` : ''}`}
+          excludeOpeningId={app.stage === 'talentpool' ? null : app.opening_id}
           onClose={() => setDialog(null)}
-          onSaved={() => { done(); setDialog(null) }}
         />
       )}
     </div>
@@ -452,44 +464,6 @@ function EditProfileDialog({ applicant, onClose, onSaved }: {
           </Field>
         </div>
       </form>
-    </Dialog>
-  )
-}
-
-function MoveDialog({ applicationId, currentOpeningId, onClose, onSaved }: {
-  applicationId: string
-  currentOpeningId: string | null
-  onClose: () => void
-  onSaved: () => void
-}) {
-  const openings = useQuery({
-    queryKey: ['openings', 'options'],
-    queryFn: async () => unwrap(await supabase.from('openings').select('id, title, code').order('created_at', { ascending: false })),
-  })
-  const [target, setTarget] = useState('')
-  const move = useMutation({
-    mutationFn: async () =>
-      unwrap(await supabase.from('opening_applicants').update({ opening_id: target || null, stage: 'new' }).eq('id', applicationId)),
-    onSuccess: onSaved,
-  })
-  const choices = (openings.data ?? []).filter((o) => o.id !== currentOpeningId)
-
-  return (
-    <Dialog
-      open
-      onClose={onClose}
-      title="Move to another opening"
-      footer={<><Button variant="secondary" onClick={onClose}>Cancel</Button><Button onClick={() => move.mutate()} disabled={!target} loading={move.isPending}>Move</Button></>}
-    >
-      <div className="space-y-3">
-        {move.error && <Alert>{friendlyError(move.error.message)}</Alert>}
-        <Field label="Opening" htmlFor="move-target" hint="The application restarts at the New stage.">
-          <Select id="move-target" value={target} onChange={(e) => setTarget(e.target.value)}>
-            <option value="" disabled>— Select an opening —</option>
-            {choices.map((o) => <option key={o.id} value={o.id}>{o.code} · {o.title}</option>)}
-          </Select>
-        </Field>
-      </div>
     </Dialog>
   )
 }

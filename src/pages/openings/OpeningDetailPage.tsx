@@ -1,16 +1,23 @@
-import { Link, useNavigate, useParams } from 'react-router'
+import { useState } from 'react'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Building2, ClipboardList, Globe, MapPin, Pencil, Trash2 } from 'lucide-react'
+import { Building2, ClipboardList, ExternalLink, FolderOpen, Globe, MapPin, Paperclip, Pencil, Plus, Trash2, UserPlus, Users } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { cn, formatDate, unwrap } from '@/lib/utils'
 import { Constants, type Enums } from '@/lib/database.types'
 import { OPENING_STATUS, STAGE_LABELS, questionTypeLabel } from '@/lib/constants'
-import { Alert, Badge, Button, Card, PageHeader, Spinner } from '@/components/ui'
+import { Alert, Avatar, Badge, Button, Card, EmptyState, PageHeader, Spinner, Stars } from '@/components/ui'
+import { STAGE_TONES, initials, type Stage } from '@/lib/applications'
+import { CandidateDrawer } from '../applications/CandidateDrawer'
+import { TalentPoolPicker } from '@/components/MoveToOpening'
 import { BackTo } from '../settings/LocationsPages'
 import { CopyField } from '@/components/CopyField'
-import { Can, useProfile } from '@/lib/auth'
+import { Can, useProfile, useRole } from '@/lib/auth'
 import { jobUrl } from '@/lib/careers'
 import { OPENINGS_KEY } from './OpeningsListPage'
+
+// Talent pool is company-wide (card on the right), so the opening's pipeline shows the six hiring stages.
+const PIPELINE_STAGES: Stage[] = ['new', 'shortlisted', 'interviewed', 'offered', 'hired', 'rejected']
 
 export function OpeningDetailPage() {
   const { id } = useParams()
@@ -18,6 +25,28 @@ export function OpeningDetailPage() {
   const qc = useQueryClient()
   const key = [...OPENINGS_KEY, 'detail', id]
   const { data: profile } = useProfile()
+  const { canEdit } = useRole()
+  const [params, setParams] = useSearchParams()
+  const openId = params.get('application')
+  const [stageFilter, setStageFilter] = useState<Stage | 'all'>('all')
+  const [picking, setPicking] = useState(false)
+  const setApplication = (appId: string | null) => {
+    const next = new URLSearchParams(params)
+    if (appId) next.set('application', appId)
+    else next.delete('application')
+    setParams(next, { replace: true })
+  }
+
+  const candidates = useQuery({
+    queryKey: ['opening-candidates', id],
+    queryFn: async () => unwrap(await supabase.from('applications').select('*').eq('opening_id', id!).order('created_at', { ascending: false })),
+  })
+
+  // company-wide talent pool (distinct candidates)
+  const pool = useQuery({
+    queryKey: ['talent-pool', 'count'],
+    queryFn: async () => new Set(unwrap(await supabase.from('applications').select('applicant_id').eq('stage', 'talentpool')).map((r) => r.applicant_id)).size,
+  })
 
   const { data: o, isLoading, error } = useQuery({
     queryKey: key,
@@ -61,6 +90,7 @@ export function OpeningDetailPage() {
 
   const counts = Object.fromEntries((pipeline.data ?? []).map((r) => [r.stage, r.total ?? 0])) as Partial<Record<Enums<'applicant_stage'>, number>>
   const totalApplicants = Object.values(counts).reduce((a, b) => a + (b ?? 0), 0)
+  const visible = (candidates.data ?? []).filter((c) => stageFilter === 'all' || c.stage === stageFilter)
   const questions = [...(o.template?.questions ?? [])].sort((a, b) => a.position - b.position)
   const st = OPENING_STATUS[o.status]
 
@@ -72,9 +102,12 @@ export function OpeningDetailPage() {
         description={`${o.code} · created ${formatDate(o.created_at)}${o.author ? ` by ${o.author.first_name} ${o.author.last_name}` : ''}`}
         actions={
           <Can edit>
+            <Link to={`/applications/new?opening=${o.id}`}><Button><UserPlus className="size-4" />Add candidate</Button></Link>
+            <Link to="/openings/new"><Button variant="secondary"><Plus className="size-4" />New opening</Button></Link>
             <Link to="edit"><Button variant="secondary"><Pencil className="size-4" />Edit</Button></Link>
             <Button
               variant="ghost"
+              title="Delete opening"
               className="text-red-600 hover:bg-red-50"
               loading={remove.isPending}
               onClick={() =>
@@ -85,7 +118,7 @@ export function OpeningDetailPage() {
                 ) && remove.mutate()
               }
             >
-              <Trash2 className="size-4" />Delete
+              <Trash2 className="size-4" /><span className="sr-only">Delete</span>
             </Button>
           </Can>
         }
@@ -97,20 +130,76 @@ export function OpeningDetailPage() {
           <Card className="p-5">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold">Pipeline</h2>
-              <span className="text-sm text-slate-500">{totalApplicants} applicant(s)</span>
+              <Link to={`/applications?opening=${o.id}&stage=all`} className="inline-flex items-center gap-1 text-xs font-medium text-brand-600 hover:underline">
+                Open in Applications <ExternalLink className="size-3" />
+              </Link>
             </div>
-            <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">
-              {Constants.public.Enums.applicant_stage.map((s) => (
-                <Link
+            <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-6">
+              {PIPELINE_STAGES.map((s) => (
+                <button
                   key={s}
-                  to={`/applications?opening=${o.id}&stage=${s}`}
-                  className="rounded-lg border border-slate-200 p-3 text-center hover:border-brand-300 hover:bg-brand-50"
+                  onClick={() => setStageFilter(stageFilter === s ? 'all' : s)}
+                  aria-pressed={stageFilter === s}
+                  className={cn(
+                    'rounded-lg border p-3 text-center transition-colors',
+                    stageFilter === s ? 'border-brand-500 bg-brand-50' : 'border-slate-200 hover:border-brand-300 hover:bg-brand-50/50',
+                  )}
                 >
                   <p className="text-xl font-semibold tabular-nums">{counts[s] ?? 0}</p>
                   <p className="mt-0.5 text-xs text-slate-500">{STAGE_LABELS[s]}</p>
-                </Link>
+                </button>
               ))}
             </div>
+          </Card>
+
+          <Card>
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 px-5 py-3">
+              <h2 className="text-sm font-semibold">
+                Candidates{stageFilter !== 'all' && <> · {STAGE_LABELS[stageFilter]}</>}
+                <span className="ml-1.5 font-normal text-slate-400">{visible.length}</span>
+              </h2>
+              <div className="flex items-center gap-2">
+                {stageFilter !== 'all' && <Button size="sm" variant="ghost" onClick={() => setStageFilter('all')}>Show all</Button>}
+                <Can edit>
+                  <Link to={`/applications/new?opening=${o.id}`}><Button size="sm" variant="secondary"><UserPlus className="size-4" />Add candidate</Button></Link>
+                </Can>
+              </div>
+            </div>
+            {candidates.isLoading ? (
+              <div className="p-5"><Spinner /></div>
+            ) : !visible.length ? (
+              <EmptyState
+                icon={<Users className="size-5" />}
+                title={stageFilter === 'all' ? 'No candidates yet' : `No candidates at ${STAGE_LABELS[stageFilter]}`}
+                description={stageFilter === 'all' ? 'Add a candidate, pick people from your talent pool, or share the application link.' : 'Choose another stage above.'}
+                action={stageFilter === 'all' && canEdit ? (
+                  <div className="flex flex-wrap justify-center gap-2">
+                    <Link to={`/applications/new?opening=${o.id}`}><Button size="sm"><UserPlus className="size-4" />Add candidate</Button></Link>
+                    <Button size="sm" variant="secondary" onClick={() => setPicking(true)}><FolderOpen className="size-4" />Add from talent pool</Button>
+                  </div>
+                ) : undefined}
+              />
+            ) : (
+              <ul className="divide-y divide-slate-100">
+                {visible.map((c) => (
+                  <li key={c.id}>
+                    <button onClick={() => setApplication(c.id!)} className={cn('flex w-full items-center gap-3 px-5 py-3 text-left hover:bg-slate-50', openId === c.id && 'bg-brand-50')}>
+                      <Avatar text={initials(c.first_name, c.last_name)} />
+                      <div className="min-w-0 flex-1">
+                        <p className="flex items-center gap-1.5 text-sm font-medium text-slate-900">
+                          <span className="truncate">{c.full_name}</span>
+                          {c.resume_path && <Paperclip className="size-3 shrink-0 text-slate-400" aria-label="Has CV" />}
+                        </p>
+                        <p className="truncate text-xs text-slate-500">{c.email}{c.city ? ` · ${c.city}` : ''} · {c.source}</p>
+                      </div>
+                      <span className="hidden sm:block"><Stars value={c.rating ?? 0} /></span>
+                      <Badge tone={STAGE_TONES[c.stage!]}>{STAGE_LABELS[c.stage!]}</Badge>
+                      <span className="hidden w-24 text-right text-xs text-slate-400 md:block">{formatDate(c.created_at!)}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
           </Card>
 
           <Card className="p-5">
@@ -124,6 +213,24 @@ export function OpeningDetailPage() {
         </div>
 
         <div className="space-y-6">
+          <Card className="p-5">
+            <div className="flex items-start gap-3">
+              <span className="rounded-lg bg-brand-50 p-2 text-brand-600"><FolderOpen className="size-5" /></span>
+              <div className="flex-1">
+                <h2 className="text-sm font-semibold">Talent pool</h2>
+                <p className="mt-0.5 text-sm text-slate-600">
+                  <span className="text-lg font-semibold tabular-nums text-slate-900">{pool.data ?? '–'}</span> candidate{pool.data === 1 ? '' : 's'} kept for future roles
+                </p>
+              </div>
+            </div>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <Can edit>
+                <Button size="sm" onClick={() => setPicking(true)} disabled={!pool.data}><Plus className="size-4" />Add from talent pool</Button>
+              </Can>
+              <Link to="/applications?stage=talentpool"><Button size="sm" variant="ghost">View pool</Button></Link>
+            </div>
+          </Card>
+
           <Card className="p-5">
             <h2 className="text-sm font-semibold">Status</h2>
             <div className="mt-3"><Badge tone={st.tone}>{st.label}</Badge></div>
@@ -182,6 +289,8 @@ export function OpeningDetailPage() {
           </Card>
         </div>
       </div>
+      {openId && <CandidateDrawer applicationId={openId} onClose={() => setApplication(null)} onOpen={setApplication} />}
+      {picking && <TalentPoolPicker openingId={o.id} openingTitle={o.title} onClose={() => setPicking(false)} />}
     </>
   )
 }

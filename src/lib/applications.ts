@@ -24,7 +24,7 @@ export const RESUME_MAX_BYTES = 10 * 1024 * 1024
 
 /** Everything that shows application data — refreshed after any change. */
 export function invalidateApplications(qc: QueryClient) {
-  for (const key of ['applications', 'application', 'stage-counts', 'opening-pipeline', 'dashboard-stats', 'openings']) {
+  for (const key of ['applications', 'application', 'stage-counts', 'opening-pipeline', 'opening-candidates', 'talent-pool', 'dashboard-stats', 'openings', 'report']) {
     qc.invalidateQueries({ queryKey: [key] })
   }
 }

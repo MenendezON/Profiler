@@ -9,6 +9,7 @@ import { STAGE_LABELS } from '@/lib/constants'
 import { ACTIVE_STAGES, STAGE_TONES, initials, invalidateApplications, useMoveStage, type Stage } from '@/lib/applications'
 import { Alert, Avatar, Badge, Button, Card, EmptyState, Input, PageHeader, Select, Spinner, Stars } from '@/components/ui'
 import { CandidateDrawer } from './CandidateDrawer'
+import { MoveToOpeningDialog } from '@/components/MoveToOpening'
 import { Can, useRole } from '@/lib/auth'
 
 const PAGE_SIZE = 25
@@ -37,6 +38,7 @@ export function ApplicationsPage() {
 
   const [search, setSearch] = useState(q)
   const [selected, setSelected] = useState<Set<string>>(new Set())
+  const [movingToOpening, setMovingToOpening] = useState(false)
   const qc = useQueryClient()
   const move = useMoveStage()
   const { canEdit } = useRole()
@@ -195,6 +197,13 @@ export function ApplicationsPage() {
               {STAGE_LABELS[s]}
             </button>
           ))}
+          <span className="mx-1 text-slate-500">·</span>
+          <button
+            onClick={() => setMovingToOpening(true)}
+            className="rounded-md bg-white px-2.5 py-1 text-xs font-medium text-slate-900 hover:bg-slate-100"
+          >
+            Move to opening…
+          </button>
           <button onClick={() => setSelected(new Set())} className="ml-auto rounded-md p-1 text-slate-300 hover:bg-white/10" aria-label="Clear selection">
             <X className="size-4" />
           </button>
@@ -294,6 +303,15 @@ export function ApplicationsPage() {
         )}
       </Card>
 
+      {movingToOpening && (
+        <MoveToOpeningDialog
+          applicationIds={[...selected]}
+          label={`${selected.size} selected candidate${selected.size > 1 ? 's' : ''} will move to the opening you choose.`}
+          excludeOpeningId={opening || null}
+          onClose={() => setMovingToOpening(false)}
+          onMoved={() => setSelected(new Set())}
+        />
+      )}
       {openId && <CandidateDrawer applicationId={openId} onClose={() => update({ application: null }, false)} onOpen={(id) => update({ application: id }, false)} />}
     </>
   )

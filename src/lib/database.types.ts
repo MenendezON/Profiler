@@ -777,6 +777,7 @@ export type Database = {
       get_careers_page: { Args: { p_slug: string }; Returns: Json }
       get_invitation: { Args: { p_token: string }; Returns: Json }
       log_email_prepared: { Args: { p_application_id: string; p_subject: string; p_template_name: string }; Returns: undefined }
+      move_to_opening: { Args: { p_application_ids: string[]; p_opening: string }; Returns: Json }
       report_summary: { Args: { p_from: string; p_opening?: string; p_to: string }; Returns: Json }
       get_public_opening: { Args: { p_opening_id: string; p_slug: string }; Returns: Json }
       submit_application: {

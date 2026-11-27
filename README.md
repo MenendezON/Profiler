@@ -100,4 +100,5 @@ Regenerate types after schema changes: `npm run gen:types` (needs the Supabase C
 | Users & roles: invitations by link (single-use, 14 days), Admin / Recruiter / Viewer enforced in RLS and Storage, deactivation, last-admin protection, My profile + password | ✅ |
 | Activity log: recorded by database triggers (openings, applications, stage changes, ratings, interviews, team, settings), Settings page with filters, timeline in the candidate panel | ✅ |
 | Email templates: EN + FR defaults per company, editor with placeholders and live preview, "Email" from the candidate panel, interview invitation/cancellation use them | ✅ |
+| Opening page: add candidate / new opening without leaving, candidate list with in-page panel, company talent pool card + "Add from talent pool"; move talent-pool candidates to an opening (panel, bulk bar) via `move_to_opening()` | ✅ |
 | Reports: KPIs, hiring funnel (uses stage history), applications per week, sources, interviews, per-opening table, CSV export | ✅ |

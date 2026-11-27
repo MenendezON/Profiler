@@ -107,7 +107,8 @@ export function AddCandidatePage() {
     },
     onSuccess: ({ applicationId }) => {
       invalidateApplications(qc)
-      navigate(`/applications?stage=all&application=${applicationId}`)
+      const from = params.get('opening')
+      navigate(from ? `/openings/${from}?application=${applicationId}` : `/applications?stage=all&application=${applicationId}`)
     },
   })
 
@@ -130,7 +131,9 @@ export function AddCandidatePage() {
 
   return (
     <>
-      <BackTo to="/applications" label="Applications" />
+      {params.get('opening') && opening
+        ? <BackTo to={`/openings/${opening.id}`} label={opening.title} />
+        : <BackTo to="/applications" label="Applications" />}
       <PageHeader title="Add candidate" description="Record a candidate who applied by email, in person or through a referral." />
 
       <form onSubmit={onSubmit} className="grid gap-6 lg:grid-cols-3">
@@ -196,7 +199,7 @@ export function AddCandidatePage() {
             </Field>
           </Card>
           <div className="flex gap-2">
-            <Link to="/applications" className="flex-1"><Button type="button" variant="secondary" className="w-full">Cancel</Button></Link>
+            <Link to={params.get('opening') ? `/openings/${params.get('opening')}` : '/applications'} className="flex-1"><Button type="button" variant="secondary" className="w-full">Cancel</Button></Link>
             <Button type="submit" className="flex-1" loading={save.isPending}>Add candidate</Button>
           </div>
         </div>

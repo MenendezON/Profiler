@@ -27,7 +27,9 @@ export const STATUS_LABELS: Record<InterviewStatus, string> = {
 export const DURATIONS = [15, 30, 45, 60, 90, 120]
 
 export function invalidateInterviews(qc: QueryClient) {
-  for (const key of ['interviews', 'interview-counts', 'application', 'applications', 'dashboard-upcoming', 'stage-counts', 'dashboard-stats']) {
+  // feedback / scheduling can change a candidate's stage, so opening counts refresh too
+  for (const key of ['interviews', 'interview-counts', 'application', 'applications', 'dashboard-upcoming', 'stage-counts', 'dashboard-stats',
+                     'opening-pipeline', 'opening-candidates', 'talent-pool', 'openings', 'report']) {
     qc.invalidateQueries({ queryKey: [key] })
   }
 }
