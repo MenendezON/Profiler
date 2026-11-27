@@ -38,16 +38,45 @@ export function useProfile() {
   return useQuery({
     queryKey: ['profile', userId],
     enabled: !!userId,
+    retry: (count, err) => !(err instanceof AccessRevokedError) && count < 1,
     queryFn: async (): Promise<Profile> => {
       const { data, error } = await supabase
         .from('profiles')
         .select('*, company:companies(id, name, code, slug)')
         .eq('id', userId!)
-        .single()
+        .maybeSingle()
       if (error) throw new Error(error.message)
+      // RLS hides the profile of a deactivated user (or one whose company was removed)
+      if (!data) throw new AccessRevokedError()
       return data as Profile
     },
   })
 }
 
 export const signOut = () => supabase.auth.signOut()
+
+export class AccessRevokedError extends Error {
+  constructor() {
+    super('Your access to Profiler has been deactivated.')
+  }
+}
+
+/** What the signed-in user may do. Mirrors the RLS rules in the database. */
+export function useRole() {
+  const { data: profile } = useProfile()
+  const role = profile?.role
+  return {
+    role,
+    isAdmin: role === 'admin',
+    canEdit: role === 'admin' || role === 'recruiter',
+    isViewer: role === 'viewer',
+  }
+}
+
+/** Render children only when the signed-in user has the permission (UI hint; RLS enforces it). */
+export function Can({ edit, admin, children }: { edit?: boolean; admin?: boolean; children: ReactNode }) {
+  const { canEdit, isAdmin } = useRole()
+  if (admin && !isAdmin) return null
+  if (edit && !canEdit) return null
+  return <>{children}</>
+}

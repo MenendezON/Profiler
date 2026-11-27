@@ -8,6 +8,7 @@ import type { Tables } from '@/lib/database.types'
 import { QUESTION_TYPES, questionHasOptions, questionTypeLabel, type QuestionType } from '@/lib/constants'
 import { Alert, Badge, Button, Card, Checkbox, Dialog, EmptyState, Field, Input, PageHeader, Select, Spinner, Textarea } from '@/components/ui'
 import { BackTo } from './LocationsPages'
+import { Can, useRole } from '@/lib/auth'
 
 type Question = Tables<'questions'>
 const KEY = ['screening-templates']
@@ -54,7 +55,7 @@ export function ScreeningTemplatesListPage() {
       <PageHeader
         title="Screening questions"
         description="Application form templates. Attach one to a job opening to ask candidates extra questions."
-        actions={addButton}
+        actions={<Can edit>{addButton}</Can>}
       />
       {(error || remove.error) && <Alert>{(error ?? remove.error)!.message}</Alert>}
       <Card>
@@ -65,7 +66,7 @@ export function ScreeningTemplatesListPage() {
             icon={<ClipboardList className="size-5" />}
             title="No templates yet"
             description="Create a template like “IT roles” or “Field staff” and add the questions candidates should answer."
-            action={<Button size="sm" onClick={() => setCreating(true)}><Plus className="size-4" />New template</Button>}
+            action={<Can edit><Button size="sm" onClick={() => setCreating(true)}><Plus className="size-4" />New template</Button></Can>}
           />
         ) : (
           <ul className="divide-y divide-slate-100">
@@ -133,6 +134,7 @@ export function ScreeningTemplateDetailPage() {
   const key = [...KEY, id]
   const [editing, setEditing] = useState<Question | 'new' | null>(null)
   const [renaming, setRenaming] = useState(false)
+  const { canEdit } = useRole()
 
   const { data, isLoading, error } = useQuery({
     queryKey: key,
@@ -191,7 +193,7 @@ export function ScreeningTemplateDetailPage() {
         title={data.name}
         description={`${questions.length} custom question(s) added to the standard application form.`}
         actions={
-          <>
+          <Can edit>
             <Button variant="secondary" onClick={() => setRenaming(true)}><Pencil className="size-4" />Rename</Button>
             <Button
               variant="ghost"
@@ -200,7 +202,7 @@ export function ScreeningTemplateDetailPage() {
             >
               <Trash2 className="size-4" />Delete
             </Button>
-          </>
+          </Can>
         }
       />
       {mutationError && <div className="mb-4"><Alert>{mutationError.message}</Alert></div>}
@@ -209,7 +211,7 @@ export function ScreeningTemplateDetailPage() {
         <Card className="lg:col-span-3">
           <div className="flex items-center justify-between border-b border-slate-200 px-5 py-3">
             <h2 className="text-sm font-semibold">Questions</h2>
-            <Button size="sm" onClick={() => setEditing('new')}><Plus className="size-4" />Add question</Button>
+            <Can edit><Button size="sm" onClick={() => setEditing('new')}><Plus className="size-4" />Add question</Button></Can>
           </div>
           {!questions.length ? (
             <EmptyState
@@ -221,7 +223,7 @@ export function ScreeningTemplateDetailPage() {
             <ul className="divide-y divide-slate-100">
               {questions.map((q, i) => (
                 <li key={q.id} className="flex items-start gap-3 px-5 py-3">
-                  <div className="flex flex-col">
+                  <div className={canEdit ? 'flex flex-col' : 'hidden'}>
                     <button
                       className="rounded p-0.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 disabled:opacity-30"
                       disabled={i === 0 || move.isPending}
@@ -249,7 +251,7 @@ export function ScreeningTemplateDetailPage() {
                       {q.options.map((o) => <Badge key={o}>{o}</Badge>)}
                     </div>
                   </div>
-                  <button onClick={() => setEditing(q)} className="rounded-md p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-900" title="Edit">
+                  {canEdit && <><button onClick={() => setEditing(q)} className="rounded-md p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-900" title="Edit">
                     <Pencil className="size-4" />
                   </button>
                   <button
@@ -258,7 +260,7 @@ export function ScreeningTemplateDetailPage() {
                     title="Delete"
                   >
                     <Trash2 className="size-4" />
-                  </button>
+                  </button></>}
                 </li>
               ))}
             </ul>

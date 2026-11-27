@@ -4,7 +4,7 @@ import { createBrowserRouter, Navigate, RouterProvider } from 'react-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import './index.css'
 import { AuthProvider } from '@/lib/auth'
-import { RequireAuth } from '@/components/AppLayout'
+import { RequireAuth, RequireRole } from '@/components/AppLayout'
 import { LoginPage, SignupPage } from '@/pages/AuthPages'
 import { DashboardPage } from '@/pages/DashboardPage'
 import { SettingsPage } from '@/pages/settings/SettingsPage'
@@ -19,6 +19,9 @@ import { AddCandidatePage } from '@/pages/applications/AddCandidatePage'
 import { CareersPage } from '@/pages/careers/CareersPage'
 import { JobPage } from '@/pages/careers/JobPage'
 import { InterviewsPage } from '@/pages/InterviewsPage'
+import { UsersPage } from '@/pages/settings/UsersPage'
+import { ProfilePage } from '@/pages/settings/ProfilePage'
+import { AcceptInvitePage } from '@/pages/AcceptInvitePage'
 import { ComingSoon } from '@/pages/ComingSoon'
 import { NotFound } from '@/pages/NotFound'
 
@@ -29,6 +32,7 @@ const queryClient = new QueryClient({
 const router = createBrowserRouter([
   { path: '/login', element: <LoginPage /> },
   { path: '/signup', element: <SignupPage /> },
+  { path: '/invite/:token', element: <AcceptInvitePage /> },
   // public careers site (no account needed)
   { path: '/careers/:slug', element: <CareersPage /> },
   { path: '/careers/:slug/jobs/:openingId', element: <JobPage /> },
@@ -38,20 +42,22 @@ const router = createBrowserRouter([
       { index: true, element: <Navigate to="/dashboard" replace /> },
       { path: 'dashboard', element: <DashboardPage /> },
       { path: 'openings', element: <OpeningsListPage /> },
-      { path: 'openings/new', element: <OpeningFormPage /> },
+      { path: 'openings/new', element: <RequireRole edit><OpeningFormPage /></RequireRole> },
       { path: 'openings/:id', element: <OpeningDetailPage /> },
-      { path: 'openings/:id/edit', element: <OpeningFormPage key="edit" /> },
+      { path: 'openings/:id/edit', element: <RequireRole edit><OpeningFormPage key="edit" /></RequireRole> },
       { path: 'applications', element: <ApplicationsPage /> },
-      { path: 'applications/new', element: <AddCandidatePage /> },
+      { path: 'applications/new', element: <RequireRole edit><AddCandidatePage /></RequireRole> },
       { path: 'interviews', element: <InterviewsPage /> },
       { path: 'reports', element: <ComingSoon title="Reports" /> },
       { path: 'settings', element: <SettingsPage /> },
       { path: 'settings/locations', element: <LocationsListPage /> },
-      { path: 'settings/locations/new', element: <LocationFormPage /> },
-      { path: 'settings/locations/:id/edit', element: <LocationFormPage /> },
+      { path: 'settings/locations/new', element: <RequireRole admin><LocationFormPage /></RequireRole> },
+      { path: 'settings/locations/:id/edit', element: <RequireRole admin><LocationFormPage /></RequireRole> },
       { path: 'settings/departments', element: <DepartmentsListPage /> },
-      { path: 'settings/departments/new', element: <DepartmentFormPage /> },
-      { path: 'settings/departments/:id/edit', element: <DepartmentFormPage /> },
+      { path: 'settings/departments/new', element: <RequireRole admin><DepartmentFormPage /></RequireRole> },
+      { path: 'settings/departments/:id/edit', element: <RequireRole admin><DepartmentFormPage /></RequireRole> },
+      { path: 'settings/users', element: <UsersPage /> },
+      { path: 'settings/profile', element: <ProfilePage /> },
       { path: 'settings/screening-templates', element: <ScreeningTemplatesListPage /> },
       { path: 'settings/screening-templates/:id', element: <ScreeningTemplateDetailPage /> },
     ],

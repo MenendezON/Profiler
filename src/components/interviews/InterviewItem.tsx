@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router'
 import { Ban, CalendarClock, CalendarPlus, ClipboardCheck, Mail, MoreHorizontal, User } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { useProfile } from '@/lib/auth'
+import { useProfile, useRole } from '@/lib/auth'
 import { DECISIONS, INTERVIEW_TYPES, downloadIcs, formatDateTime, formatTime, inviteMailto } from '@/lib/interviews'
 import { Badge, Button, Stars } from '@/components/ui'
 import { CancelInterviewDialog, FeedbackDialog, ScheduleInterviewDialog, inviteFromRow, type InterviewRow } from './InterviewDialogs'
@@ -10,6 +10,7 @@ import { CancelInterviewDialog, FeedbackDialog, ScheduleInterviewDialog, inviteF
 /** One interview with its actions. `compact` hides the candidate (used inside the candidate panel). */
 export function InterviewItem({ row, compact }: { row: InterviewRow; compact?: boolean }) {
   const { data: profile } = useProfile()
+  const { canEdit } = useRole()
   const [dialog, setDialog] = useState<'reschedule' | 'feedback' | 'cancel' | null>(null)
   const [menu, setMenu] = useState(false)
   const type = INTERVIEW_TYPES[row.type ?? 'in_person']
@@ -59,7 +60,7 @@ export function InterviewItem({ row, compact }: { row: InterviewRow; compact?: b
       </div>
 
       <div className="flex shrink-0 items-start gap-1">
-        {needsFeedback && (
+        {needsFeedback && canEdit && (
           <Button size="sm" onClick={() => setDialog('feedback')}><ClipboardCheck className="size-4" />Feedback</Button>
         )}
         <div className="relative">
@@ -72,15 +73,19 @@ export function InterviewItem({ row, compact }: { row: InterviewRow; compact?: b
                 <>
                   <MenuLink href={inviteMailto(invite)} icon={Mail} onClick={() => setMenu(false)}>Email invitation</MenuLink>
                   <MenuButton icon={CalendarPlus} onClick={() => { setMenu(false); downloadIcs(invite) }}>Add to calendar</MenuButton>
-                  <MenuButton icon={CalendarClock} onClick={() => { setMenu(false); setDialog('reschedule') }}>Reschedule</MenuButton>
-                  <MenuButton icon={ClipboardCheck} onClick={() => { setMenu(false); setDialog('feedback') }}>Give feedback</MenuButton>
-                  <MenuButton icon={Ban} danger onClick={() => { setMenu(false); setDialog('cancel') }}>Cancel interview</MenuButton>
+                  {canEdit && (
+                    <>
+                      <MenuButton icon={CalendarClock} onClick={() => { setMenu(false); setDialog('reschedule') }}>Reschedule</MenuButton>
+                      <MenuButton icon={ClipboardCheck} onClick={() => { setMenu(false); setDialog('feedback') }}>Give feedback</MenuButton>
+                      <MenuButton icon={Ban} danger onClick={() => { setMenu(false); setDialog('cancel') }}>Cancel interview</MenuButton>
+                    </>
+                  )}
                 </>
               )}
-              {row.status === 'completed' && (
+              {row.status === 'completed' && canEdit && (
                 <MenuButton icon={ClipboardCheck} onClick={() => { setMenu(false); setDialog('feedback') }}>Edit feedback</MenuButton>
               )}
-              {row.status === 'cancelled' && (
+              {row.status === 'cancelled' && canEdit && (
                 <MenuButton icon={CalendarClock} onClick={() => { setMenu(false); setDialog('reschedule') }}>Schedule again</MenuButton>
               )}
             </div>

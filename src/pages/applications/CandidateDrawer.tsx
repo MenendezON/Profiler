@@ -7,7 +7,7 @@ import {
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { formatDate, unwrap } from '@/lib/utils'
-import { useProfile } from '@/lib/auth'
+import { Can, useProfile, useRole } from '@/lib/auth'
 import { Constants, type Json, type TablesUpdate } from '@/lib/database.types'
 import { STAGE_LABELS, questionTypeLabel } from '@/lib/constants'
 import {
@@ -25,6 +25,7 @@ export function CandidateDrawer({ applicationId, onClose, onOpen }: {
 }) {
   const qc = useQueryClient()
   const { data: profile } = useProfile()
+  const { canEdit } = useRole()
   const fileInput = useRef<HTMLInputElement>(null)
   const [menu, setMenu] = useState(false)
   const [dialog, setDialog] = useState<'edit' | 'move' | 'schedule' | null>(null)
@@ -130,9 +131,9 @@ export function CandidateDrawer({ applicationId, onClose, onOpen }: {
             </button>
           </div>
           <div className="relative flex items-center gap-1">
-            <button onClick={() => setMenu((m) => !m)} className="rounded-md p-1.5 text-slate-500 hover:bg-slate-100" aria-label="More actions" aria-expanded={menu}>
+            {canEdit && <button onClick={() => setMenu((m) => !m)} className="rounded-md p-1.5 text-slate-500 hover:bg-slate-100" aria-label="More actions" aria-expanded={menu}>
               <MoreHorizontal className="size-5" />
-            </button>
+            </button>}
             {menu && app && (
               <div className="absolute right-8 top-9 z-10 w-56 overflow-hidden rounded-lg border border-slate-200 bg-white py-1 text-sm shadow-lg" onMouseLeave={() => setMenu(false)}>
                 <MenuItem icon={Pencil} onClick={() => { setMenu(false); setDialog('edit') }}>Edit profile</MenuItem>
@@ -180,9 +181,9 @@ export function CandidateDrawer({ applicationId, onClose, onOpen }: {
                       </Link>
                     ) : 'No opening'}
                   </p>
-                  <div className="mt-2"><Stars value={app.rating} size="md" onChange={(rating) => patchApp.mutate({ rating })} disabled={patchApp.isPending} /></div>
+                  <div className="mt-2"><Stars value={app.rating} size="md" onChange={canEdit ? (rating) => patchApp.mutate({ rating }) : undefined} disabled={patchApp.isPending} /></div>
                 </div>
-                <Button size="sm" onClick={() => setDialog('schedule')}><CalendarPlus className="size-4" />Schedule interview</Button>
+                <Can edit><Button size="sm" onClick={() => setDialog('schedule')}><CalendarPlus className="size-4" />Schedule interview</Button></Can>
               </div>
 
               {/* stage */}
@@ -192,12 +193,12 @@ export function CandidateDrawer({ applicationId, onClose, onOpen }: {
                   {Constants.public.Enums.applicant_stage.map((s) => (
                     <button
                       key={s}
-                      disabled={patchApp.isPending}
+                      disabled={patchApp.isPending || !canEdit}
                       onClick={() => s !== app.stage && patchApp.mutate({ stage: s })}
                       className={
                         s === app.stage
                           ? 'rounded-full bg-brand-600 px-3 py-1 text-xs font-medium text-white'
-                          : 'rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200'
+                          : 'rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600 enabled:hover:bg-slate-200 disabled:cursor-default'
                       }
                     >
                       {STAGE_LABELS[s]}
@@ -242,8 +243,10 @@ export function CandidateDrawer({ applicationId, onClose, onOpen }: {
                     </div>
                     <Button size="sm" variant="secondary" onClick={() => openCv(false)}><ExternalLink className="size-4" />Open</Button>
                     <button onClick={() => openCv(true)} className="rounded-md p-1.5 text-slate-500 hover:bg-slate-100" title="Download"><Download className="size-4" /></button>
-                    <button onClick={() => fileInput.current?.click()} className="rounded-md p-1.5 text-slate-500 hover:bg-slate-100" title="Replace"><Upload className="size-4" /></button>
+                    {canEdit && <button onClick={() => fileInput.current?.click()} className="rounded-md p-1.5 text-slate-500 hover:bg-slate-100" title="Replace"><Upload className="size-4" /></button>}
                   </div>
+                ) : !canEdit ? (
+                  <p className="text-sm text-slate-400">No CV uploaded.</p>
                 ) : (
                   <Button variant="secondary" size="sm" loading={replaceCv.isPending} onClick={() => fileInput.current?.click()}>
                     <Upload className="size-4" />Upload CV
@@ -263,7 +266,7 @@ export function CandidateDrawer({ applicationId, onClose, onOpen }: {
               )}
 
               {/* notes */}
-              <NotesEditor key={app.id} initial={app.notes ?? ''} saving={patchApp.isPending} onSave={(notes) => patchApp.mutate({ notes: notes || null })} />
+              <NotesEditor key={app.id} readOnly={!canEdit} initial={app.notes ?? ''} saving={patchApp.isPending} onSave={(notes) => patchApp.mutate({ notes: notes || null })} />
 
               {/* screening answers */}
               {!!questions.length && (
@@ -348,8 +351,16 @@ function Info({ icon: Icon, children }: { icon: typeof Mail; children: React.Rea
   )
 }
 
-function NotesEditor({ initial, onSave, saving }: { initial: string; onSave: (v: string) => void; saving: boolean }) {
+function NotesEditor({ initial, onSave, saving, readOnly }: { initial: string; onSave: (v: string) => void; saving: boolean; readOnly?: boolean }) {
   const [value, setValue] = useState(initial)
+  if (readOnly) {
+    return (
+      <div>
+        <p className="mb-2 text-xs font-medium uppercase tracking-wide text-slate-500">Notes</p>
+        <p className="whitespace-pre-wrap text-sm text-slate-700">{initial || <span className="text-slate-400">No notes.</span>}</p>
+      </div>
+    )
+  }
   const dirty = value.trim() !== initial.trim()
   return (
     <div>

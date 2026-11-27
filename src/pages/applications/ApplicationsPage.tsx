@@ -9,6 +9,7 @@ import { STAGE_LABELS } from '@/lib/constants'
 import { ACTIVE_STAGES, STAGE_TONES, initials, invalidateApplications, useMoveStage, type Stage } from '@/lib/applications'
 import { Alert, Avatar, Badge, Button, Card, EmptyState, Input, PageHeader, Select, Spinner, Stars } from '@/components/ui'
 import { CandidateDrawer } from './CandidateDrawer'
+import { Can, useRole } from '@/lib/auth'
 
 const PAGE_SIZE = 25
 export const SOURCES = ['Dashboard', 'Career page', 'Referral', 'LinkedIn', 'Email', 'Walk-in', 'Other']
@@ -38,6 +39,7 @@ export function ApplicationsPage() {
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const qc = useQueryClient()
   const move = useMoveStage()
+  const { canEdit } = useRole()
 
   function update(changes: Record<string, string | null>, resetPage = true) {
     const next = new URLSearchParams(params)
@@ -130,7 +132,7 @@ export function ApplicationsPage() {
       <PageHeader
         title="Applications"
         description="Every candidate across your openings and talent pool."
-        actions={<Link to="/applications/new"><Button><Plus className="size-4" />Add candidate</Button></Link>}
+        actions={<Can edit><Link to="/applications/new"><Button><Plus className="size-4" />Add candidate</Button></Link></Can>}
       />
 
       {/* stage tabs */}
@@ -207,14 +209,14 @@ export function ApplicationsPage() {
             icon={<Users className="size-5" />}
             title={filtersActive ? 'No candidates match these filters' : 'No candidates here yet'}
             description={filtersActive ? 'Try clearing a filter or searching for something else.' : 'Add a candidate manually, or share an opening to start receiving applications.'}
-            action={!filtersActive ? <Link to="/applications/new"><Button size="sm"><Plus className="size-4" />Add candidate</Button></Link> : undefined}
+            action={!filtersActive && canEdit ? <Link to="/applications/new"><Button size="sm"><Plus className="size-4" />Add candidate</Button></Link> : undefined}
           />
         ) : (
           <div className={cn('overflow-x-auto transition-opacity', list.isFetching && 'opacity-60')}>
             <table className="w-full text-left text-sm">
               <thead className="border-b border-slate-200 text-xs uppercase tracking-wide text-slate-500">
                 <tr>
-                  <th className="w-10 px-4 py-3">
+                  <th className={cn('w-10 px-4 py-3', !canEdit && 'hidden')}>
                     <input
                       type="checkbox"
                       className="size-4 accent-brand-600"
@@ -238,7 +240,7 @@ export function ApplicationsPage() {
                     onClick={() => update({ application: r.id }, false)}
                     className={cn('cursor-pointer hover:bg-slate-50', selected.has(r.id!) && 'bg-brand-50/60', openId === r.id && 'bg-brand-50')}
                   >
-                    <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
+                    <td className={cn('px-4 py-3', !canEdit && 'hidden')} onClick={(e) => e.stopPropagation()}>
                       <input type="checkbox" className="size-4 accent-brand-600" checked={selected.has(r.id!)} onChange={() => toggle(r.id!)} aria-label={`Select ${r.full_name}`} />
                     </td>
                     <td className="px-3 py-3">
@@ -265,7 +267,7 @@ export function ApplicationsPage() {
                     </td>
                     <td className="px-3 py-3"><Badge tone={STAGE_TONES[r.stage!]}>{STAGE_LABELS[r.stage!]}</Badge></td>
                     <td className="px-3 py-3" onClick={(e) => e.stopPropagation()}>
-                      <Stars value={r.rating ?? 0} onChange={(rating) => rate.mutate({ id: r.id!, rating })} disabled={rate.isPending} />
+                      <Stars value={r.rating ?? 0} onChange={canEdit ? (rating) => rate.mutate({ id: r.id!, rating }) : undefined} disabled={rate.isPending} />
                     </td>
                     <td className="hidden px-3 py-3 text-slate-600 md:table-cell">{r.source}</td>
                     <td className="whitespace-nowrap px-3 py-3 text-right text-xs text-slate-500">{formatDate(r.created_at!)}</td>

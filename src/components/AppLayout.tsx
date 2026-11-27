@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Navigate, NavLink, Outlet, useLocation } from 'react-router'
 import { BarChart3, Briefcase, CalendarClock, LayoutDashboard, LogOut, Menu, Settings, Users, X } from 'lucide-react'
-import { signOut, useAuth, useProfile } from '@/lib/auth'
+import { AccessRevokedError, signOut, useAuth, useProfile, useRole } from '@/lib/auth'
 import { cn } from '@/lib/utils'
 import { Spinner } from './ui'
 
@@ -21,6 +21,22 @@ export function RequireAuth() {
     return <div className="flex h-full items-center justify-center"><Spinner className="size-6" /></div>
   }
   if (!session) return <Navigate to="/login" replace state={{ from: location.pathname }} />
+  return <ProfileGate />
+}
+
+function ProfileGate() {
+  const { error } = useProfile()
+  if (error instanceof AccessRevokedError) {
+    return (
+      <div className="flex h-full items-center justify-center p-6">
+        <div className="max-w-sm text-center">
+          <h1 className="text-xl font-semibold">Access deactivated</h1>
+          <p className="mt-2 text-sm text-slate-600">An administrator of your organization has deactivated your account. Contact them if you think this is a mistake.</p>
+          <button onClick={signOut} className="mt-6 text-sm font-medium text-brand-600 hover:underline">Sign out</button>
+        </div>
+      </div>
+    )
+  }
   return <AppLayout />
 }
 
@@ -55,10 +71,10 @@ function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
           <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-slate-200 text-sm font-semibold text-slate-700">
             {(profile?.first_name?.[0] ?? '') + (profile?.last_name?.[0] ?? '') || '?'}
           </div>
-          <div className="min-w-0 flex-1">
+          <NavLink to="/settings/profile" onClick={onNavigate} className="min-w-0 flex-1 hover:opacity-80">
             <p className="truncate text-sm font-medium">{profile ? `${profile.first_name} ${profile.last_name}` : '…'}</p>
-            <p className="truncate text-xs text-slate-500">{profile?.company?.name}</p>
-          </div>
+            <p className="truncate text-xs text-slate-500">{profile?.company?.name}{profile ? ` · ${profile.role[0].toUpperCase()}${profile.role.slice(1)}` : ''}</p>
+          </NavLink>
           <button onClick={signOut} title="Sign out" className="rounded-md p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-900">
             <LogOut className="size-4" />
             <span className="sr-only">Sign out</span>
@@ -106,4 +122,21 @@ function AppLayout() {
       </div>
     </div>
   )
+}
+
+/** Route wrapper: shows a friendly message instead of a form the user can't submit. */
+export function RequireRole({ edit, admin, children }: { edit?: boolean; admin?: boolean; children: React.ReactNode }) {
+  const { canEdit, isAdmin, role } = useRole()
+  if (!role) return <Spinner />
+  if ((admin && !isAdmin) || (edit && !canEdit)) {
+    return (
+      <div className="mx-auto max-w-md py-16 text-center">
+        <h1 className="text-lg font-semibold">You don't have access to this page</h1>
+        <p className="mt-2 text-sm text-slate-500">
+          {admin ? 'Only administrators can make this change.' : 'Your role is read-only.'} Ask an administrator if you need more access.
+        </p>
+      </div>
+    )
+  }
+  return <>{children}</>
 }

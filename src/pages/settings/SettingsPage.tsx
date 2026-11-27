@@ -1,5 +1,5 @@
 import { Link } from 'react-router'
-import { Building2, ClipboardList, History, Mail, MapPin, Users } from 'lucide-react'
+import { Building2, ClipboardList, History, Mail, MapPin, UserCircle, Users } from 'lucide-react'
 import { Badge, Card, PageHeader } from '@/components/ui'
 import { CopyField } from '@/components/CopyField'
 import { useProfile } from '@/lib/auth'
@@ -9,7 +9,8 @@ const sections = [
   { to: '/settings/locations', title: 'Locations', description: 'Offices and sites for your openings.', icon: MapPin, ready: true },
   { to: '/settings/departments', title: 'Departments', description: 'Teams that own job openings.', icon: Building2, ready: true },
   { to: '/settings/screening-templates', title: 'Screening questions', description: 'Reusable application form templates.', icon: ClipboardList, ready: true },
-  { to: '/settings/users', title: 'Users', description: 'Invite recruiters and manage roles.', icon: Users, ready: false },
+  { to: '/settings/users', title: 'Users', description: 'Invite recruiters and manage roles.', icon: Users, ready: true },
+  { to: '/settings/profile', title: 'My profile', description: 'Your name, job title and password.', icon: UserCircle, ready: true },
   { to: '/settings/email-templates', title: 'Email templates', description: 'Messages sent to candidates.', icon: Mail, ready: false },
   { to: '/settings/activity-log', title: 'Activity log', description: 'Who changed what, and when.', icon: History, ready: false },
 ]

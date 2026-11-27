@@ -62,6 +62,18 @@ Known limits: no CAPTCHA/rate limiting yet, and a file uploaded by a candidate w
 
 Deploying: the SPA needs a catch-all rewrite to `index.html` so `/careers/...` links work — `vercel.json` (Vercel) and `public/_redirects` (Netlify) are included.
 
+### Team & roles
+
+| Role | Can do |
+|---|---|
+| **Admin** | Everything, plus users & invitations, locations, departments |
+| **Recruiter** | Openings, screening templates, candidates, applications, interviews, CV uploads |
+| **Viewer** | Read everything (incl. opening CVs), change nothing except their own name |
+
+Roles are enforced by RLS (`private.can_edit()`, `private.is_company_admin()`) and Storage policies; the UI only hides what a role can't use. Deactivated users get no rows at all. A trigger keeps at least one active admin per company.
+
+Invitations: an admin creates one in **Settings → Users** and shares the link (copy or prefilled email). `/invite/<token>` lets the person set a password; the sign-up trigger checks the token, the email and expiry, then adds them to the company with the chosen role instead of creating a new company. Someone who already has a Profiler account can't join a second company yet.
+
 Regenerate types after schema changes: `npm run gen:types` (needs the Supabase CLI and `supabase login`).
 
 ## Migration status
@@ -79,5 +91,6 @@ Regenerate types after schema changes: `npm run gen:types` (needs the Supabase C
 | Add candidate (dedupe by email, CV + cover letter upload, screening answers) | ✅ |
 | Public careers page + online application (screening questions, CV upload, consent) | ✅ |
 | Interviews: schedule / reschedule / cancel from the candidate panel, feedback with hire–maybe–no-hire + rating, Interviews page (upcoming, pending feedback, feedback given, cancelled), dashboard card, email invitation (mailto) + calendar file (.ics) | ✅ |
-| Users & invitations (needed for multiple interviewers) | ⏳ next |
-| Reports, Email templates, Activity log | ⏳ |
+| Users & roles: invitations by link (single-use, 14 days), Admin / Recruiter / Viewer enforced in RLS and Storage, deactivation, last-admin protection, My profile + password | ✅ |
+| Reports | ⏳ next |
+| Email templates, Activity log | ⏳ |

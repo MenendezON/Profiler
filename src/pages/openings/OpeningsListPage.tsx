@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase'
 import { cn, formatDate, unwrap } from '@/lib/utils'
 import { Constants, type Enums } from '@/lib/database.types'
 import { OPENING_STATUS } from '@/lib/constants'
+import { Can, useRole } from '@/lib/auth'
 import { Alert, Badge, Button, Card, EmptyState, Input, PageHeader, Spinner } from '@/components/ui'
 
 type StatusFilter = Enums<'opening_status'> | 'all'
@@ -13,6 +14,7 @@ export const OPENINGS_KEY = ['openings']
 
 export function OpeningsListPage() {
   const [params, setParams] = useSearchParams()
+  const { canEdit } = useRole()
   const status = (params.get('status') ?? 'all') as StatusFilter
   const q = params.get('q') ?? ''
 
@@ -57,7 +59,7 @@ export function OpeningsListPage() {
       <PageHeader
         title="Job openings"
         description="Create and manage the positions you're hiring for."
-        actions={<Link to="/openings/new"><Button><Plus className="size-4" />New opening</Button></Link>}
+        actions={<Can edit><Link to="/openings/new"><Button><Plus className="size-4" />New opening</Button></Link></Can>}
       />
 
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
@@ -92,7 +94,7 @@ export function OpeningsListPage() {
             icon={<Briefcase className="size-5" />}
             title={needle ? 'No matching openings' : status === 'all' ? 'No openings yet' : `No ${OPENING_STATUS[status].label.toLowerCase()} openings`}
             description={needle ? 'Try a different search.' : 'Create an opening to start receiving applications.'}
-            action={!needle ? <Link to="/openings/new"><Button size="sm"><Plus className="size-4" />New opening</Button></Link> : undefined}
+            action={!needle && canEdit ? <Link to="/openings/new"><Button size="sm"><Plus className="size-4" />New opening</Button></Link> : undefined}
           />
         ) : (
           <ul className="divide-y divide-slate-100">

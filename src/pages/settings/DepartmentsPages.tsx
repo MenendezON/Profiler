@@ -6,11 +6,13 @@ import { supabase } from '@/lib/supabase'
 import { formatDate, unwrap } from '@/lib/utils'
 import { Alert, Button, Card, EmptyState, Field, Input, PageHeader, Spinner } from '@/components/ui'
 import { BackTo } from './LocationsPages'
+import { Can, useRole } from '@/lib/auth'
 
 const KEY = ['departments']
 
 export function DepartmentsListPage() {
   const qc = useQueryClient()
+  const { isAdmin } = useRole()
   const { data, isLoading, error } = useQuery({
     queryKey: KEY,
     queryFn: async () => unwrap(await supabase.from('departments').select('*, openings(count)').order('name')),
@@ -26,7 +28,7 @@ export function DepartmentsListPage() {
       <PageHeader
         title="Departments"
         description="Teams that own your job openings."
-        actions={<Link to="new"><Button><Plus className="size-4" />Add department</Button></Link>}
+        actions={<Can admin><Link to="new"><Button><Plus className="size-4" />Add department</Button></Link></Can>}
       />
       {error && <Alert>{error.message}</Alert>}
       {remove.error && <Alert>{remove.error.message}</Alert>}
@@ -38,7 +40,7 @@ export function DepartmentsListPage() {
             icon={<Building2 className="size-5" />}
             title="No departments yet"
             description="Create departments like Human Resources or Information Technology."
-            action={<Link to="new"><Button size="sm"><Plus className="size-4" />Add department</Button></Link>}
+            action={<Can admin><Link to="new"><Button size="sm"><Plus className="size-4" />Add department</Button></Link></Can>}
           />
         ) : (
           <ul className="divide-y divide-slate-100">
@@ -50,7 +52,7 @@ export function DepartmentsListPage() {
                     {d.openings[0]?.count ?? 0} opening(s) · created {formatDate(d.created_at)}
                   </p>
                 </div>
-                <Link to={`${d.id}/edit`} className="rounded-md p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-900" title="Edit">
+                {isAdmin && <><Link to={`${d.id}/edit`} className="rounded-md p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-900" title="Edit">
                   <Pencil className="size-4" />
                 </Link>
                 <button
@@ -59,7 +61,7 @@ export function DepartmentsListPage() {
                   onClick={() => confirm(`Delete “${d.name}”?`) && remove.mutate(d.id)}
                 >
                   <Trash2 className="size-4" />
-                </button>
+                </button></>}
               </li>
             ))}
           </ul>

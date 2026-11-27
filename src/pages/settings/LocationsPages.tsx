@@ -3,9 +3,10 @@ import { Link, useNavigate, useParams } from 'react-router'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { ArrowLeft, MapPin, Pencil, Plus, Trash2 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
-import { unwrap } from '@/lib/utils'
+import { cn, unwrap } from '@/lib/utils'
 import type { TablesInsert } from '@/lib/database.types'
 import { Alert, Button, Card, EmptyState, Field, Input, PageHeader, Spinner } from '@/components/ui'
+import { Can, useRole } from '@/lib/auth'
 
 const KEY = ['locations']
 
@@ -18,6 +19,7 @@ function useLocations() {
 
 export function LocationsListPage() {
   const qc = useQueryClient()
+  const { isAdmin } = useRole()
   const { data, isLoading, error } = useLocations()
   const remove = useMutation({
     mutationFn: async (id: string) => unwrap(await supabase.from('locations').delete().eq('id', id)),
@@ -30,7 +32,7 @@ export function LocationsListPage() {
       <PageHeader
         title="Locations"
         description="Offices and sites your openings can be attached to."
-        actions={<Link to="new"><Button><Plus className="size-4" />Add location</Button></Link>}
+        actions={<Can admin><Link to="new"><Button><Plus className="size-4" />Add location</Button></Link></Can>}
       />
       {error && <Alert>{error.message}</Alert>}
       {remove.error && <Alert>{remove.error.message}</Alert>}
@@ -42,7 +44,7 @@ export function LocationsListPage() {
             icon={<MapPin className="size-5" />}
             title="No locations yet"
             description="Add your first office so you can attach it to job openings."
-            action={<Link to="new"><Button size="sm"><Plus className="size-4" />Add location</Button></Link>}
+            action={<Can admin><Link to="new"><Button size="sm"><Plus className="size-4" />Add location</Button></Link></Can>}
           />
         ) : (
           <div className="overflow-x-auto">
@@ -64,7 +66,7 @@ export function LocationsListPage() {
                     <td className="px-5 py-3 text-slate-600">{l.city}{l.state && l.state !== l.city ? `, ${l.state}` : ''}</td>
                     <td className="px-5 py-3 text-slate-600">{l.country}</td>
                     <td className="px-5 py-3">
-                      <div className="flex justify-end gap-1">
+                      <div className={cn('flex justify-end gap-1', !isAdmin && 'hidden')}>
                         <Link to={`${l.id}/edit`} className="rounded-md p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-900" title="Edit">
                           <Pencil className="size-4" />
                         </Link>

@@ -8,7 +8,7 @@ import { OPENING_STATUS, STAGE_LABELS, questionTypeLabel } from '@/lib/constants
 import { Alert, Badge, Button, Card, PageHeader, Spinner } from '@/components/ui'
 import { BackTo } from '../settings/LocationsPages'
 import { CopyField } from '@/components/CopyField'
-import { useProfile } from '@/lib/auth'
+import { Can, useProfile } from '@/lib/auth'
 import { jobUrl } from '@/lib/careers'
 import { OPENINGS_KEY } from './OpeningsListPage'
 
@@ -71,7 +71,7 @@ export function OpeningDetailPage() {
         title={o.title}
         description={`${o.code} · created ${formatDate(o.created_at)}${o.author ? ` by ${o.author.first_name} ${o.author.last_name}` : ''}`}
         actions={
-          <>
+          <Can edit>
             <Link to="edit"><Button variant="secondary"><Pencil className="size-4" />Edit</Button></Link>
             <Button
               variant="ghost"
@@ -87,7 +87,7 @@ export function OpeningDetailPage() {
             >
               <Trash2 className="size-4" />Delete
             </Button>
-          </>
+          </Can>
         }
       />
       {(setStatus.error || remove.error) && <div className="mb-4"><Alert>{(setStatus.error ?? remove.error)!.message}</Alert></div>}
@@ -134,13 +134,13 @@ export function OpeningDetailPage() {
                 <CopyField value={jobUrl(profile.company.slug, o.id)} label="Application link" />
               </div>
             )}
-            <div className="mt-4 flex flex-wrap gap-2">
+            <Can edit><div className="mt-4 flex flex-wrap gap-2">
               {Constants.public.Enums.opening_status.filter((s) => s !== o.status).map((s) => (
                 <Button key={s} size="sm" variant="secondary" loading={setStatus.isPending && setStatus.variables === s} onClick={() => setStatus.mutate(s)}>
                   Make {OPENING_STATUS[s].label.toLowerCase()}
                 </Button>
               ))}
-            </div>
+            </div></Can>
           </Card>
 
           <Card className="p-5">
