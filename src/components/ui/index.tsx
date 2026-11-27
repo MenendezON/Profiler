@@ -1,5 +1,5 @@
 import { forwardRef, type ButtonHTMLAttributes, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes, type TextareaHTMLAttributes } from 'react'
-import { Loader2, X } from 'lucide-react'
+import { Loader2, Star, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 // ---------- Button ----------
@@ -152,5 +152,39 @@ export function Checkbox({ label, ...props }: InputHTMLAttributes<HTMLInputEleme
       <input type="checkbox" className="size-4 rounded border-slate-300 accent-brand-600" {...props} />
       {label}
     </label>
+  )
+}
+
+// ---------- Stars ----------
+export function Stars({ value, onChange, size = 'sm', disabled }: { value: number; onChange?: (v: number) => void; size?: 'sm' | 'md'; disabled?: boolean }) {
+  const cls = size === 'md' ? 'size-5' : 'size-3.5'
+  return (
+    <span className="inline-flex items-center gap-0.5" aria-label={`Rating ${value} of 5`}>
+      {[1, 2, 3, 4, 5].map((n) => {
+        const star = <Star className={cn(cls, n <= value ? 'fill-amber-400 text-amber-400' : 'text-slate-300')} />
+        return onChange ? (
+          <button
+            key={n}
+            type="button"
+            disabled={disabled}
+            onClick={(e) => { e.stopPropagation(); onChange(n === value ? 0 : n) }}
+            className="rounded p-0.5 hover:bg-amber-50 disabled:opacity-50"
+            aria-label={`${n} star${n > 1 ? 's' : ''}`}
+          >
+            {star}
+          </button>
+        ) : (
+          <span key={n}>{star}</span>
+        )
+      })}
+    </span>
+  )
+}
+
+export function Avatar({ text, className }: { text: string; className?: string }) {
+  return (
+    <span className={cn('flex size-9 shrink-0 items-center justify-center rounded-full bg-brand-100 text-xs font-semibold text-brand-700', className)}>
+      {text}
+    </span>
   )
 }

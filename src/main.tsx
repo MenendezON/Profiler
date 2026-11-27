@@ -14,6 +14,8 @@ import { ScreeningTemplateDetailPage, ScreeningTemplatesListPage } from '@/pages
 import { OpeningsListPage } from '@/pages/openings/OpeningsListPage'
 import { OpeningFormPage } from '@/pages/openings/OpeningFormPage'
 import { OpeningDetailPage } from '@/pages/openings/OpeningDetailPage'
+import { ApplicationsPage } from '@/pages/applications/ApplicationsPage'
+import { AddCandidatePage } from '@/pages/applications/AddCandidatePage'
 import { ComingSoon } from '@/pages/ComingSoon'
 import { NotFound } from '@/pages/NotFound'
 
@@ -33,7 +35,8 @@ const router = createBrowserRouter([
       { path: 'openings/new', element: <OpeningFormPage /> },
       { path: 'openings/:id', element: <OpeningDetailPage /> },
       { path: 'openings/:id/edit', element: <OpeningFormPage key="edit" /> },
-      { path: 'applications/*', element: <ComingSoon title="Applications" /> },
+      { path: 'applications', element: <ApplicationsPage /> },
+      { path: 'applications/new', element: <AddCandidatePage /> },
       { path: 'interviews', element: <ComingSoon title="Interviews" /> },
       { path: 'reports', element: <ComingSoon title="Reports" /> },
       { path: 'settings', element: <SettingsPage /> },

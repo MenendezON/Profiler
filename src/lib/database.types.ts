@@ -189,6 +189,7 @@ export type Database = {
       }
       opening_applicants: {
         Row: {
+          answers: Json
           applicant_id: string
           created_at: string
           id: string
@@ -200,6 +201,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          answers?: Json
           applicant_id: string
           created_at?: string
           id?: string
@@ -211,6 +213,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          answers?: Json
           applicant_id?: string
           created_at?: string
           id?: string
@@ -459,6 +462,32 @@ export type Database = {
       }
     }
     Views: {
+      applications: {
+        Row: {
+          applicant_id: string | null
+          city: string | null
+          created_at: string | null
+          email: string | null
+          experience: number | null
+          first_name: string | null
+          full_name: string | null
+          id: string | null
+          last_name: string | null
+          notes: string | null
+          opening_code: string | null
+          opening_id: string | null
+          opening_status: Database["public"]["Enums"]["opening_status"] | null
+          opening_title: string | null
+          phone: string | null
+          rating: number | null
+          resume_path: string | null
+          skills: string[] | null
+          source: string | null
+          stage: Database["public"]["Enums"]["applicant_stage"] | null
+          updated_at: string | null
+        }
+        Relationships: []
+      }
       opening_pipeline_counts: {
         Row: {
           opening_id: string | null

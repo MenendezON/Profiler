@@ -36,10 +36,12 @@ Every business table carries a `company_id`. RLS policies restrict each signed-i
 | `screeningquestions`   | `screening_templates`   | `data` → `name` |
 | `questions`            | `questions`             | `screeningquestion_id` → `template_id`, new `position`, `options text[]` for predefined answers, `type` limited to 8 field types |
 | `openings`             | `openings`              | `status` is an enum; `user_id` → `created_by`; `code` auto-generated per company (`FABR-001`) when blank |
-| `applicants`           | `applicants`            | **added `company_id`** (was missing → data leaked across companies); `skills` is `text[]` |
-| `openingapplicants`    | `opening_applicants`    | own `id`, `stage` enum, unique (opening, applicant) |
+| `applicants`           | `applicants`            | **added `company_id`** (was missing → data leaked across companies); `skills` is `text[]`; one record per email per company; CV paths point to Storage |
+| `openingapplicants`    | `opening_applicants`    | own `id`, `stage` enum, unique (opening, applicant) incl. one talent-pool row, `answers jsonb` for screening answers. Read through the `applications` view |
 
 Migrations live in `supabase/migrations/` and are already applied to the project. Tenancy helpers live in a non-exposed `private` schema. Triggers stop non-admins from changing their role/status, stop anyone from switching companies, and stop an opening from referencing another company's location, department or template.
+
+CVs and cover letters live in the private Storage bucket `resumes` under `<company_id>/<applicant_id>/`. Storage policies only let a company read or write its own folder; the app opens files through 10-minute signed URLs.
 
 Regenerate types after schema changes: `npm run gen:types` (needs the Supabase CLI and `supabase login`).
 
@@ -53,5 +55,8 @@ Regenerate types after schema changes: `npm run gen:types` (needs the Supabase C
 | Settings → Departments (list/create/edit/delete) | ✅ |
 | Settings → Screening question templates (questions, predefined answers, ordering, form preview) | ✅ |
 | Job openings (status tabs + search, create, edit, details with pipeline, status switch) | ✅ |
-| Applications (pipeline, add candidate, bulk moves, CV upload → Supabase Storage) | ⏳ next |
+| Applications (stage tabs, filters, search, pagination, bulk stage moves, ratings) | ✅ |
+| Candidate panel (stage, rating, notes, CV open/replace, screening answers, move to another opening, talent pool, delete) | ✅ |
+| Add candidate (dedupe by email, CV + cover letter upload, screening answers) | ✅ |
+| Public careers page + online application | ⏳ next |
 | Interviews, Reports, Email templates, Activity log, Users/invites | ⏳ |
